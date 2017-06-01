@@ -602,6 +602,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_meta_module">7.5. Meta Module</a></li>
 <li><a href="#_home_module">7.6. Home Module</a></li>
 <li><a href="#_operations_module">7.7. Operations Module</a></li>
+<li><a href="#_ui_module">7.8. UI Module</a></li>
 </ul>
 </li>
 <li><a href="#_module_development">8. Module Development</a>
@@ -710,23 +711,23 @@ and UI automation.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Resources</strong> and <strong>repositories</strong> are the main object types in use by Crnk. Those types closely reflect the
-JSON API specification. Resources hold the data; while repositories implement the access to those repositories. A
-running Crnk application has any number of those objects and those object can also be related. For this
-reason there is a further distinction for repositories between <strong>resource repositories</strong> and <strong>relationship repositories</strong>.</p>
+JSON API specification. Resources hold the data; while repositories implement the access to those resources. A
+running Crnk application can have any number of those repositories which may or may not be related. To establish
+such relations, there is further a distinction between <strong>resource repositories</strong> and <strong>relationship repositories</strong>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>crnk-engine</code> project provides an implementation of the JSON API specification. It processes incoming requests
-and makes the appropriate calls to repositories. A single request may make one or multiple calls to repositories. Multiple
+<p>The <code>crnk-core</code> project hosts a <code>engine</code> package that provides an implementation of the JSON API specification.
+It processes incoming requests and makes the appropriate calls to repositories. A single request may make one or multiple calls
+ to repositories. Multiple
 repository are called when the request asks for inclusions of related resoures where the main repository chooses
 to not directly handle those inclusions by itself (explained in detail in later chapters). In the background
-<code>crnk-engine</code> takes care of details like serialization, repository lookup and error handling. For this
-to work it offers a module API to customize and extend the Crnk feature set. <code>crnk-engine</code>
+the engine takes care of details like serialization, repository lookup and error handling. For this
+to work it offers a module API to customize and extend the Crnk feature set. The engine
 does not dictate how resources and repositories are implemented. It makes use of a more abstract
 information model and adapters to forward call to a particular implementation. This allows for a lot of flexibility
 in the repository design. In many cases users will make use of annotations and interfaces provided by <code>crnk-core</code>
 which follow the specification and recommendations of JSON API. But there is also the possibility to implement
-repositories in other fasions, as it is the case, for example, in
-<code>crnk-jpa</code>.</p>
+repositories in other fashions like it has been done in <code>crnk-jpa</code>.</p>
 </div>
 <div class="paragraph">
 <p>The subsequent chapters explain how to setup and use Crnk.</p>
@@ -1103,8 +1104,9 @@ An example of a prefix <code>/api/v1</code>.</p>
 <h2 id="_resource">4. Resource</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A resource as defined by JSON API holds the actual data. <code>crnk-engine</code> is agnostic to how such resources are actually
-implemented (see the architecture and modueles chapters). This chapter gives information of the most common way using
+<p>A resource as defined by JSON API holds the actual data. The engine part of <code>crnk-core</code> is agnostic to how such resources are
+actually
+implemented (see the architecture and modules chapters). This chapter gives information of the most common way using
 annotations provided by <code>crnk-core</code>.</p>
 </div>
 <div class="sect2">
@@ -1537,7 +1539,7 @@ sections will provide a number of example.</p>
 <td class="content">
 Not everything is specified by JSON API. For some request parameters only recommendations
 are provided as different applications are likely to be in need of different semantics and
-implementations. For this reason <code>crnk-engine</code> makes use of <code>QueryAdapter</code> and allows implementations other than
+implementations. For this reason the engine part in <code>crnk-core</code> makes use of <code>QueryAdapter</code> and allows implementations other than
 QuerySpec (like the legacy <code>QueryParams</code>).
 </td>
 </tr>
@@ -2176,7 +2178,7 @@ is registered as <code>JpaRelationshipRepository</code>. <code>JpaModule.setRepo
 allows to provide a factory to change or customized the used repositories.
 To manually select the entities exposed to Crnk use <code>JpaModule.addEntityClass(&#8230;&#8203;)</code>
 and <code>JpaModule.removeEntityClass(&#8230;&#8203;)</code>. If no <code>entityManagerFactory</code> is provided
-to newServerModule, then the registartion of entities is omitted and can be done
+to newServerModule, then the registration of entities is omitted and can be done
 manually.</p>
 </div>
 <div class="paragraph">
@@ -2585,6 +2587,26 @@ transaction spanning all requests. This looks as follows:</p>
 The limitations are expected to be addressed at some point as well, contributions welcomed.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_ui_module">7.8. UI Module</h3>
+<div class="paragraph">
+<p>The UI module makes <code>crnk-ui</code> accessible trough the module system. It allows to browse and edit all the repositories
+and resources. The setup looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>		UIModule operationsModule = UIModule.create(new UIModuleConfig());
+		...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the user interface is accessible from the <code>/browse/</code> directory next to all the repositories.
+Have a look at the Spring Boot example application to see a working example.</p>
+</div>
+<div class="paragraph">
+<p>This module is currently in incubation. Please provide feedback.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2704,6 +2726,7 @@ export module Schedule{
 	}
 	export interface Attributes{
 		name?: string;
+		delayed?: boolean;
 	}
 }
 export interface Schedule extends StoreResource{
@@ -2750,7 +2773,7 @@ All other resources are imported as external NPM dependency.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>katharsis-meta is used to get a meta model of the underlying resources (or a any other type of object like JPA entities).
+<p>crnk-meta is used to get a meta model of the underlying resources (or a any other type of object like JPA entities).
 Important to know is that every object is assigned a string-based meta id. For typical, simpler use cases this matches
 the class name. But for more advanced use cases those may or can differ.</p>
 </div>

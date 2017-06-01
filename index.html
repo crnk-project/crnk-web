@@ -1,289 +1,289 @@
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Crnk: Java JSON API framework</title>
+	<meta charset="utf-8">
+	<title>Crnk: Java JSON API framework</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+	<script
+			src="https://code.jquery.com/jquery-3.2.1.min.js"
+			integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			crossorigin="anonymous"></script>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <style>
-        .section {
-            padding: 20px;
-        }
+	<style>
+		.section {
+			padding: 20px;
+		}
 
-        .section-content {
-            background: #F8F8F8;
-            padding: 10px;
-        }
+		.section-content {
+			background: #F8F8F8;
+			padding: 10px;
+		}
 
-        .section .part {
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
+		.section .part {
+			padding-top: 5px;
+			padding-bottom: 5px;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
 
-        .section .part .content {
-            padding: 5px;
-        }
+		.section .part .content {
+			padding: 5px;
+		}
 
-        pre.prettyprint {
-            padding-top: 10px;
-            border: none;
-            background-color: transparent;
-        }
+		pre.prettyprint {
+			padding-top: 10px;
+			border: none;
+			background-color: transparent;
+		}
 
-        .tab-content {
-            padding: 10px;
-            background: #FFFFFF;
-            border-left: 1px solid #E0E0E0;
-            border-right: 1px solid #E0E0E0;
-            border-bottom: 1px solid #E0E0E0;
-        }
+		.tab-content {
+			padding: 10px;
+			background: #FFFFFF;
+			border-left: 1px solid #E0E0E0;
+			border-right: 1px solid #E0E0E0;
+			border-bottom: 1px solid #E0E0E0;
+		}
 
-        footer {
-            background: #F8F8F8;
-            padding: 10px;
-        }
+		footer {
+			background: #F8F8F8;
+			padding: 10px;
+		}
 
-    </style>
+	</style>
 </head>
 <body style="padding:0px;margin:0px">
 
 
 <div style="height:55px; padding:10px; background:#113844;color:#F8F8F8">
 
-    <div style="float:left; font-size: 200%">Crnk: JSON API framework</div>
+	<div style="float:left; font-size: 200%">Crnk: JSON API framework</div>
 
-    <div style="float:right;vertical-align: middle;padding-left:10px;">
-        <div style="width:32px;height:32px">
-            <a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
-                <img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg">
-            </a>
-        </div>
-    </div>
+	<div style="float:right;vertical-align: middle;padding-left:10px;">
+		<div style="width:32px;height:32px">
+			<a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
+				<img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg">
+			</a>
+		</div>
+	</div>
 
-    <div style="float:right;vertical-align: middle;padding-left:10px;">
-        <a href="https://github.com/crnk-project/">
-            <svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github" height="32"
-                 version="1.1" viewBox="0 0 16 16" width="32">
-                <path fill-rule="evenodd"
-                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-            </svg>
-        </a>
-    </div>
+	<div style="float:right;vertical-align: middle;padding-left:10px;">
+		<a href="https://github.com/crnk-project/">
+			<svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github" height="32"
+					version="1.1" viewBox="0 0 16 16" width="32">
+				<path fill-rule="evenodd"
+						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+			</svg>
+		</a>
+	</div>
 
-    <div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
-        <a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
-    </div>
+	<div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
+		<a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
+	</div>
 </div>
 
 <div class="section">
-    <div class="section-content">
+	<div class="section-content">
 
-        <p>
-            Crnk, pronounced <i>Crank</i>, is an implementation of the <a href="http://jsonapi.org/">JSON API</a>
-            specification and recommendations in Java to facilitate the implementation of RESTful applications.
-            To quote the specification:
-        </p>
+		<p>
+			Crank up the development of RESTful applications with Crnk (pronounced <i>Crank</i>).
+			Crnk is an implementation of the <a href="http://jsonapi.org/">JSON API</a>
+			specification and recommendations in Java to facilitate building RESTful applications.
+			To quote the specification:
+		</p>
 
-        <p style="padding-left:10px;padding-right:10px">
-            <i>By following shared conventions, you can increase productivity, take advantage of
-                generalized tooling, and focus on what matters: your application.</i>
-        </p>
-    </div>
-</div>
-
-
-<div class="section">
-    <div>
-        <div class="row">
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Easy to integrate</b> with frameworks like Spring, JEE, CDI, JAX-RS, Dropwizard, Servlet API.
-                </div>
-            </div>
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Long-term support</b> for technologies such as Java 7 and JPA 2.0 to ease enterprise adoption.
-                </div>
-            </div>
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    Only <b>few dependencies</b> of the core libraries, most notably the <a
-                        href="https://github.com/FasterXML/jackson">Jackson library</a>.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    JSON API <b>client and server</b> implementation with the possibility of shared, fully type-safe
-                    repository
-                    interfaces.
-                </div>
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Open Source</b> and released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
-                    License,
-                    Version 2.0.</a> license. Suitable for both open source and commercial projects.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Modular design</b> to choose and extend the feature set through a Module API.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Mobile friendly</b>. Fetch complex object graphs in a
-                    single request with JSON API inclusions. Fetch partial objects with JSON API sparse field sets.
-                    Use together with the popular <a href="http://square.github.io/okhttp/">OkHttp</a> library on
-                    Android devices.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and resources
-                    in a
-                    type-safe manner.
-                </div>
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Expose any JPA entity</b> as JSON API resource with out-of-the-box sorting, filtering, paging and
-                    CRUD
-                    support without any implementation work. Or further map your entities to DTOs.
-                </div>
-            </div>
-
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Standardized error handling</b> with support for JSR-303 Bean Validation and a variety of other
-                    standard
-                    Java
-                    exception types.</b>
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Atomically</b> insert, update and delete multiple resources with <a href="http://jsonpatch.com/">JSON
-                    Patch</a>.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    Integrate into <a href="http://zipkin.io/">Zipkin</a> to <b>trace</b> incoming and outgoing
-                    requests.
-                </div>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Up-to-date documentation</b> with Asciidoc.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    <b>Secure</b> your repositories on repository, resource and field level.
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-md-3 part">
-                <div class="content">
-                    Extensive <b>meta model</b> of your repositories available as JSON API repositories for the purpose
-                    of
-                    documentation and UI automation.
-                </div>
-            </div>
-        </div>
-    </div>
+		<p style="padding-left:10px;padding-right:10px">
+			<i>By following shared conventions, you can increase productivity, take advantage of
+				generalized tooling, and focus on what matters: your application.</i>
+		</p>
+	</div>
 </div>
 
 
 <div class="section">
-    <div class="section-content">
+	<div>
+		<div class="row">
 
-        <h3>in 5 Minutes</h3>
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Easy to integrate</b> with frameworks like Spring, JEE, CDI, JAX-RS, Dropwizard, Servlet API.
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Long-term support</b> for technologies such as Java 7 and JPA 2.0 to ease enterprise adoption.
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					Only <b>few dependencies</b> of the core libraries, most notably the <a
+						href="https://github.com/FasterXML/jackson">Jackson library</a>.
+				</div>
+			</div>
 
-        <p>
-            The following gives a brief example of how to setup Crnk with JAX-RS and CDI.
-            For more information have a look at the documentation and join us on <a
-                href="https://gitter.im/crnk-io/Lobby?source=orgpage">Gitter</a> and
-            <a href="https://github.com/crnk-project/">GitHub</a>!
-        </p>
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					JSON API <b>client and server</b> implementation with the possibility of shared, fully type-safe
+					repository
+					interfaces.
+				</div>
+			</div>
+		</div>
+		<div class="row">
 
-        <div>
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"
-                    class="active"><a href="#dependencies" aria-controls="dependencies" role="tab" data-toggle="tab">Dependencies
-                </a></li>
-                <li
-                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">JAX-RS
-                    integration</a></li>
-                <li
-                        role="presentation"><a href="#resource" aria-controls="resource" role="tab" data-toggle="tab">Resource
-                </a></li>
-                <li
-                        role="presentation"><a href="#interface" aria-controls="interface" role="tab"
-                                               data-toggle="tab">Repository Interface
-                </a></li>
-                <li
-                        role="presentation"><a href="#repository" aria-controls="repository" role="tab"
-                                               data-toggle="tab">Repository Implementation
-                </a></li>
-            </ul>
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Open Source</b> and released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
+					License,
+					Version 2.0.</a> license. Suitable for both open source and commercial projects.
+				</div>
+			</div>
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="dependencies">
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Modular design</b> to choose and extend the feature set through a Module API.
+				</div>
+			</div>
 
-                    Add crnk-core together with the CDI and JAX-RS integrations to your classpath:
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Mobile friendly</b>. Fetch complex object graphs in a
+					single request with JSON API inclusions. Fetch partial objects with JSON API sparse field sets.
+					Use together with the popular <a href="http://square.github.io/okhttp/">OkHttp</a> library on
+					Android devices.
+				</div>
+			</div>
 
-                    <pre class="prettyprint">
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					(soon) <b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and resources
+					in a type-safe manner.
+				</div>
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Expose any JPA entity</b> as JSON API resource with out-of-the-box sorting, filtering, paging and
+					CRUD
+					support without any implementation work. Or further map your entities to DTOs.
+				</div>
+			</div>
+
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Standardized error handling</b> with support for JSR-303 Bean Validation and a variety of other
+					standard
+					Java
+					exception types.</b>
+				</div>
+			</div>
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Atomically</b> insert, update and delete multiple resources with <a href="http://jsonpatch.com/">JSON
+					Patch</a>.
+				</div>
+			</div>
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					Integrate into <a href="http://zipkin.io/">Zipkin</a> to <b>trace</b> incoming and outgoing
+					requests.
+				</div>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Up-to-date documentation</b> with Asciidoc.
+				</div>
+			</div>
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					<b>Secure</b> your repositories on repository, resource and field level.
+				</div>
+			</div>
+
+			<div class="col-xs-6 col-md-3 part">
+				<div class="content">
+					Extensive <b>meta model</b> of your repositories available as JSON API repositories for the purpose
+					of
+					documentation and UI automation.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="section">
+	<div class="section-content">
+
+		<h3>in 5 Minutes</h3>
+
+		<p>
+			The following gives a brief example of how to setup Crnk with JAX-RS and CDI.
+			For more information have a look at the documentation and join us on <a
+				href="https://gitter.im/crnk-io/Lobby?source=orgpage">Gitter</a> and
+			<a href="https://github.com/crnk-project/">GitHub</a>!
+		</p>
+
+		<div>
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation"
+						class="active"><a href="#dependencies" aria-controls="dependencies" role="tab" data-toggle="tab">Dependencies
+				</a></li>
+				<li
+						role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">JAX-RS
+					integration</a></li>
+				<li
+						role="presentation"><a href="#resource" aria-controls="resource" role="tab" data-toggle="tab">Resource
+				</a></li>
+				<li
+						role="presentation"><a href="#interface" aria-controls="interface" role="tab"
+						data-toggle="tab">Repository Interface
+				</a></li>
+				<li
+						role="presentation"><a href="#repository" aria-controls="repository" role="tab"
+						data-toggle="tab">Repository Implementation
+				</a></li>
+			</ul>
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="dependencies">
+
+					Add crnk-core together with the CDI and JAX-RS integrations to your classpath:
+
+					<pre class="prettyprint">
 compile 'io.crnk:crnk-core:${version}'
 compile 'io.crnk:crnk-cdi:${version}'
 compile 'io.crnk:crnk-rs:${version}'
 					</pre>
 
 
-                </div>
-                <div role="tabpanel" class="tab-pane" id="jaxrs">
+				</div>
+				<div role="tabpanel" class="tab-pane" id="jaxrs">
 
 
-                    <p>
-                        Setup a JAX-RS application and add the CrnkFeature. In this example a default page size and some
-                        meaningful Jackson settings are further configured.
-                    </p>
+					<p>
+						Setup a JAX-RS application and add the CrnkFeature. In this example a default page size and some
+						meaningful Jackson settings are further configured.
+					</p>
 
-                    <pre class="prettyprint">
+					<pre class="prettyprint">
 @ApplicationPath("/api")
 @Singleton
 public class DemoApplication extends Application {
@@ -306,12 +306,12 @@ public class DemoApplication extends Application {
 					</pre>
 
 
-                </div>
-                <div role="tabpanel" class="tab-pane" id="resource">
+				</div>
+				<div role="tabpanel" class="tab-pane" id="resource">
 
-                    The actual data objects known as resource in JSON API terminology looks like:
+					The actual data objects known as resource in JSON API terminology looks like:
 
-                    <pre class="prettyprint">
+					<pre class="prettyprint">
 @JsonApiResource(type = "schedules")
 public class Schedule {
 
@@ -340,14 +340,14 @@ public class Schedule {
 
 					</pre>
 
-                </div>
-                <div role="tabpanel" class="tab-pane" id="interface">
+				</div>
+				<div role="tabpanel" class="tab-pane" id="interface">
 
-                    Specifying an interface for your repository is an optional step, but can be quite convient when
-                    working on the client-side (like for testing). This particular example further specifies the
-                    structure of links and meta data attached to the actual data.
+					Specifying an interface for your repository is an optional step, but can be quite convient when
+					working on the client-side (like for testing). This particular example further specifies the
+					structure of links and meta data attached to the actual data.
 
-                    <pre class="prettyprint">
+					<pre class="prettyprint">
 public interface ScheduleRepository extends ResourceRepositoryV2<Schedule, Long> {
 
 	@Override
@@ -385,15 +385,15 @@ public interface ScheduleRepository extends ResourceRepositoryV2<Schedule, Long>
 }
 					</pre>
 
-                </div>
-                <div role="tabpanel" class="tab-pane" id="repository">
+				</div>
+				<div role="tabpanel" class="tab-pane" id="repository">
 
-                    The actual implementation of a JSON API repository. This example stores all data in-memory. Notice
-                    the QuerySpec.apply to do sorting, filtering and patching in-memory. More advanced use cases
-                    will translate the QuerySpec to a native query of the underlying data store. The
-                    @ApplicationScoped will lead for the repository to get picked up by the crnk-cdi integration.
+					The actual implementation of a JSON API repository. This example stores all data in-memory. Notice
+					the QuerySpec.apply to do sorting, filtering and patching in-memory. More advanced use cases
+					will translate the QuerySpec to a native query of the underlying data store. The
+					@ApplicationScoped will lead for the repository to get picked up by the crnk-cdi integration.
 
-                    <pre class="prettyprint">
+					<pre class="prettyprint">
 
 @ApplicationScoped
 public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, Long&gt; implements ScheduleRepository {
@@ -429,184 +429,212 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 	}
 }
 					</pre>
-                </div>
-            </div>
+				</div>
+			</div>
 
-            <script>
-                $('#myTabs a').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                })
-            </script>
+			<script>
+				$('#myTabs a').click(function (e) {
+					e.preventDefault()
+					$(this).tab('show')
+				})
+			</script>
 
 
-        </div>
+		</div>
 
-    </div>
+	</div>
 </div>
 
 
 <div class="section">
-    <div class="section-content">
+	<div class="section-content">
 
-        <h3>News</h3>
+		<h3>News</h3>
 
-        <h4>25 May 2017</h4>
+		<h4>1 June 2017</h4>
 
-        <p>
-            A first version 0.9.20170524133411 is released. Various contributors and existing users currently
-            verify that everything is working smoothly.
-        </p>
+		<p>
+			0.9.20170601160228 is available. Mostly a quality release to catch up with Sonar after the preceding Katharsis setup
+			was broken for a while. All major (or worse) Sonar violations have been addressed. Fairly drastic (conditional)
+			code coverage improvements to around 95%. There is still some more work left to do in a few modules. Further
+			improvements will also follow once all the deprecated legacy code is removed. Goal is to have near
+			complete coverage in the near future.
+		</p>
 
-        <p>
-            Development originally took place in a project named Katharsis. Katharsis
-            had an active user base, but with the original founder leaving and the vast majority of contributions coming
-            from its user base, it was decided to move forward with a new repository under new leadership to maintain
-            the rapid
-            pace of progress and contributions seen in the past. For this reason, this release can already be considered
-            being
-            production stable. There are already many improvements over the original Katharsis code base while still
-            maintaining
-            backward-compatibility (after some package renaming):
-        </p>
+		<p>
+			An incubating UIModule that lets you browse the repositories with an Angular web application.
+			Have a look at the documentation and Spring example application.
+		</p>
 
-        <ul>
-            <li>
-                Vastly improved <b>documentation based on Asciidoctor</b>.
-            </li>
-            <li>
-                A new (incurbation) crnk-operations module implementing <a href="http://jsonpatch.com/">JSON
-                Patch</a> to allow atomic insertions, updates and deletions of multiple resources. For example, this can
-                ensure that all modifications take place within the same transaction when working with a database.
-                In the past, applications had to merge multiple data objects into a single resource to gain such a
-                functionality, which may or may still be a perfectly valid approach, but many times it involves quite a
-                bit of
-                extra implementation work.
-            </li>
-            <li>The <b>meta model gained various improvements</b> and is now considered being production stable. It now
-                provides additional information like whether an attribute is
-                insertable, updateable, filterable, sortable, nullable, cascaded or a blob.
-            </li>
-            <li>
-                A new <b>typescript generator</b> was added as incurbation module.
-            </li>
-            <li>
-                A <b> shared code base for the integrations</b> (Spring, JAX-RS, Servlet, etc) for
-                more consistent common behavior and stability across the different frameworks.
-            </li>
-            <li>
-                A new incurbating <b>crnk-home module</b> was added. It provides a listing of all available repositories
-                when
-                accessing the parent directory above all repositories. The format is based on
-                <a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>. Please provide
-                feedback!
-            </li>
-            <li>
-                A new HttpRequestProcessor was added to the Module API to intercept HTTP requests on a lower-layer
-                independent
-                of the used integration (Servlet, JAX-RS, etc.). This provides the basis for the implementation
-                of crnk-operations and crnk-home.
-            </li>
-            <li>
-                Compared to katharsis-core, crnk-core was refactored to more clearly separate the public API from the
-                lower-level and internal APIs. Many classes that users typically will not make use of now reside within
-                the
-                io.crnk.engine package. As the name implies it hosts the &quot;engine&quot; of crnk that implements the
-                actual
-                JSON API logic and processing. The Module API provides access to that <b>Engine API</b> to extend Crnk
-                in
-                virtually
-                every area.
-            </li>
-            <li>
-                <b>Automatic conversion from QueryParams to QuerySpec</b> and back to ease the transition to the new
-                query
-                API introduced with Katharsis 3.0.
-            </li>
-            <li>
-                Build system was moved to <b>Gradle</b> to gain faster builds, release automation and a proper frontend
-                development
-                setup used by crnk-ui.
-            </li>
-            <li>
-                EditorConfig setup to have a unique set of code formatting rules independent of the IDE in use.
-            </li>
-        </ul>
+		<p>
+			Improvements to customize the QueySpecDeserializer to deal with unknown parameters not specified by JSON API
+			(like the <i>group</i> parameter used by Katharsis in the past).
+		</p>
 
-    </div>
+		<p>
+			Various exceptions no longer inherit CrnkMatchingException. It is mostly an internal thing, but could
+			lead to requests being ignored rather than throwing a proper exception, which in turn made finding such
+			errors rather difficult.
+		</p>
+
+		<h4>25 May 2017</h4>
+
+		<p>
+			A first version 0.9.20170524133411 is released. Various contributors and existing users currently
+			verify that everything is working smoothly.
+		</p>
+
+		<p>
+			Development originally took place in a project named Katharsis. Katharsis
+			had an active user base, but with the original founder leaving and the vast majority of contributions coming
+			from its user base, it was decided to move forward with a new repository under new leadership to maintain
+			the rapid
+			pace of progress and contributions seen in the past. For this reason, this release can already be considered
+			being
+			production stable. There are already many improvements over the original Katharsis code base while still
+			maintaining
+			backward-compatibility (after some package renaming):
+		</p>
+
+		<ul>
+			<li>
+				Vastly improved <b>documentation based on Asciidoctor</b>.
+			</li>
+			<li>
+				A new (incurbation) crnk-operations module implementing <a href="http://jsonpatch.com/">JSON
+				Patch</a> to allow atomic insertions, updates and deletions of multiple resources. For example, this can
+				ensure that all modifications take place within the same transaction when working with a database.
+				In the past, applications had to merge multiple data objects into a single resource to gain such a
+				functionality, which may or may still be a perfectly valid approach, but many times it involves quite a
+				bit of
+				extra implementation work.
+			</li>
+			<li>The <b>meta model gained various improvements</b> and is now considered being production stable. It now
+				provides additional information like whether an attribute is
+				insertable, updateable, filterable, sortable, nullable, cascaded or a blob.
+			</li>
+			<!--
+			<li>
+				A new <b>typescript generator</b> was added as incurbation module.
+			</li>
+			-->
+			<li>
+				A <b> shared code base for the integrations</b> (Spring, JAX-RS, Servlet, etc) for
+				more consistent common behavior and stability across the different frameworks.
+			</li>
+			<li>
+				A new incurbating <b>crnk-home module</b> was added. It provides a listing of all available repositories
+				when
+				accessing the parent directory above all repositories. The format is based on
+				<a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>. Please provide
+				feedback!
+			</li>
+			<li>
+				A new HttpRequestProcessor was added to the Module API to intercept HTTP requests on a lower-layer
+				independent
+				of the used integration (Servlet, JAX-RS, etc.). This provides the basis for the implementation
+				of crnk-operations and crnk-home.
+			</li>
+			<li>
+				Compared to katharsis-core, crnk-core was refactored to more clearly separate the public API from the
+				lower-level and internal APIs. Many classes that users typically will not make use of now reside within
+				the
+				io.crnk.core.engine package. As the name implies it hosts the &quot;engine&quot; of crnk that implements the
+				actual
+				JSON API logic and processing. The Module API provides access to that <b>Engine API</b> to extend Crnk
+				in
+				virtually
+				every area.
+			</li>
+			<li>
+				<b>Automatic conversion from QueryParams to QuerySpec</b> and back to ease the transition to the new
+				query
+				API introduced with Katharsis 3.0.
+			</li>
+			<li>
+				Build system was moved to <b>Gradle</b> to gain faster builds, release automation and a proper frontend
+				development
+				setup used by crnk-ui.
+			</li>
+			<li>
+				EditorConfig setup to have a unique set of code formatting rules independent of the IDE in use.
+			</li>
+		</ul>
+
+	</div>
 </div>
 
 
 <div class="section">
-    <div class="section-content">
+	<div class="section-content">
 
-        <h3>Roadmap</h3>
+		<h3>Roadmap</h3>
 
-        A first version has been released, but many more improvements are planned for the near-future:
+		A first version has been released, but many more improvements are planned for the near-future:
 
-        <ul>
-            <li>
-                More documentation and web page updates.
-            </li>
-            <li>
-                Sonar setup and identify any gaps in testing.
-            </li>
-            <li>
-                Extensions to the security module as outlined in the documentation.
-            </li>
-            <li>
-                More examples, including frontend development.
-            </li>
-            <li>
-                Finalize crnk-ui and add further delivery options (docker, webjar, NPM library).
-            </li>
-            <li>
-                Support for more datastores next to JPA.
-            </li>
-            <li>
-                Support to collect and access metrics information.
-            </li>
-        </ul>
+		<ul>
+			<li>
+				More documentation and web page updates.
+			</li>
+			<li>
+				Sonar setup and identify any gaps in testing.
+			</li>
+			<li>
+				Extensions to the security module as outlined in the documentation.
+			</li>
+			<li>
+				More examples, including frontend development.
+			</li>
+			<li>
+				Finalize crnk-ui and add further delivery options (docker, webjar, NPM library).
+			</li>
+			<li>
+				Support for more datastores next to JPA.
+			</li>
+			<li>
+				Support to collect and access metrics information.
+			</li>
+		</ul>
 
-    </div>
+	</div>
 </div>
 
 
 <div class="section">
-    <div class="section-content">
+	<div class="section-content">
 
-        <h3>Katharsis Migration</h3>
+		<h3>Katharsis Migration</h3>
 
-        Current Katharsis users can easily migrate to Crnk. If questions come up, do not hestitate to ask in the
-        forum.
+		Current Katharsis users can easily migrate to Crnk. If questions come up, do not hestitate to ask in the
+		forum.
 
-        <ul>
-            <li>Fix the project naming by replacing katharsis with crnk.</li>
-            <li>Fix the package imports for katharsis-core. Typically an additional &quot;core&quot; needs to be added
-                to the
-                import, like &quot;io.crnk.core.repository.ResourceRepositoryV2&quot; instead of
-                &quot;io.katharsis.repository.ResourceRepositoryV2&quot;. Custom modules likely will find imported
-                classes in the
-                various &quot;io.crnk.engine&quot; subpackages. Note that no classes have been renamed (except those
-                having
-                Katharsis in their name), so imports should be easily fixable.
-            </li>
-            <li>
-                Deprecated integration classes (like KatharsisConfigV2 in Spring or the deprecated Servlet and Filter
-                classes) have been removed. Switch to the respective current implementations. The old ones more than
-                likely do
-                you more harm than good.
-            </li>
-            <li>At some point in the future, the <i>io.crnk.legacy</i> package will be removed. That package has been
-                deprecated since Katharsis 3.0.
-            </li>
-        </ul>
+		<ul>
+			<li>Fix the project naming by replacing katharsis with crnk.</li>
+			<li>Fix the package imports for katharsis-core. Typically an additional &quot;core&quot; needs to be added
+				to the
+				import, like &quot;io.crnk.core.repository.ResourceRepositoryV2&quot; instead of
+				&quot;io.katharsis.repository.ResourceRepositoryV2&quot;. Custom modules likely will find imported
+				classes in the
+				various &quot;io.crnk.engine&quot; subpackages. Note that no classes have been renamed (except those
+				having
+				Katharsis in their name), so imports should be easily fixable.
+			</li>
+			<li>
+				Deprecated integration classes (like KatharsisConfigV2 in Spring or the deprecated Servlet and Filter
+				classes) have been removed. Switch to the respective current implementations. The old ones more than
+				likely do
+				you more harm than good.
+			</li>
+			<li>At some point in the future, the <i>io.crnk.legacy</i> package will be removed. That package has been
+				deprecated since Katharsis 3.0.
+			</li>
+		</ul>
 
-    </div>
+	</div>
 </div>
 
 <footer>
-    © 2017 <a href="https://www.adnovum.ch">Adnovum</a>
+	© 2017 <a href="https://www.adnovum.ch">Adnovum</a>
 </footer>
 
 </body>
