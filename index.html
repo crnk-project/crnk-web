@@ -162,9 +162,8 @@
 
 			<div class="col-xs-6 col-md-3 part">
 				<div class="content">
-					<b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and resources
-					in a
-					type-safe manner.
+					(soon) <b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and resources
+					in a type-safe manner.
 				</div>
 			</div>
 		</div>
@@ -455,10 +454,11 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 		<h4>1 June 2017</h4>
 
 		<p>
-			0.9.x is now available.	Mostly a quality release to catch up with Sonar after the preceding Katharsis setup
+			0.9.20170601160228 is available. Mostly a quality release to catch up with Sonar after the preceding Katharsis setup
 			was broken for a while. All major (or worse) Sonar violations have been addressed. Fairly drastic (conditional)
 			code coverage improvements to around 95%. There is still some more work left to do in a few modules. Further
-			improvements will also follow once all the deprecated legacy code is removed. Goal is to have near complete coverage.
+			improvements will also follow once all the deprecated legacy code is removed. Goal is to have near
+			complete coverage in the near future.
 		</p>
 
 		<p>
@@ -513,9 +513,11 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 				provides additional information like whether an attribute is
 				insertable, updateable, filterable, sortable, nullable, cascaded or a blob.
 			</li>
+			<!--
 			<li>
 				A new <b>typescript generator</b> was added as incurbation module.
 			</li>
+			-->
 			<li>
 				A <b> shared code base for the integrations</b> (Spring, JAX-RS, Servlet, etc) for
 				more consistent common behavior and stability across the different frameworks.
@@ -537,7 +539,7 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 				Compared to katharsis-core, crnk-core was refactored to more clearly separate the public API from the
 				lower-level and internal APIs. Many classes that users typically will not make use of now reside within
 				the
-				io.crnk.engine package. As the name implies it hosts the &quot;engine&quot; of crnk that implements the
+				io.crnk.core.engine package. As the name implies it hosts the &quot;engine&quot; of crnk that implements the
 				actual
 				JSON API logic and processing. The Module API provides access to that <b>Engine API</b> to extend Crnk
 				in
