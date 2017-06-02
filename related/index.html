@@ -1,0 +1,288 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Crnk: Java JSON API framework</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .section {
+            padding: 20px;
+        }
+
+        .section-content {
+            background: #F8F8F8;
+            padding: 10px;
+        }
+
+        .section .part {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .section .part .content {
+            padding: 5px;
+        }
+
+        pre.prettyprint {
+            padding-top: 10px;
+            border: none;
+            background-color: transparent;
+        }
+
+        .tab-content {
+            padding: 10px;
+            background: #FFFFFF;
+            border-left: 1px solid #E0E0E0;
+            border-right: 1px solid #E0E0E0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        footer {
+            background: #F8F8F8;
+            padding: 10px;
+        }
+
+        .example tr td {
+            padding-right: 10px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            font-size: 90%;
+            vertical-align: top;
+        }
+
+    </style>
+</head>
+<body style="padding:0px;margin:0px">
+
+
+<div style="height:55px; padding:10px; background:#113844;color:#F8F8F8">
+
+    <div style="float:left; font-size: 200%">
+        <a href="http://www.crnk.io"  style="color:WHITE;decoration:none">Crnk: JSON API framework</a>
+    </div>
+
+    <div style="float:right;vertical-align: middle;padding-left:10px;">
+        <div style="width:32px;height:32px">
+            <a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
+                <img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg">
+            </a>
+        </div>
+    </div>
+
+    <div style="float:right;vertical-align: middle;padding-left:10px;">
+        <a href="https://github.com/crnk-project/">
+            <svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github" height="32"
+                 version="1.1" viewBox="0 0 16 16" width="32">
+                <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+        </a>
+    </div>
+
+    <div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
+        <a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
+        &nbsp;&nbsp;
+        <a href="/related/" style="color:WHITE;decoration:none">Related Projects</a>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-content">
+
+        <p>
+            There are many libraries helping when it comes to building RESTful applications. The goal of this page
+            is to put Crnk into perspective by comparing to those other projects.
+        </p>
+
+        <p>
+            In general we feel
+            that JSON API has many benefits when implementing resource based RESTful
+            application. Those benefits are sometimes quite subtile and only come to light when designing
+            more elaborate applications. For example, the document structure with attributes, relationships,
+            meta data and links data can be considered being normalized. This may seem like an additional burden
+            where other framework include relationships directly with a resource. There is no extra step
+            to resolve relationships. But such a design can proof highly useful in many scenarios:
+
+        <ul>
+            <li>The normalization allows for complex object graphs with arbitrary, potentially cyclic
+                relationships, such as parent/child relationships.
+            </li>
+            <li>
+                The normalization works well together with newer Redux-style frontend applications.
+                For example, <a href="https://github.com/abdulhaq-e/ngrx-json-api">ngrx-json-api</a>
+                provides a very neat integration of JSON API with Angular and ngrx.
+            </li>
+            <li>
+                While sightly harder to read, it is much easier to insert, update and delete. Also
+                checkout crnk-operations to perform multiple operations simultaneously.
+            </li>
+        </ul>
+        </p>
+
+        <p>
+            Before diving into the various frameworks, maybe a suprising disclaimer. We <b>consider
+            Crnk not to be limited to JSON API</b>. People can be quite opinionated how
+            their API is supposed to look like. JSON API then either does or does not fit in there.
+            However, it is quite simple to customize Crnk towards your requirements if really necessary.
+            Custom serializers and deserializers allow to marshall request and response documents
+            to your liking. Similarly, the parsing of request parameters can be customized as well.
+            <b>It is also thinkable to provide adapters into other technologies such as GraphQL or OData</b>.
+            More than likely, such integrations would be much simpler to achieve than writing a
+            new framework from scratch. Many parts of the crnk engine, integrations and modules could be reused.
+            Contributions in this area would be very welcomed.
+        </p>
+
+        <p>
+            Note also that this page is considered to be work in progress. For sure there are more
+            things to say and more updates will follow. Any insights are also welcomed.
+        </p>
+
+        <p>
+        <h3>JAX-RS</h3>
+
+        <p>
+            Considered to be the standard when it comes to building RESTful applications.
+            JAX-RS is easy to use. There are multiple implementations available. A drawback is that it is quite close
+            to the transport layer. Plenty of declarations are necessary for each service (parameters, methods,
+            body, url handling, content type, etc.). This in turn frequently leads to boiler-plate and inconsistent
+            behavior
+            in larger applications. More opinionated specifications like JSON API can help here.
+            In particular when it comes to things like sorting, filtering, paging or
+            complex object graphs, the speed-up and simplification can be quite dramatic.
+        </p>
+        <p>
+            It is not unusual for JSON API not be able to cover all the use cases, but
+            maybe 90% of them. For this reason, crnk works well together
+            with JAX-RS as also shown in the documentation. Resource-based services are then implemented
+            with JSON API, while other more custom services get implemented with JAX-RS.
+            There is also the possibility to benefit of some JSON API features in
+            JAX-RS services. It is possible to make use of the JSON API exception handling, providing
+            a single common error mechanism among all services. It is also possible for JAX-RS services
+            to return data in JSON API format. Have a look at the documentation for more information.
+        </p>
+
+        <p>
+        <h3>Spring Data Rest</h3>
+
+        <p>
+            Similar to JSON API, Spring Data Rest has to goal to simplify the development of resource-based
+            RESTful application. Just like Crnk it provides an integration into JPA. It also has
+            further integrations into other data stores that are currently still missing in
+            Crnk (contributions welcomed).
+        </p>
+
+        <p>
+            There are various areas where one can highly benefit from using Crnk over Spring Data Rest,
+            with the JSON API specification itself potentially being the most important benefit;
+
+        <ul>
+            <li>
+                The JSON API specification
+                page lists countless implementations for various programming languages. Those
+                go far beyond the Spring ecosystem.
+            </li>
+            <li>
+                The JSON API specification and recommendations provide quite powerful tooling to
+                deal with sorting, filtering, paging, spare field sets, complex object graphs,
+                inclusions, etc. Various of those features go well beyond what is possible with
+                Spring Data Rest.
+            </li>
+            <li>
+                Crnk is lightweight and plays well together with any framework, not just Spring.
+                For example, we expect to move into areas such as AWS Lambda and OpenWhisk soon
+                where as services are expected to be available instantly.
+            </li>
+            <li>
+                Crnk allows the use of type-safe stubs by both Typescript and Java clients. Useful
+                for both testing and client side development.
+            </li>
+            <li>
+                Crnk is highly modular and provides you with all the flexibility you may or may not need.
+            </li>
+            <li>
+                crnk-security can provide true resource-based access control which comes closer
+                to data room access control than the more traditional service-based access control.
+                As an example, it not only checks the access to a particular service method, but
+                it can also (soon) check parameters accessing related resources.
+            </li>
+            <li>...</li>
+        </ul>
+        </p>
+
+
+        <p>
+        <h3>OData / Apache Olingo</h3>
+
+        <p>
+            We consider OData and JSON API to be quite similar in their goals. JSON API may can be considered
+            to be a bit simpler and more accessible. And it also follows more closely the best practices
+            for RESTful applications. It currently seems that there is not to much momentum anymore
+            in OData.
+        </p>
+
+        <p>
+            Apache Olingo is a Java implementation of OData. Given the closeness of the two approaches,
+            implementing a crnk-adapter-odata would be a simple thing to achieve.
+        </p>
+
+        <p>
+        <h3>Falcor</h3>
+
+        Not unlike GraphQL, but it seems that there is more momentum towards GraphQL.
+
+        </p>
+
+        <p>
+        <h3>GraphQL</h3>
+
+        <p>
+            Similar to Falcor one of the newer kids on the block. While GraphQL makes use of HTTP, it
+            does not follow the REST principles. That gives some benefits.
+            But we feel like it also leads to a loss of simplicity and accessibility, two
+            of the most well regarded aspects of a RESTful API. How well that will play
+            out seems currently open. Given its young age, the ecosystem also has to mature a bit.
+        </p>
+
+        <p>
+            JSON API seems to be a simpler alternative to the use of GraphQL.
+            Its support for relationship inclusions and spare field sets are not to different from
+            some GraphQL concepts (on a very high level). So support for a crnk-adapter-graphql
+            could be a possibility.
+        </p>
+
+        <p>
+        <h3>Elide (JSON API)</h3>
+
+        Elide is another Java implementation of the JSON API specification. It is comparable
+        to the feature set of crnk-jpa. But in general Crnk targets a much wider scope supporting
+        use cases other than JPA.
+
+        </p>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>
+
+
+
+
+
+
