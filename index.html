@@ -451,32 +451,38 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 
 		<h3>News</h3>
 
+		<br>
 		<h4>1 June 2017</h4>
 
 		<p>
 			0.9.20170601160228 is available. Mostly a quality release to catch up with Sonar after the preceding Katharsis setup
-			was broken for a while. All major (or worse) Sonar violations have been addressed. Fairly drastic (conditional)
-			code coverage improvements to around 95%. There is still some more work left to do in a few modules. Further
-			improvements will also follow once all the deprecated legacy code is removed. Goal is to have near
-			complete coverage in the near future.
+			was broken for a while.
 		</p>
 
-		<p>
-			An incubating UIModule that lets you browse the repositories with an Angular web application.
-			Have a look at the documentation and Spring example application.
-		</p>
+		<ul>
+			<li>
+				All major (or worse) Sonar violations have been addressed. Fairly drastic (conditional)
+				code coverage improvements to around 95%. There is still some more work left to do in a few modules. Further
+				improvements will also follow once all the deprecated legacy code is removed. Goal is to have near
+				complete coverage in the near future.
+			</li>
+			<li>
+				An incubating UIModule that lets you browse the repositories with an Angular web application.
+				Have a look at the documentation and Spring example application.
+			</li>
+			<li>
+				Improvements to customize the QueySpecDeserializer to deal with unknown parameters not specified by JSON API
+				(like the <i>group</i> parameter used by Katharsis in the past).
+			</li>
+			<li>
+				Various exceptions no longer inherit CrnkMatchingException. It is mostly an internal thing, but could
+				lead to requests being ignored rather than throwing a proper exception, which in turn made finding such
+				errors rather difficult.
+			</li>
+		</ul>
 
-		<p>
-			Improvements to customize the QueySpecDeserializer to deal with unknown parameters not specified by JSON API
-			(like the <i>group</i> parameter used by Katharsis in the past).
-		</p>
 
-		<p>
-			Various exceptions no longer inherit CrnkMatchingException. It is mostly an internal thing, but could
-			lead to requests being ignored rather than throwing a proper exception, which in turn made finding such
-			errors rather difficult.
-		</p>
-
+		<br>
 		<h4>25 May 2017</h4>
 
 		<p>
@@ -485,14 +491,9 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 		</p>
 
 		<p>
-			Development originally took place in a project named Katharsis. Katharsis
-			had an active user base, but with the original founder leaving and the vast majority of contributions coming
-			from its user base, it was decided to move forward with a new repository under new leadership to maintain
-			the rapid
-			pace of progress and contributions seen in the past. For this reason, this release can already be considered
-			being
-			production stable. There are already many improvements over the original Katharsis code base while still
-			maintaining
+			While it is the first release, it can already be considered being production stable. The maintainers here
+			moved on from the Katharsis.io project. A migration guide for existing Katharsis projects is outlined below.
+			There are already many improvements over the original Katharsis code base while still maintaining
 			backward-compatibility (after some package renaming):
 		</p>
 
