@@ -618,6 +618,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_typescript">8.1. Typescript</a></li>
 </ul>
 </li>
+<li><a href="#_faq">9. FAQ</a></li>
 </ul>
 </div>
 </div>
@@ -1541,6 +1542,20 @@ QuerySpec (like the legacy <code>QueryParams</code>).
 </div>
 <div class="sect3">
 <h4 id="_filtering">4.5.1. Filtering</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The JSON API specification does not a mandate a specific filtering semantic. Instead
+it provides a recommendation that comes by default with Crnk. Depending on the data store
+in use, application may choose to extend or replace that default implementation.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Resource filtering can be achieved by providing parameters which start with <code>filter</code>.
 The format for filters: <code>filter[ResourceType][property|operator]([property|operator])* = "value"</code></p>
@@ -1562,7 +1577,62 @@ The format for filters: <code>filter[ResourceType][property|operator]([property|
 </ul>
 </div>
 <div class="paragraph">
-<p>QuerySpec uses the <code>EQ</code> operator if no operator was provided. Custom operators can be registered
+<p>QuerySpec uses the <code>EQ</code> operator if no operator was provided.</p>
+</div>
+<div class="paragraph">
+<p>Operators are represented by the <code>FilterOperator</code> class. Crnk comes with a set of
+default filters:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EQ</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">equals operator where values match exactly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NEQ</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not equals where values do not match.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIKE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">where the value matches the specified pattern. It is usually
+ not case-sensitive and makes use of <code>%</code> as wildclard, but
+ may different depending on the underlying implementation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lower than the specified value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lower than or equals the specified value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">greater than the specified value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">greater than or equals the specified value</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The application is free to implements its own <code>FilterOperator</code>. Next to the name
+a <code>matches</code> method can be implemented to support in-memory filtering
+with <code>QuerySpec.apply</code>. Otherwise, it is up to the repository implementation
+to handle the various filter operators; usually by translating them
+to datastore-native query expressions. Custom operators can be registered
 with <code>DefaultQuerySpecDeserializer.addSupportedOperator(..)</code>. The default operator can be
 overridden by setting <code>DefaultQuerySpecDeserializer.setDefaultOperator(&#8230;&#8203;)</code>.</p>
 </div>
@@ -3029,10 +3099,31 @@ the class name. But for more advanced use cases those may or can differ.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_faq">9. FAQ</h2>
+<div class="sectionbody">
+<div class="qlist qanda">
+<ol>
+<li>
+<p><em>How to do Cors with Crnk?</em></p>
+<p>In most cases if not all cases Cors should be setup in the underyling
+integration, like with the Servlet-API or as JAX-RS filter and
+not within Crnk itself. This allows to make use of the native
+Cors mechanisms of an integration and to share Cors handling with
+the other parts of the application.</p>
+</li>
+<li>
+<p><em>Is Swagger supported by Crnk?</em></p>
+<p>Have a look at <a href="http://www.crnk.io/related/" class="bare">http://www.crnk.io/related/</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-06-03 13:29:55 +02:00
+Last updated 2017-06-05 11:20:55 +02:00
 </div>
 </div>
 </body>
