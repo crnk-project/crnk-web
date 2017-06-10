@@ -590,9 +590,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jpa_module">6.1. JPA Module</a>
 <ul class="sectlevel3">
 <li><a href="#_jpa_setup">6.1.1. JPA Setup</a></li>
-<li><a href="#_criteria_api_and_querydsl">6.1.2. Criteria API and QueryDSL</a></li>
-<li><a href="#_customizing_the_jpa_repository">6.1.3. Customizing the JPA repository</a></li>
-<li><a href="#_dto_mapping">6.1.4. DTO Mapping</a></li>
+<li><a href="#_pagination_2">6.1.2. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">6.1.3. Criteria API and QueryDSL</a></li>
+<li><a href="#_customizing_the_jpa_repository">6.1.4. Customizing the JPA repository</a></li>
+<li><a href="#_dto_mapping">6.1.5. DTO Mapping</a></li>
 </ul>
 </li>
 <li><a href="#_jsr_303_validation_module">6.2. JSR 303 Validation Module</a></li>
@@ -1652,6 +1653,9 @@ overridden by setting <code>DefaultQuerySpecDeserializer.setDefaultOperator(&#82
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><a id="pagination"></a></p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_pagination">4.5.3. Pagination</h4>
@@ -1670,11 +1674,34 @@ The format for pagination: <code>page[offset|limit] = "value", where value is an
 </ul>
 </div>
 <div class="paragraph">
-<p>Note that JSON API specifies first, previous, next and last links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
-Crnk provides support to compute those pagination links. For this two work, a repository
-has to return meta and links information implementing PagedMetaInformation resp. PagedLinksInformation.
-With PagedMetaInformation the repository can let Crnk know about the total number of (potentially filtered)
-resources. Crnk then fills in PagedLinksInformation with the corresponding links.</p>
+<p>The JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
+The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
+by repositories along with the result data. There is a default implementation named <code>DefaultPagedLinksInformation</code>.</p>
+</div>
+<div class="paragraph">
+<p>There are two ways to let Crnk compute pagination links automatically:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The repository returns meta information implementing <code>PagedMetaInformation</code>. With this interface the total
+number of (potentially filtered) resources is passed to Crnk, which in turn allows the computation of the links.</p>
+</li>
+<li>
+<p>The repository returns meta information implementing <code>HasMoreResourcesMetaInformation</code>. This interface
+only specifies whether further resources are available after the currently requested resources. This
+lets Crnk compute all except the <code>last</code> link.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Note that for both approaches the repository has to return either no links or links information implementing
+<code>PagedLinksInformation</code>. If the links are already set, then the computation will be skipped.</p>
+</div>
+<div class="paragraph">
+<p>The potential benefit of the second over the first approach is that it might be easier to just
+determine whether more resources are available rather than counting all resources.
+This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2303,7 +2330,17 @@ are discussed in the subsequent sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">6.1.2. Criteria API and QueryDSL</h4>
+<h4 id="_pagination_2">6.1.2. Pagination</h4>
+<div class="paragraph">
+<p>The JPA module implements both pagination approaches supported by Crnk.
+Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
+number of resources should be counted or whether just the presence of a subsequent resource
+is checked (by querying <code>limit + 1</code> entities). By default the total resources
+are counted. Have a look at the <a href="#pagination">[pagination]</a> section for more information.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_criteria_api_and_querydsl">6.1.3. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -2313,7 +2350,7 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_jpa_repository">6.1.3. Customizing the JPA repository</h4>
+<h4 id="_customizing_the_jpa_repository">6.1.4. Customizing the JPA repository</h4>
 <div class="paragraph">
 <p>The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
 implementations into the JPA module. The JPA module further provides a more
@@ -2344,7 +2381,7 @@ lightweight filter API to perform various changes to JPA repository requests:</p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dto_mapping">6.1.4. DTO Mapping</h4>
+<h4 id="_dto_mapping">6.1.5. DTO Mapping</h4>
 <div class="paragraph">
 <p>Mapping to DTO objects is supported with <code>JpaModule.registerMappedEntityClass(&#8230;&#8203;)</code>.
 A mapper then can be provided that translates the Entity to a DTO class.
@@ -3022,33 +3059,83 @@ Available soon (ngrx-json-api needs to be released as well)
 </table>
 </div>
 <div class="paragraph">
-<p>The Typescript generator allows the generation of JSON API resources, repositories and related objects such as meta
-information, links information, data objects, list types and enumeration types. Currently the generator targets the
-&lt;a href="https://github.com/abdulhaq-e/ngrx-json-api"&gt;ngrx-json-api&lt;/a&gt; library. Support for other libraries/formats
-would be fairly straightforward to add, contributions welcomed. A generated resource looks like:</p>
+<p>The Typescript generator allows the generation of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>interfaces for resources and related objects (like nested objects and enumeration types).</p>
+</li>
+<li>
+<p>interfaces for result documents (i.e. resources and any linking and meta information).</p>
+</li>
+<li>
+<p>interfaces for links information.</p>
+</li>
+<li>
+<p>interfaces for meta information.</p>
+</li>
+<li>
+<p>method to create an empty object instance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Currently the generator targets the &lt;a href="https://github.com/abdulhaq-e/ngrx-json-api"&gt;ngrx-json-api&lt;/a&gt; library.
+Support for other libraries/formats would be straightforward to add, contributions welcomed. A generated resource looks
+like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>import {Task} from './task'
-import {ResourceRelationship, StoreResource, TypedManyResourceRelationship, TypedOneResourceRelationship} from 'ngrx-json-api'
+import {DefaultPagedLinksInformation} from '@crnk/core/'
+import {ManyQueryResult, OneQueryResult, ResourceRelationship, StoreResource, TypedManyResourceRelationship, TypedOneResourceRelationship} from 'ngrx-json-api/src/interfaces'
 
-export module Schedule{
-	export interface Relationships{
+export module Schedule {
+	export interface Relationships {
 		[key: string]: ResourceRelationship;
 		task?: TypedOneResourceRelationship&lt;Task&gt;;
 		lazyTask?: TypedOneResourceRelationship&lt;Task&gt;;
 		tasks?: TypedManyResourceRelationship&lt;Task&gt;;
 		tasksList?: TypedManyResourceRelationship&lt;Task&gt;;
 	}
-	export interface Attributes{
+	export interface Attributes {
 		name?: string;
 		delayed?: boolean;
 	}
 }
-export interface Schedule extends StoreResource{
+export interface Schedule extends StoreResource {
 	relationships?: Schedule.Relationships;
 	attributes?: Schedule.Attributes;
-}</code></pre>
+}
+export interface ScheduleResult extends OneQueryResult {
+	data?: Schedule;
+}
+export module ScheduleListResult {
+	export interface ScheduleListLinks extends DefaultPagedLinksInformation {
+	}
+	export interface ScheduleListMeta {
+	}
+}
+export interface ScheduleListResult extends ManyQueryResult {
+	data?: Array&lt;Schedule&gt;;
+	links?: ScheduleListResult.ScheduleListLinks;
+	meta?: ScheduleListResult.ScheduleListMeta;
+}
+export let createEmptySchedule = function(id: string): Schedule {
+	return {
+		id: id,
+		type: 'schedules',
+		attributes: {
+		},
+		relationships: {
+			task: {data: null},
+			lazyTask: {data: null},
+			tasks: {data: []},
+			tasksList: {data: []},
+		},
+	};
+};</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3066,35 +3153,65 @@ So far supported are a setup of JUnit with Deltaspike for JEE application. Other
 <pre class="CodeRay highlight"><code>buildscript {
 	dependencies {
 		classpath "io.crnk:crnk-gen-typescript:${version}"
+		classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
 	}
 }
 
-apply plugin: 'io.crnk.typescriptGen'
+node {
+	version = '6.9.1'
+	download = true
+	distBaseUrl = "${ADN_NODEJS_MIRROR_BASE_URL}/dist"
+}
 
-typescriptGen.npmPackageName = '@crnk/typescript-demo'</code></pre>
+apply plugin: 'crnk-gen-typescript'
+typescriptGen.npmPackageVersion = '0.0.1'
+typescriptGen.npmPackageName = '@adnovum/moap-movie-management-api'
+typescriptGen.npmPackageMapping.put('my.company.app.model', '@company/app-model')
+typescriptGen.npmDependencies.put('ngrx-json-api', '&gt;=1.2.0');</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Two configurations are necessary:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>npmPackageName</code> to use for publishing.</p>
+<p>the <code>moowork</code> plugin is used to to gain a <code>node</code> setup.</p>
 </li>
 <li>
-<p>a mapping of meta (package) ids to npm packages. Only resources are generated whose package matches the chosen <code>npmPackageName</code>.
+<p>by default the package version matches the npm version.</p>
+</li>
+<li>
+<p><code>npmPackageName</code> is necessary to use for publishing.</p>
+</li>
+<li>
+<p>a mapping of Java package name (resp. <code>MetaElement.id</code>) to npm packages has to be provided.
+Only resources are generated whose package matches the chosen <code>npmPackageName</code>.
 All other resources are imported as external NPM dependency.</p>
+</li>
+<li>
+<p>crnk-meta is used to gather a meta model of the underlying resources (or a any other type of object like JPA entities).
+Important to know is that every object is assigned a string-based meta id. For typical, simpler use cases this matches
+the package resp. class name. But for more advanced use cases those may differ.</p>
+</li>
+<li>
+<p>two new tasks are available: <code>generateTypescript</code> and <code>compileTypescript</code>. The former is added as dependency
+to <code>assemble</code>. We choose not to add a dependency from <code>compileTypescript</code> to <code>assemble</code> has a backend-only
+develop may not need to run with every <code>assemble</code> run. Typically <code>compileTypescript</code> is either hooked
+into the publishing or added as dependency on a frontend project contained within the same Gradle project.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>crnk-meta is used to get a meta model of the underlying resources (or a any other type of object like JPA entities).
-Important to know is that every object is assigned a string-based meta id. For typical, simpler use cases this matches
-the class name. But for more advanced use cases those may or can differ.</p>
-</div>
-<div class="paragraph">
-<p>TODO show publishing setup into NPM repository</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+the generator plugin is not yet included in any example applications. It is not possible to
+include a plugin from within the same project. At some point an external example application will be
+setup to showcase the use of the plugin.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -3106,7 +3223,7 @@ the class name. But for more advanced use cases those may or can differ.</p>
 <ol>
 <li>
 <p><em>How to do Cors with Crnk?</em></p>
-<p>In most cases if not all cases Cors should be setup in the underyling
+<p>In most (if not all) cases Cors should be setup in the underlying
 integration, like with the Servlet-API or as JAX-RS filter and
 not within Crnk itself. This allows to make use of the native
 Cors mechanisms of an integration and to share Cors handling with
