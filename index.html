@@ -14,6 +14,24 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
 
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-101263796-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <style>
@@ -131,7 +149,8 @@
 
 <div class="section" style="padding-top:0px;padding-bottom: 0px">
     <div class="section-content" style="background-color: #FFFFC8">
-        10 June 2017: version <a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">1.0.20170610072810</a>
+        10 June 2017: version <a
+            href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">1.0.20170610072810</a>
         is available. More information <a href="#news">below</a> and in the <a href="/documentation">documentation</a>.
     </div>
 </div>
@@ -638,7 +657,7 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
         <p>
             While it is the first release, it can already be considered being production stable. The maintainers here
             moved forward from a private code base and the Katharsis.io project. A migration guide for existing
-            Katharsis projects is outlined below. There are  many improvements over the  Katharsis code base
+            Katharsis projects is outlined below. There are many improvements over the Katharsis code base
             while still maintaining backward-compatibility (after some package renaming):
         </p>
 
