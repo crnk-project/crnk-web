@@ -6,26 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.4">
 <title>Crnk Documentation</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+
 
 	<script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-101263796-1', 'auto');
-        ga('send', 'pageview');
+		ga('create', 'UA-101263796-1', 'auto');
+		ga('send', 'pageview');
 
 	</script>
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove comment around @import statement below when using as a custom stylesheet */
@@ -567,6 +568,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapirelation">3.3. JsonApiRelation</a></li>
 <li><a href="#_jsonapimetainformation">3.4. JsonApiMetaInformation</a></li>
 <li><a href="#_jsonapilinksinformation">3.5. JsonApiLinksInformation</a></li>
+<li><a href="#_jackson_annotations">3.6. Jackson annotations</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">4. Repositories</a>
@@ -1286,6 +1288,44 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 		}
 	}</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><a id="jackson_annotations"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jackson_annotations">3.6. Jackson annotations</h3>
+<div class="paragraph">
+<p>Crnk comes with (partial) support for Jackson annotations. Currently supported are:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonIgnore</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Excludes a given attribute from serialization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonProperty.value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renames an attribute during serialization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonProperty.access</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an object can be read and/or written. <code>WRITE_ONLY</code> is not yet supported.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Support for more annotations will be added in the future. PRs welcomed.</p>
 </div>
 </div>
 </div>
@@ -2254,6 +2294,9 @@ join to related entities. For example, <code>sort=-project.name,project.id</code
 <li>
 <p>support for entity inheritance by allowing sorting, filtering and inclusions
 to refer to attributes on subtypes.</p>
+</li>
+<li>
+<p>support for Jackson annotations to customize entity attributes on the JSON API layer, see <a href="#jackson_annotations">here</a>.</p>
 </li>
 <li>
 <p>DTO mapping support to map entities to DTOs before sending them to clients.</p>
@@ -3259,7 +3302,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-06-05 11:20:55 +02:00
+Last updated 2017-06-07 17:50:40 MESZ
 </div>
 </div>
 </body>
