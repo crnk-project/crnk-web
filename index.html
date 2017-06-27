@@ -149,8 +149,8 @@
 
 <div class="section" style="padding-top:0px;padding-bottom: 0px">
 	<div class="section-content" style="background-color: #FFFFC8">
-		21 June 2017: version <a
-			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">1.0.20170620140608</a>
+		26 June 2017: version <a
+			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">1.0.20170626133151</a>
 		is available. More information <a href="#news">below</a> and in the <a href="/documentation">documentation</a>.
 	</div>
 </div>
@@ -588,6 +588,14 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 
 
 		<br>
+		<h4>26 June 2017</h4>
+		<p>
+			1.0.20170626133151 is released. It patches an issue in the Typescript generator whereas it can fail when it is used
+			together with the Gradle deamon and Deltaspike.
+		</p>
+
+
+		<br>
 		<h4>21 June 2017</h4>
 		<p>
 			1.0.20170620140608 is available as minor patch/feature release:
@@ -705,75 +713,12 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 
 		<p>
 			While it is the first release, it can already be considered being production stable. The maintainers here
-			moved forward from a private code base and the Katharsis.io project. A migration guide for existing
-			Katharsis projects is outlined below. There are many improvements over the Katharsis code base
-			while still maintaining backward-compatibility (after some package renaming):
+			moved forward from a mostly private code base that partially was also contributed to katharsis.io.
+			As such there is also an easy migration path as Crnk still maintains support for the same set of main
+			annotations and interfaces as Katharsis does. For more information see the migration
+			guide below.
 		</p>
 
-		<ul>
-			<li>
-				Vastly improved <b>documentation based on Asciidoctor</b>.
-			</li>
-			<li>
-				A new (incurbation) crnk-operations module implementing <a href="http://jsonpatch.com/">JSON
-				Patch</a> to allow atomic insertions, updates and deletions of multiple resources. For example, this can
-				ensure that all modifications take place within the same transaction when working with a database.
-				In the past, applications had to merge multiple data objects into a single resource to gain such a
-				functionality, which may or may still be a perfectly valid approach, but many times it involves quite a
-				bit of
-				extra implementation work.
-			</li>
-			<li>The <b>meta model gained various improvements</b> and is now considered being production stable. It now
-				provides additional information like whether an attribute is
-				insertable, updateable, filterable, sortable, nullable, cascaded or a blob.
-			</li>
-			<!--
-			<li>
-				A new <b>typescript generator</b> was added as incurbation module.
-			</li>
-			-->
-			<li>
-				A <b> shared code base for the integrations</b> (Spring, JAX-RS, Servlet, etc) for
-				more consistent common behavior and stability across the different frameworks.
-			</li>
-			<li>
-				A new incurbating <b>crnk-home module</b> was added. It provides a listing of all available repositories
-				when
-				accessing the parent directory above all repositories. The format is based on
-				<a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>. Please provide
-				feedback!
-			</li>
-			<li>
-				A new HttpRequestProcessor was added to the Module API to intercept HTTP requests on a lower-layer
-				independent
-				of the used integration (Servlet, JAX-RS, etc.). This provides the basis for the implementation
-				of crnk-operations and crnk-home.
-			</li>
-			<li>
-				Compared to katharsis-core, crnk-core was refactored to more clearly separate the public API from the
-				lower-level and internal APIs. Many classes that users typically will not make use of now reside within
-				the
-				io.crnk.core.engine package. As the name implies it hosts the &quot;engine&quot; of crnk that implements
-				the
-				actual
-				JSON API logic and processing. The Module API provides access to that <b>Engine API</b> to extend Crnk
-				in
-				virtually
-				every area.
-			</li>
-			<li>
-				<b>Automatic conversion from QueryParams to QuerySpec</b> and back to ease the transition to the new
-				query
-				API introduced with Katharsis 3.0.
-			</li>
-			<li>
-				Build system was moved to <b>Gradle</b> to gain faster builds, release automation and a proper frontend
-				development
-				setup used by crnk-ui.
-			</li>
-			<li>
-				EditorConfig setup to have a unique set of code formatting rules independent of the IDE in use.
-			</li>
 		</ul>
 
 	</div>
@@ -818,9 +763,10 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 <div class="section">
 	<div class="section-content">
 
-		<h3>Katharsis Migration</h3>
+		<h3>Katharsis Users</h3>
 
-		Current Katharsis users can easily migrate to Crnk. If questions come up, do not hestitate to ask in the
+		Crnk has support for the same set of annotations as Katharsis 3.0. As such there is a simple
+		migration path from Katharsis to Crnk. If questions come up, do not hestitate to ask in the
 		forum.
 
 		<ul>
