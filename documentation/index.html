@@ -6,27 +6,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.4">
 <title>Crnk Documentation</title>
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 
 	<script>
-		(function (i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r;
-			i[r] = i[r] || function () {
-					(i[r].q = i[r].q || []).push(arguments)
-				}, i[r].l = 1 * new Date();
-			a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0];
-			a.async = 1;
-			a.src = g;
-			m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-		ga('create', 'UA-101263796-1', 'auto');
-		ga('send', 'pageview');
+        ga('create', 'UA-101263796-1', 'auto');
+        ga('send', 'pageview');
 
 	</script>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove comment around @import statement below when using as a custom stylesheet */
@@ -633,6 +632,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_implement_a_custom_discovery_mechanism">7.3. Implement a custom discovery mechanism</a></li>
 <li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">7.4. Let a module hook into the Crnk HTTP client implementation</a></li>
 <li><a href="#_implement_a_custom_integration">7.5. Implement a custom integration</a></li>
+<li><a href="#_create_repositories_at_runtime">7.6. Create repositories at runtime</a>
+<ul class="sectlevel3">
+<li><a href="#_implementing_repositories_dynamically_at_runtime">7.6.1. Implementing repositories dynamically at runtime</a></li>
+<li><a href="#_registering_repositories_at_runtime">7.6.2. Registering repositories at runtime</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_generation">8. Generation</a>
@@ -1111,6 +1116,34 @@ An example of a prefix <code>/api/v1</code>.</p>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p><code>crnk.config.include.paging.enabled</code> enables pagination for inclusions. Disabled by default. Be aware this may
+inadvertently enable pagination for included resources when doing paging on root resources if data structures
+are cyclic. See <code>CrnkProperties.INCLUDE_PAGING_ENABLED</code> fore mor information.</p>
+</li>
+<li>
+<p><code>crnk.config.include.behavior</code> with possible values <code>BY_TYPE</code> (default) and <code>BY_ROOT_PATH</code>.
+<code>BY_ROOT_PATH</code> specifies that an inclusion can only requested as path from the root
+resource such as <code>include[tasks]=project.schedule</code>. While <code>BY_TYPE</code> can further request
+inclusions by type directly such as <code>include[tasks]=project&amp;include[projects]=schedule</code>.
+For simple object structures they are semantically the same, but they do differ
+for more complex ones, like when multiple attributes lead
+to the same type or for cycle structures. In the later case BY_TYPE inclusions
+become recursive, while BY_ROOT_PATH do not. Note that the use of BY_TYPE
+outmatches BY_ROOT_PATH, so BY_TYPE includes everything BY_ROOT_PATH does
+and potentially more. For more information see <code>CrnkProperties.INCLUDE_BEHAVIOR</code>.</p>
+</li>
+<li>
+<p><code>crnk.config.resource.immutableWrite</code> with values IGNORE (default) or FAIL.
+Determines how to deal with field that cannot be changed upon a PATCH or POST
+request. For more information see <code>CrnkProperties.RESOURCE_FIELD_IMMUTABLE_WRITE_BEHAVIOR</code>.</p>
+</li>
+<li>
+<p><code>crnk.config.resource.response.return_404</code> with values true and false (default).
+Enforces a 404 response should a repository return a null value. This is common practice, but
+not strictly mandated by the JSON API specification. In general it is recommended for
+repository to throw <code>ResourceNotFoundException</code>.</p>
 </li>
 </ul>
 </div>
@@ -3051,7 +3084,7 @@ various Crnk integrations, like the CrnkFeature. Modules have access to that
 <h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">7.4. Let a module hook into the Crnk HTTP client implementation</h3>
 <div class="paragraph">
 <p>Modules for the Crnk client can additionally implement <code>HttpAdapterAware</code>. It gives
-the module access to the underlying HTTP client implementation and allows abitrary
+the module access to the underlying HTTP client implementation and allows arbitrary
 customizations of it. Have a look at the Crnk client documentation for more information.</p>
 </div>
 </div>
@@ -3082,6 +3115,160 @@ necessary is already be provided by <code>crnk-core</code>. The steps include:</
 and <code>PropertiesProvider</code> to interface with that particular systems.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_repositories_at_runtime">7.6. Create repositories at runtime</h3>
+<div class="paragraph">
+<p>Repositories are usually created at compile-time, either by making use of the various annotations or a module
+such as the ´JpaModule´. However, the module API also allows the creation of repositories at runtime.
+There are two complementary mechanisms in place to achieve this and outlined in the next two sections.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+this feature is in incubation, more refinements are expected in upcoming releases.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_implementing_repositories_dynamically_at_runtime">7.6.1. Implementing repositories dynamically at runtime</h4>
+<div class="paragraph">
+<p>There are different possibilities to implement a repository at runtime:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a matching resource class at runtime with a library like <a href="http://bytebuddy.net/#/" class="bare">http://bytebuddy.net/#/</a> to follow the same
+pattern as for any compile-time repository.</p>
+</li>
+<li>
+<p>Make use of the <code>Resource</code> class. It is the generic JSON API resource presentation within the Crnk engine.</p>
+</li>
+<li>
+<p>Make use of an arbitrary dynamic object like a <code>java.util.Map</code> and provide a <code>ResourceFieldAccessor</code> for
+each <code>ResourceField</code> to specify how to read and write attributes (see below for <code>ResourceField</code> examples).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the following example we make use of the second option:</p>
+</div>
+<div class="listingblock">
+<div class="title">DynamicResourceRepository.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>public class DynamicResourceRepository extends ResourceRepositoryBase&lt;Resource, String&gt; implements UntypedResourceRepository&lt;Resource, String&gt; {
+
+	private static Map&lt;String, Resource&gt; RESOURCES = new HashMap&lt;&gt;();
+
+	public DynamicResourceRepository() {
+		super(Resource.class);
+	}
+
+	@Override
+	public String getResourceType() {
+		return "dynamic";
+	}
+
+	@Override
+	public Class&lt;Resource&gt; getResourceClass() {
+		return Resource.class;
+	}
+
+	@Override
+	public DefaultResourceList&lt;Resource&gt; findAll(QuerySpec querySpec) {
+		return querySpec.apply(RESOURCES.values());
+	}
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This new repository can be registered to Crnk with a module:</p>
+</div>
+<div class="listingblock">
+<div class="title">DynamicModule</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>public class DynamicModule implements Module {
+
+	@Override
+	public String getModuleName() {
+		return "dynamic";
+	}
+
+	@Override
+	public void setupModule(ModuleContext context) {
+		RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
+
+		RegistryEntryBuilder.ResourceRepository resourceRepository = builder.resourceRepository();
+		resourceRepository.instance(new DynamicResourceRepository());
+
+		RegistryEntryBuilder.RelationshipRepository relationshipRepository = builder.relationshipRepository("dynamic");
+		relationshipRepository.instance(new DynamicRelationshipRepository());
+
+		InformationBuilder.Resource resource = builder.resource();
+		resource.resourceType("dynamic");
+		resource.resourceClass(Resource.class);
+		resource.addField("id", ResourceFieldType.ID, String.class);
+		resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
+		resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType("dynamic");
+		resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType("dynamic");
+
+		context.addRegistryEntry(builder.build());
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A new <code>RegistryEntry</code> is created and registered with Crnk. It provides information about:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the resource and all its fields.</p>
+</li>
+<li>
+<p>the repositories and instances thereof.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Have a look at the complete example
+in <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-client/src/test/java/io/crnk/client/dynamic"><code>crnk-client</code></a>.
+There is a further example test case and relationship repository.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_registering_repositories_at_runtime">7.6.2. Registering repositories at runtime</h4>
+<div class="paragraph">
+<p>There are two possibilities to register a new repository at runtime:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>by using a <code>Module</code> and invoking <code>ModuleContext.addRegistryEntry</code> as done in the previous section.</p>
+</li>
+<li>
+<p>by implementing a <code>ResourceRegistryPart</code> and invoking <code>ModuleContext.addResourceRegistry</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The first is well suited if there is a predefined set of repositories that need to be registered
+(like a fixed set of JPA entities in the <code>JpaModule</code>). The later is suited for fully dynamic use cases where
+the set of repositories can change over time (like tables in a database or tasks in an activiti instance). In this
+case the repositories no longer need registration. Instead the custom <code>ResourceRegistryPart</code> implementation always
+provides an up-to-date set of repositories that is used by the Crnk engine.</p>
+</div>
+<div class="paragraph">
+<p>An example can be found at
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-core/src/test/java/io/crnk/core/engine/registry/CustomResourceRegistryTest.java">CustomResourceRegistryTest.java</a></p>
+</div>
 </div>
 </div>
 </div>
@@ -3302,7 +3489,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-06-07 17:50:40 MESZ
+Last updated 2017-06-05 11:20:55 +02:00
 </div>
 </div>
 </body>
