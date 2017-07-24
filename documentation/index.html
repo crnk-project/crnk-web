@@ -7,25 +7,6 @@
 <meta name="generator" content="Asciidoctor 1.5.4">
 <title>Crnk Documentation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
-
-	<script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-101263796-1', 'auto');
-        ga('send', 'pageview');
-
-	</script>
-
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove comment around @import statement below when using as a custom stylesheet */
@@ -541,7 +522,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_crnkfeature">2.2.1. CrnkFeature</a></li>
 <li><a href="#_exception_mapping_for_jax_rs_services">2.2.2. Exception mapping for JAX-RS services</a></li>
-<li><a href="#_return_resources_with_jax_rs_services">2.2.3. Return resources with JAX-RS services</a></li>
+<li><a href="#_use_json_api_format_with_jax_rs_services">2.2.3. Use JSON API format with JAX-RS services</a></li>
 <li><a href="#_jax_rs_interoperability">2.2.4. JAX-RS interoperability</a></li>
 </ul>
 </li>
@@ -855,14 +836,70 @@ use of the JSON API resp. Crnk exception handling in JAX-RS services, one can ad
 <strong>JsonapiExceptionMapperBridge</strong> to the JAX-RS application. The constructor of <code>JsonapiExceptionMapperBridge</code>
 takes <code>CrnkFeature</code> as parameter.</p>
 </div>
+<div class="paragraph">
+<p>For an example have a look at the next section which make use of it together with <code>JsonApiResponseFilter</code>.</p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_return_resources_with_jax_rs_services">2.2.3. Return resources with JAX-RS services</h4>
+<h4 id="_use_json_api_format_with_jax_rs_services">2.2.3. Use JSON API format with JAX-RS services</h4>
 <div class="paragraph">
 <p>Similar to <code>JsonapiExceptionMapperBridge</code> in the previous section, it is possible for JAX-RS services to return
-resources in JSON API format. In order to properly serialize such responses, add
-<strong>JsonApiResponseFilter</strong> to your JAX-RS application. The constructor of <code>JsonApiResponseFilter</code>
-takes <code>CrnkFeature</code> as parameter.</p>
+resources in JSON API format with <strong>JsonApiResponseFilter</strong>. <code>JsonApiResponseFilter</code> wraps primitive
+responses with a <code>data</code> object; resource objects with <code>data</code> and <code>included</code> objects.
+The constructor of <code>JsonApiResponseFilter</code> takes <code>CrnkFeature</code> as parameter.</p>
+</div>
+<div class="paragraph">
+<p>To determine which JAX-RS services should be wrapped, <code>JsonApiResponseFilter</code> checks whether the
+<code>@Produce</code> annotation delivers JSON API. The produce
+annotation can be added, for example, to the class:</p>
+</div>
+<div class="listingblock">
+<div class="title">ScheduleRepository.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@Path("schedules")
+@Produces(JsonApiMediaType.APPLICATION_JSON_API)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the JAX-RS application setup looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">JsonApiResponseFilterTestBase.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	@ApplicationPath("/")
+	class TestApplication extends ResourceConfig {
+
+		TestApplication(JsonApiResponseFilterTestBase instance, boolean enableNullResponse) {
+			instance.setEnableNullResponse(enableNullResponse);
+
+			property(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "io.crnk.rs.resource");
+			property(CrnkProperties.NULL_DATA_RESPONSE_ENABLED, Boolean.toString(enableNullResponse));
+
+			CrnkFeature feature = new CrnkFeature();
+			feature.addModule(new TestModule());
+
+			register(new JsonApiResponseFilter(feature));
+			register(new JsonapiExceptionMapperBridge(feature));
+			register(new JacksonFeature());
+
+			register(feature);
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
+as JSON API responses.</p>
+</li>
+<li>
+<p>Make use of proper service discovery instead of <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> in real applications.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
@@ -1978,7 +2015,7 @@ a corresponding exception mapper which defines mapping to a proper JSON API erro
 <div class="ulist">
 <ul>
 <li>
-<p>implement JsonApiExceptionMapper interface</p>
+<p>implement ExceptionMapper interface</p>
 </li>
 <li>
 <p>available trough the used discovery mechanism or added trough a module.</p>
@@ -1989,24 +2026,51 @@ a corresponding exception mapper which defines mapping to a proper JSON API erro
 <p>Sample exception mapper:</p>
 </div>
 <div class="listingblock">
+<div class="title">TestExceptionMapper.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>  public class SampleExceptionMapper implements JsonApiExceptionMapper&lt;SampleException&gt; {
-    @Override
-    public ErrorResponse toErrorResponse(SampleException exception) {
-      return ErrorResponse.builder()
-        .setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500)
-        .setSingleErrorData(ErrorData.builder()
-          .setTitle(exception.getTitle())
-          .setId(exception.getId())
-          .build())
-        .build();
-    }
-  }</code></pre>
+<pre class="CodeRay highlight"><code>package io.crnk.test.mock;
+
+import java.util.List;
+
+import io.crnk.core.engine.document.ErrorData;
+import io.crnk.core.engine.error.ErrorResponse;
+import io.crnk.core.engine.error.ExceptionMapper;
+import io.crnk.core.repository.response.JsonApiResponse;
+
+public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt; {
+
+	public static final int HTTP_ERROR_CODE = 499;
+
+	@Override
+	public ErrorResponse toErrorResponse(TestException cve) {
+		ErrorData error = ErrorData.builder().setDetail(cve.getMessage()).build();
+		return ErrorResponse.builder().setStatus(HTTP_ERROR_CODE).setSingleErrorData(error).build();
+	}
+
+	@Override
+	public TestException fromErrorResponse(ErrorResponse errorResponse) {
+		JsonApiResponse response = errorResponse.getResponse();
+		List&lt;ErrorData&gt; errors = (List&lt;ErrorData&gt;) response.getEntity();
+		StringBuilder message = new StringBuilder();
+		for (ErrorData error : errors) {
+			String title = error.getDetail();
+			message.append(title);
+		}
+		return new TestException(message.toString());
+	}
+
+	@Override
+	public boolean accepts(ErrorResponse errorResponse) {
+		return errorResponse.getHttpStatus() == HTTP_ERROR_CODE;
+	}
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>An exception should be mapped to an ErrorResponse object.
-It consists of an HTTP status and ErrorData (which is consistent with JSON API error structure).</p>
+<p>On the server-side an exception should be mapped to an <code>ErrorResponse</code> object
+with <code>toErrorResponse</code>. It consists of an HTTP status and <code>ErrorData</code> (which is consistent with JSON API error structure).
+On the client-side an <code>ExceptionMapper</code> returning <code>true</code> upon <code>accept(&#8230;&#8203;)</code> is used to map an
+<code>ErrorResponse</code> back to an exception with <code>fromErrorResponse</code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that the exception mapper is reponsible for providing the logging of exceptions with the
@@ -2200,7 +2264,8 @@ URL as parameter.</p>
 <div class="listingblock">
 <div class="title">ScheduleRepository.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>@Path("schedules")</code></pre>
+<pre class="CodeRay highlight"><code>@Path("schedules")
+@Produces(JsonApiMediaType.APPLICATION_JSON_API)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2211,7 +2276,16 @@ URL as parameter.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>	@GET
 	@Path("repositoryAction")
+	@Produces(MediaType.TEXT_HTML)
 	String repositoryAction(@QueryParam(value = "msg") String msg);
+
+	@GET
+	@Path("repositoryActionJsonApi")
+	String repositoryActionJsonApi(@QueryParam(value = "msg") String msg);
+
+	@GET
+	@Path("repositoryActionWithJsonApiResponse")
+	String repositoryActionWithJsonApiResponse(@QueryParam(value = "msg") String msg);
 
 	@GET
 	@Path("repositoryActionWithResourceResult")
@@ -2220,6 +2294,15 @@ URL as parameter.</p>
 	@GET
 	@Path("repositoryActionWithException")
 	Schedule repositoryActionWithException(@QueryParam(value = "msg") String msg);
+
+	@GET
+	@Path("repositoryActionWithNullResponse")
+	@Produces(MediaType.TEXT_HTML)
+	String repositoryActionWithNullResponse();
+
+	@GET
+	@Path("repositoryActionWithNullResponseJsonApi")
+	String repositoryActionWithNullResponseJsonApi();
 
 	@GET
 	@Path("{id}/resourceAction")
@@ -3413,10 +3496,22 @@ node {
 }
 
 apply plugin: 'crnk-gen-typescript'
-typescriptGen.npmPackageVersion = '0.0.1'
-typescriptGen.npmPackageName = '@adnovum/moap-movie-management-api'
-typescriptGen.npmPackageMapping.put('my.company.app.model', '@company/app-model')
-typescriptGen.npmDependencies.put('ngrx-json-api', '&gt;=1.2.0');</code></pre>
+
+typescriptGen{
+	npm {
+		packageVersion = '0.0.1'
+		packageName = '@adnovum/moap-movie-management-api'
+		description = 'movie management API to access backend'
+		gitRepository = 'https://.../bitbucket/scm/moap/moap-movie.git'
+		license = 'MIT'
+
+		includes = ['ch.adnovum.moap.movie.somePackage']
+		excludes = ['ch.adnovum.moap.movie.somePackage.otherPackage']
+
+		packageMapping['ch.adnovum.moap.movie.management'] = '@adnovum/moap-movie-management-api'
+		peerDependencies['ngrx-json-api'] = '&gt;=1.2.0'
+	}
+}</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -3425,15 +3520,18 @@ typescriptGen.npmDependencies.put('ngrx-json-api', '&gt;=1.2.0');</code></pre>
 <p>the <code>moowork</code> plugin is used to to gain a <code>node</code> setup.</p>
 </li>
 <li>
+<p><code>packageName</code>, <code>description</code>, <code>license</code>, <code>gitRepository</code> are added to the generated <code>package.json</code>.</p>
+</li>
+<li>
 <p>by default the package version matches the npm version.</p>
 </li>
 <li>
-<p><code>npmPackageName</code> is necessary to use for publishing.</p>
+<p>a mapping of Java package name (resp. <code>MetaElement.id</code>) to npm packages must be specified.
+Only resources are generated whose package matches the chosen <code>npm.packageName</code>.
+All other resources are imported as external NPM dependency.</p>
 </li>
 <li>
-<p>a mapping of Java package name (resp. <code>MetaElement.id</code>) to npm packages has to be provided.
-Only resources are generated whose package matches the chosen <code>npmPackageName</code>.
-All other resources are imported as external NPM dependency.</p>
+<p><code>includes</code> and <code>excludes</code> allow to include and exclude packages from generation.</p>
 </li>
 <li>
 <p>crnk-meta is used to gather a meta model of the underlying resources (or a any other type of object like JPA entities).
@@ -3441,9 +3539,10 @@ Important to know is that every object is assigned a string-based meta id. For t
 the package resp. class name. But for more advanced use cases those may differ.</p>
 </li>
 <li>
-<p>two new tasks are available: <code>generateTypescript</code> and <code>compileTypescript</code>. The former is added as dependency
-to <code>assemble</code>. We choose not to add a dependency from <code>compileTypescript</code> to <code>assemble</code> has a backend-only
-develop may not need to run with every <code>assemble</code> run. Typically <code>compileTypescript</code> is either hooked
+<p>applying <code>crnk-gen-typescript</code> results in a new <code>assembleTypescript</code> task. It and its dependencies
+generate, compile and package the Typescript sources. We chose not to add a dependency from <code>assembleTypescript</code> to
+<code>assemble</code> has a backend-only
+develop may not need to run with every <code>assemble</code> run. Typically <code>assembleTypescript</code> is either hooked
 into the publishing or added as dependency on a frontend project contained within the same Gradle project.</p>
 </li>
 </ul>
@@ -3489,7 +3588,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-06-05 11:20:55 +02:00
+Last updated 2017-06-07 17:50:40 MESZ
 </div>
 </div>
 </body>
