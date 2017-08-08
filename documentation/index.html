@@ -735,6 +735,9 @@ repositories in other fashions like it has been done in <code>crnk-jpa</code>.</
 <div class="paragraph">
 <p>The subsequent chapters explain how to setup and use Crnk.</p>
 </div>
+<div class="paragraph">
+<p><a id="setup"></a></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1946,20 +1949,42 @@ Sets the page limit if none is specified by the request.</p>
 Sets the maximum page limit allowed to be requested.</p>
 </li>
 <li>
-<p><code>setIgnoreUnknownAttributes(boolean)</code>
-DefaultQuerySpecDeserializer validates all passed parameters against the domain model and fails
+<p><code>setAllowUnknownAttributes(boolean)</code>
+<code>DefaultQuerySpecDeserializer</code> validates all passed parameters against the domain model and fails
 if one of the attributes is unknown. This flag allows to disable that check in case the should be necessary.</p>
+</li>
+<li>
+<p><code>setIgnoreParseExceptions(boolean)</code>
+<code>DefaultQuerySpecDeserializer</code> attempts to convert all filter parameters to their proper type based on the
+attribute type to be filtered. In some scenarios like dates this behavior may be undesirable as applications
+introduce expressions like 'now`. Enabling this flag will let <code>DefaultQuerySpecDeserializer</code> ignore
+such values and provide them as <code>String</code> within <code>FilterSpec</code>.</p>
+</li>
+<li>
+<p><code>setEnforceDotPathSeparator(boolean)</code>
+DefaultQuerySpecDeserializer by default supports by default two URL conventions:
+ <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project][name]=myProject</code> and
+ <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project.name]=myProject</code>. The later is recommended. The former
+ still supported for historic reasons. By default the flag is still disabled, but it is recommended
+ to be enabled and will become the default at some point in the future. Note that without the enforcement,
+ there is danger of introducing ambiguity with resources and attributes are named equally.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Note that appropriate page limits are vital to protect against denial-of-service attacks when working
-with large data sets!</p>
+with large data sets! Such attacks may not be of malicious nature, but normals users using a browser
+and omitting to specify pagination parameters.</p>
 </div>
 <div class="paragraph">
 <p><code>DefaultQuerySpecDeserializer</code> implements <code>QuerySpecDeserializer</code> and you may also provide your own
 implementation to further customize its behavior. The various integrations like <code>CrnkFeature</code> will
 allow to replace the implementation.</p>
+</div>
+<div class="paragraph">
+<p>One can get access to <code>DefaultQuerySpecDeserializer</code> trough the various integrations, e.g.
+<code>CrnkFeature.getQuerySpecDeserializer()</code>. For more information have a look at the
+<a href="#setup">setup chapter</a>.</p>
 </div>
 </div>
 </div>
