@@ -92,7 +92,7 @@
 <div style="height:55px; padding:10px; background:#113844;color:#F8F8F8">
 
 	<div style="float:left; font-size: 200%">
-		<a href="http://www.crnk.io" style="color:WHITE;decoration:none">Crnk: JSON API framework</a>
+		<a href="http://www.crnk.io" style="color:WHITE;decoration:none">Crnk: JSON API library</a>
 	</div>
 
 	<div style="float:right;vertical-align: middle;padding-left:10px;padding-top:3px">
@@ -130,6 +130,8 @@
 	</div>
 
 	<div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
+		<a href="/news/" style="color:WHITE;decoration:none">News</a>
+		&nbsp;&nbsp;
 		<a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
 		&nbsp;&nbsp;
 		<a href="/related/" style="color:WHITE;decoration:none">Related Projects</a>
@@ -155,9 +157,11 @@
 
 <div class="section" style="padding-top:0px;padding-bottom: 0px">
 	<div class="section-content" style="background-color: #FFFFC8">
-		24 July 2017: version <a
-			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">1.0.20170721162741</a>
-		is available. More information <a href="#news">below</a> and in the <a href="/documentation">documentation</a>.
+		24 July 2017: with <a
+			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">2.0.20170906114618/</a>
+		a new major version is available. Most prominent features are a @crnk/angular-ngrx Angular library,
+		major upgrades to the security module, support for Guice and improvements to the module API.
+		For more information see in the <a href="/news/">news</a> and <a href="/documentation">documentation</a>.
 	</div>
 </div>
 
@@ -600,237 +604,6 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 <div class="section">
 	<div class="section-content">
 
-
-		and in the <a href="/documentation">documentation</a>.
-
-		<h3>News</h3>
-
-		<br>
-		<h4>24. July 2017</h4>
-
-		<br>
-		1.0.20170721162741 is released:
-		<ul>
-			<li>
-				Support for CDI discovery of exception mappers.
-			</li>
-			<li>
-				Improvements to the JAX-RS integration. Any JAX-RS service carrying a @Produce annotation of type
-				<i>application/vnd.api+json</i> can benefit of the JSON API response format and exception handling
-				to streamline mixed JAX-RS/JSON API applications.
-			</li>
-			<li>
-				Added protected default constructors for all modules. Improves the CDI integration by allowing
-				the creation of dynamic CDI proxies necessary in some scenarios.
-			</li>
-			<li>
-				Resource.equals/hashCode fix. Should not affect most applications as ResourceIdentifier.equals/hashCode is
-				primarly used.
-			</li>
-			<li>
-				Typescript generator has been update. Source maps are created for the generated NPM packages.
-				Gradle DSL improvements with the introduction of a <i>npm</i> configuration object. See
-				documentation for an example.
-			</li>
-		</ul>
-
-
-		<br>
-		<h4>9. July 2017</h4>
-		<p>
-			1.0.20170709163645 is the next release of Crnk coming with some major updates:
-		<ul>
-			<li>
-				Dependencies to Guava, Reflections and Apache Commons libraries have been removed
-				to reduce the footprint of Crnk. Only dependencies remaining are Jackson and Jodah, with the
-				later being very small in size.
-			</li>
-			<li>
-				Crnk supports dynamic, untyped resources. Till this point,
-				every repository had to be backed by a resource declared as Java class. This limitation is
-				now gone. A resource can be everything from a Java class to a simple hash map with key/attribute
-				pairs. The Module API has been extended to register such repositories. For more information
-				see <a
-					href="http://www.crnk.io/documentation/#_implementing_repositories_dynamically_at_runtime">here</a>.
-			</li>
-			<li>
-				The support for dynamic, untyped resources is complemented by a more flexible handling or repositories.
-				Repositories are held by ResourceRegistry instances. Applications are now enabled to provide custom
-				ResourceRegistry instances in order to be in full control of the lifecycle of repositories. For example, a JDBC
-				module
-				maybe expose a repository for every table currently held by a schema. Adding and removing tables
-				triggers an update of the available repositories without having to restart the application. Multiple
-				ResourceRegistry instances can be used along each other to to maintain different repository lifecycles
-				for different parts of the application.
-			</li>
-			<li>
-				npm package versions of the generated Typescript projects have been fixated. To the consumer
-				they are defined as peerDependencies and application are free to choose other, newer versions.
-			</li>
-			<li>
-				Fix for Gradle up-to-date check of the Typescript generator plugin due to NPM interfering with the
-				generated package.json file.
-			</li>
-			<li>
-				Pagination for non-root resources has been disabled by default to prevent ambiguities in case of
-				complex requests with inclusions and cyclic data structures. For most to all applications this
-				should be sufficient. For more information and to modify the behavior see
-				CrnkProperties.INCLUDE_PAGING_ENABLED.
-			</li>
-			<li>
-				CrnkProperties.RETURN_404_ON_NULL has been introduced to enforce returning a 404 in case of a
-				resource has not been found. While this is not mandated by the specification, it is common practice
-				in most applications. It will prevent repositories returning null values from providing a 200 instead
-				of 404 response. By default the feature is disabled.
-				Note that throwing a ResourceNotFoundException continues to be the recommended approach
-				of providing 404 responses.
-			</li>
-		</ul>
-		</p>
-
-
-		<br>
-		<h4>26 June 2017</h4>
-		<p>
-			1.0.20170626133151 is released. It patches an issue in the Typescript generator whereas it can fail when it
-			is used
-			together with the Gradle deamon and Deltaspike.
-		</p>
-
-
-		<br>
-		<h4>21 June 2017</h4>
-		<p>
-			1.0.20170620140608 is available as minor patch/feature release:
-		</p>
-		<table>
-			<tr>
-				<th>Module</th>
-				<th>Changes</th>
-			</tr>
-			<tr>
-				<td>crnk-validation</td>
-				<td>OptimisticLockException.message transmitted as as JSON API error detail</td>
-			</tr>
-			<tr>
-				<td>crnk-ui</td>
-				<td>
-					<ul>
-						<li>
-							Running it in embedded mode with UIModule will no longer
-							display the URL input.
-						</li>
-						<li>
-							Type input component is validated upon changing the url.
-						</li>
-					</ul>
-				</td>
-			</tr>
-			<tr>
-				<td>crnk-core, crnk-client</td>
-				<td>utf-8 charset added to content-type HTTP request and responses headers</td>
-			</tr>
-			<tr>
-				<td>crnk-meta</td>
-				<td>Support for ObjectNode, ArrayNode, JsonNode as primitive types added.</td>
-			</tr>
-			<tr>
-				<td>crnk-gen-typescript</td>
-				<td>
-					<ul>
-						<li>
-							Logback setup to avoid uncessary logging during Gradle build.
-						</li>
-						<li>
-							Improved up-to-date checking of Gradle tasks.
-						</li>
-					</ul>
-				</td>
-			</tr>
-
-		</table>
-
-
-		<br>
-		<h4>10 June 2017</h4>
-		<p>
-			1.0.20170610072810 is available!
-		</p>
-		<ul>
-			<li>
-				Initial release of the Typescript generator. It creates Typescript interfaces for resources,
-				meta information, links information, response documents and all related objects such as
-				enumerations and nested objects. It allows fully type-safe development of web applications
-				including code completion and compile-type safety. Currently the combination of
-				`ngrx-json-api`, Gradle and CDI resp. Deltaspike is supported. Have a look at the documentation for
-				more information and get in touch for support of other frameworks.
-			</li>
-			<li>
-				New pagination mechanism based on `HasMoreResourcesMetaInformation` for use cases where the computation
-				of the total number of resources is to expensive. Have a look at the documentation for more information.
-			</li>
-			<li>
-				Various documentation and web page updates.
-			</li>
-			<li>
-				Gradle Build speed improvements.
-			</li>
-		</ul>
-
-
-		<br>
-		<h4>1 June 2017</h4>
-		<p>
-			0.9.20170601160228 is available. Mostly a quality release to catch up with Sonar.
-		</p>
-		<ul>
-			<li>
-				All major (or worse) Sonar violations have been addressed. Fairly drastic (conditional)
-				code coverage improvements to around 95%. There is still some more work left to do in a few modules.
-				Further
-				improvements will also follow once all the deprecated legacy code is removed. Goal is to have near
-				complete coverage in the near future.
-			</li>
-			<li>
-				An incubating UIModule that lets you browse the repositories with an Angular web application.
-				Have a look at the documentation and Spring example application.
-			</li>
-			<li>
-				Improvements to customize the QueySpecDeserializer to deal with unknown parameters not specified by JSON
-				API.
-			</li>
-			<li>
-				Various exceptions no longer inherit CrnkMatchingException. It is mostly an internal thing, but could
-				lead to requests being ignored rather than throwing a proper exception, which in turn made finding such
-				errors rather difficult.
-			</li>
-		</ul>
-
-		<br>
-		<h4>25 May 2017</h4>
-
-		<p>
-			A first version 0.9.20170524133411 is released. Various contributors and existing users currently
-			verify that everything is working smoothly.
-		</p>
-
-		<p>
-			While it is the first release, it can already be considered being production stable. The maintainers here
-			moved forward from a mostly private code base that partially was also contributed to katharsis.io.
-			As such there is also an easy migration path as Crnk still maintains support for the same set of main
-			annotations and interfaces as Katharsis does. For more information see the migration
-			guide below.
-		</p>
-
-		</ul>
-
-	</div>
-</div>
-
-
-<div class="section">
-	<div class="section-content">
-
 		<h3>Roadmap</h3>
 
 		A first version has been released, but many more improvements are planned for the near-future:
@@ -856,41 +629,6 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 			</li>
 			<li>
 				Support to collect and access metrics information.
-			</li>
-		</ul>
-
-	</div>
-</div>
-
-
-<div class="section">
-	<div class="section-content">
-
-		<h3>Katharsis Users</h3>
-
-		Crnk has support for the same set of annotations as Katharsis 3.0. As such there is a simple
-		migration path from Katharsis to Crnk. If questions come up, do not hestitate to ask in the
-		forum.
-
-		<ul>
-			<li>Fix the project naming by replacing katharsis with crnk.</li>
-			<li>Fix the package imports for katharsis-core. Typically an additional &quot;core&quot; needs to be added
-				to the
-				import, like &quot;io.crnk.core.repository.ResourceRepositoryV2&quot; instead of
-				&quot;io.katharsis.repository.ResourceRepositoryV2&quot;. Custom modules likely will find imported
-				classes in the
-				various &quot;io.crnk.engine&quot; subpackages. Note that no classes have been renamed (except those
-				having
-				Katharsis in their name), so imports should be easily fixable.
-			</li>
-			<li>
-				Deprecated integration classes (like KatharsisConfigV2 in Spring or the deprecated Servlet and Filter
-				classes) have been removed. Switch to the respective current implementations. The old ones more than
-				likely do
-				you more harm than good.
-			</li>
-			<li>At some point in the future, the <i>io.crnk.legacy</i> package will be removed. That package has been
-				deprecated since Katharsis 3.0.
 			</li>
 		</ul>
 
