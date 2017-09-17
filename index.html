@@ -1,444 +1,461 @@
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Crnk: Java JSON API framework</title>
+    <meta charset="utf-8">
+    <title>Crnk: Java JSON API framework</title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-	<script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 
-	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 
-	<script
-			src="https://code.jquery.com/jquery-3.2.1.min.js"
-			integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-			crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
 
-	<script>
-		(function (i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r;
-			i[r] = i[r] || function () {
-				(i[r].q = i[r].q || []).push(arguments)
-			}, i[r].l = 1 * new Date();
-			a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0];
-			a.async = 1;
-			a.src = g;
-			m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-		ga('create', 'UA-101263796-1', 'auto');
-		ga('send', 'pageview');
+        ga('create', 'UA-101263796-1', 'auto');
+        ga('send', 'pageview');
 
-	</script>
+    </script>
 
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<style>
-		.section {
-			padding: 20px;
-		}
+    <style>
+        .section {
+            padding: 20px;
+        }
 
-		.section-content {
-			background: #F8F8F8;
-			padding: 10px;
-		}
+        .section-content {
+            background: #F8F8F8;
+            padding: 10px;
+        }
 
-		.section .part {
-			padding-top: 5px;
-			padding-bottom: 5px;
-			padding-left: 5px;
-			padding-right: 5px;
-		}
+        .section .part {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
-		.section .part .content {
-			padding: 5px;
-		}
+        .section .part .content {
+            padding: 5px;
+        }
 
-		pre.prettyprint {
-			padding-top: 10px;
-			border: none;
-			background-color: transparent;
-		}
+        pre.prettyprint {
+            padding-top: 10px;
+            border: none;
+            background-color: transparent;
+        }
 
-		.tab-content {
-			padding: 10px;
-			background: #FFFFFF;
-			border-left: 1px solid #E0E0E0;
-			border-right: 1px solid #E0E0E0;
-			border-bottom: 1px solid #E0E0E0;
-		}
+        .tab-content {
+            padding: 10px;
+            background: #FFFFFF;
+            border-left: 1px solid #E0E0E0;
+            border-right: 1px solid #E0E0E0;
+            border-bottom: 1px solid #E0E0E0;
+        }
 
-		footer {
-			background: #F8F8F8;
-			padding: 10px;
-		}
+        footer {
+            background: #F8F8F8;
+            padding: 10px;
+        }
 
-		table tr td, table tr th {
-			vertical-align: top;
-			font-size: 90%;
-			padding-right: 10px;
-			padding-top: 2px;
-			padding-bottom: 2px;
-		}
+        table tr td, table tr th {
+            vertical-align: top;
+            font-size: 90%;
+            padding-right: 10px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
 
-	</style>
+    </style>
 </head>
 <body style="padding:0px;margin:0px">
 
 
 <div style="height:55px; padding:10px; background:#113844;color:#F8F8F8">
 
-	<div style="float:left; font-size: 200%">
-		<a href="http://www.crnk.io" style="color:WHITE;decoration:none">Crnk: JSON API library</a>
-	</div>
+    <div style="float:left; font-size: 200%">
+        <a href="http://www.crnk.io" style="color:WHITE;decoration:none">Crnk: JSON API library</a>
+    </div>
 
-	<div style="float:right;vertical-align: middle;padding-left:10px;padding-top:3px">
+    <div style="float:right;vertical-align: middle;padding-left:10px;padding-top:3px">
 
-		<a class="github-button" href="https://github.com/crnk-project/crnk-framework" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star crnk-project/crnk-framework on GitHub">Star</a>
-	</div>
+        <a class="github-button" href="https://github.com/crnk-project/crnk-framework" data-icon="octicon-star"
+           data-size="large" data-show-count="true" aria-label="Star crnk-project/crnk-framework on GitHub">Star</a>
+    </div>
 
-	<div style="float:right;vertical-align: middle;padding-left:10px;">
-		<a href="https://github.com/crnk-project/">
-			<svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github"
-				 height="32"
-				 version="1.1" viewBox="0 0 16 16" width="32">
+    <div style="float:right;vertical-align: middle;padding-left:10px;">
+        <a href="https://github.com/crnk-project/">
+            <svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github"
+                 height="32"
+                 version="1.1" viewBox="0 0 16 16" width="32">
 
-				<path fill-rule="evenodd"
-					  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-			</svg>
-		</a>
-	</div>
+                <path fill-rule="evenodd"
+                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+        </a>
+    </div>
 
-	<div style="float:right;vertical-align: middle;padding-left:10px;">
-		<div style="width:32px;height:32px">
-			<a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
-				<img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg"
-						title="Get in touch on Gitter">
-			</a>
-		</div>
-	</div>
+    <div style="float:right;vertical-align: middle;padding-left:10px;">
+        <div style="width:32px;height:32px">
+            <a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
+                <img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg"
+                     title="Get in touch on Gitter">
+            </a>
+        </div>
+    </div>
 
-	<div style="float:right;vertical-align: middle;padding-left:10px;">
-		<div style="width:32px;height:32px">
-			<a href="https://twitter.com/crnk_io" style="color:WHITE;text-decoration: none">
-				<img src="images/twitter-xxl.png" width="32" title="Follow us on Twitter">
-			</a>
-		</div>
-	</div>
+    <div style="float:right;vertical-align: middle;padding-left:10px;">
+        <div style="width:32px;height:32px">
+            <a href="https://twitter.com/crnk_io" style="color:WHITE;text-decoration: none">
+                <img src="images/twitter-xxl.png" width="32" title="Follow us on Twitter">
+            </a>
+        </div>
+    </div>
 
-	<div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
-		<a href="/news/" style="color:WHITE;decoration:none">News</a>
-		&nbsp;&nbsp;
-		<a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
-		&nbsp;&nbsp;
-		<a href="/related/" style="color:WHITE;decoration:none">Related Projects</a>
-	</div>
+    <div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
+        <a href="/news/" style="color:WHITE;decoration:none">News</a>
+        &nbsp;&nbsp;
+        <a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
+        &nbsp;&nbsp;
+        <a href="/related/" style="color:WHITE;decoration:none">Related Projects</a>
+    </div>
 </div>
 
 <div class="section">
-	<div class="section-content">
+    <div class="section-content">
 
-		<p>
-			Crank up the development of RESTful applications with Crnk (pronounced <i>Crank</i>).
-			Crnk is an implementation of the <a href="http://jsonapi.org/">JSON API</a>
-			specification and recommendations in Java to facilitate building RESTful applications.
-			To quote the specification:
-		</p>
+        <p>
+            Crank up the development of RESTful applications with Crnk (pronounced <i>Crank</i>).
+            Crnk is an implementation of the <a href="http://jsonapi.org/">JSON API</a>
+            specification and recommendations in Java to facilitate building RESTful applications.
+            To quote the specification:
+        </p>
 
-		<p style="padding-left:10px;padding-right:10px">
-			<i>By following shared conventions, you can increase productivity, take advantage of
-				generalized tooling, and focus on what matters: your application.</i>
-		</p>
-	</div>
+        <p style="padding-left:10px;padding-right:10px">
+            <i>By following shared conventions, you can increase productivity, take advantage of
+                generalized tooling, and focus on what matters: your application.</i>
+        </p>
+    </div>
 </div>
 
 <div class="section" style="padding-top:0px;padding-bottom: 0px">
-	<div class="section-content" style="background-color: #FFFFC8">
-		24 July 2017: with <a
-			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">2.0.20170906114618/</a>
-		a new major version is available. Most prominent features are a @crnk/angular-ngrx Angular library,
-		major upgrades to the security module, support for Guice and improvements to the module API.
-		For more information see in the <a href="/news/">news</a> and <a href="/documentation">documentation</a>.
-	</div>
-</div>
-
-<div class="section">
-	<div>
-		<div class="row">
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Easy to integrate</b> with frameworks like Spring, JEE, CDI, JAX-RS, Dropwizard, Servlet API.
-				</div>
-			</div>
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Long-term support</b> for technologies such as Java 7 and JPA 2.0 to ease enterprise adoption.
-				</div>
-			</div>
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					Only <b>few dependencies</b> of the core libraries, most notably the <a
-						href="https://github.com/FasterXML/jackson">Jackson library</a>.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					JSON API <b>client and server</b> implementation with the possibility of shared, fully type-safe
-					repository
-					interfaces.
-				</div>
-			</div>
-		</div>
-		<div class="row">
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Open Source</b> and released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
-					License,
-					Version 2.0.</a> license. Suitable for both open source and commercial projects.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Modular design</b> to choose and extend the feature set through a Module API.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Mobile friendly</b>. Fetch complex object graphs in a
-					single request with JSON API inclusions. Fetch partial objects with JSON API sparse field sets.
-					Use together with the popular <a href="http://square.github.io/okhttp/">OkHttp</a> library on
-					Android devices.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and
-					resources
-					in a type-safe manner.
-				</div>
-			</div>
-		</div>
-		<div class="row">
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Expose any JPA entity</b> as JSON API resource with out-of-the-box sorting, filtering, paging and
-					CRUD
-					support without any implementation work. Or further map your entities to DTOs.
-				</div>
-			</div>
-
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Standardized error handling</b> with support for JSR-303 Bean Validation and a variety of other
-					standard
-					Java
-					exception types.</b>
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Atomically</b> insert, update and delete multiple resources with <a href="http://jsonpatch.com/">JSON
-					Patch</a>.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					Integrate into <a href="http://zipkin.io/">Zipkin</a> to <b>trace</b> incoming and outgoing
-					requests.
-				</div>
-			</div>
-
-		</div>
-		<div class="row">
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Up-to-date documentation</b> with Asciidoc.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					<b>Secure</b> your repositories on repository, resource and field level.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					Extensive <b>meta model</b> of your repositories available as JSON API repositories for the purpose
-					of
-					documentation and UI automation.
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-md-3 part">
-				<div class="content">
-					Focus on quality with continuous releases and extensive test coverage.
-					<p>
-						<img src='https://coveralls.io/repos/github/crnk-project/crnk-framework/badge.svg' alt='Coverage Status' /></a>.
-					</p>
-				</div>
-			</div>
-
-		</div>
-	</div>
+    <div class="section-content" style="background-color: #FFFFC8">
+        14 September 2017: with <a
+            href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">2.0.20170914102958/</a>
+        a new major version is available. Most prominent features are a @crnk/angular-ngrx Angular library,
+        major upgrades to the security module, support for Guice and improvements to the module API.
+        For more information see in the <a href="/news/">news</a> and <a href="/documentation">documentation</a>.
+    </div>
 </div>
 
 
 <div class="section">
-	<div class="section-content">
+    <div>
+        <div class="row">
 
-		<h3>Example applications</h3>
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Easy to integrate</b> with frameworks like Spring, JEE, CDI, JAX-RS, Dropwizard, Servlet API.
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Long-term support</b> for technologies such as Java 7 and JPA 2.0 to ease enterprise adoption.
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Lightweight</b> with only <b>few dependencies</b> of the core libraries, most notably the <a
+                        href="https://github.com/FasterXML/jackson">Jackson library</a>.
+                </div>
+            </div>
 
-		<p>
-			Checkout the various example applications in
-			<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples">crnk-examples</a>.
-			To start the spring boot application (the most advanced one) checkout
-			<a href="https://github.com/crnk-project/crnk-framework">crnk-framework</a> and run:
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    JSON API <b>client and server</b> implementation with the possibility of shared, fully type-safe
+                    repository
+                    interfaces.
+                </div>
+            </div>
+        </div>
+        <div class="row">
 
-		<pre class="prettyprint">
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Open Source</b> and released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
+                    License,
+                    Version 2.0.</a> license. Suitable for both open source and commercial projects.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Modular design</b> to choose and extend the feature set through a Module API.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Mobile friendly</b>. Fetch complex object graphs in a
+                    single request with JSON API inclusions. Fetch partial objects with JSON API sparse field sets.
+                    Use together with the popular <a href="http://square.github.io/okhttp/">OkHttp</a> library on
+                    Android devices.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Typescript friendly</b>. Generate Typescript interfaces to access your repositories and
+                    resources
+                    in a type-safe manner.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Expose any JPA entity</b> as JSON API resource with out-of-the-box sorting, filtering, paging and
+                    CRUD
+                    support without any implementation work. Or further map your entities to DTOs.
+                </div>
+            </div>
+
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Standardized error handling</b> with support for JSR-303 Bean Validation and a variety of other
+                    standard
+                    Java
+                    exception types.</b>
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Atomically</b> insert, update and delete multiple resources with <a href="http://jsonpatch.com/">JSON
+                    Patch</a>.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    Integrate into <a href="http://zipkin.io/">Zipkin</a> to <b>trace</b> incoming and outgoing
+                    requests.
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Up-to-date documentation</b> with Asciidoc.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    <b>Secure</b> your repositories on repository, resource and field level.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    Support for <b>Angular development</b> with
+                    <a href="https://www.npmjs.com/package/@crnk/angular-ngrx">@crnk/angular-ngrx</a>.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    Focus on quality with continuous releases and extensive test coverage.
+                    <p>
+                        <img src='https://coveralls.io/repos/github/crnk-project/crnk-framework/badge.svg'
+                             alt='Coverage Status'/></a>.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-6 col-md-3 part">
+                <div class="content">
+                    Extensive <b>meta model</b> of your repositories available as JSON API repositories for the purpose
+                    of
+                    documentation and UI automation.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+
+        <h3>Example applications</h3>
+
+        <p>
+            Checkout the various example applications in
+            <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples">crnk-examples</a>.
+            To start the spring boot application (the most advanced one) checkout
+            <a href="https://github.com/crnk-project/crnk-framework">crnk-framework</a> and run:
+
+        <pre class="prettyprint">
 gradlew :crnk-examples:spring-boot-example:run
 		</pre>
 
-		<p>
-			A number of URLs to try:
-		</p>
+        <p>
+            A number of URLs to try:
+        </p>
 
-		<table class="example">
-			<tr>
-				<td><a href="http://127.0.0.1:8080/">http://127.0.0.1:8080/</a></td>
-				<td>JSON Home document provided by crnk-home listing all repositories.</td>
-			</tr>
+        <table class="example">
+            <tr>
+                <td><a href="http://127.0.0.1:8080/">http://127.0.0.1:8080/</a></td>
+                <td>JSON Home document provided by crnk-home listing all repositories.</td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/browse/">http://127.0.0.1:8080/browse/</a></td>
-				<td>crnk-ui allowing to browse all repositories.</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/browse/">http://127.0.0.1:8080/browse/</a></td>
+                <td>crnk-ui allowing to browse all repositories.</td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/projects">http://127.0.0.1:8080/projects</a></td>
-				<td>Simple in-memory repository (<a
-						href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository/ProjectRepositoryImpl.java">PersonRepositoryImpl.java</a>).
-				</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/projects">http://127.0.0.1:8080/projects</a></td>
+                <td>Simple in-memory repository (<a
+                        href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository/ProjectRepositoryImpl.java">PersonRepositoryImpl.java</a>).
+                </td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/schedule">http://127.0.0.1:8080/schedule</a></td>
-				<td>
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
-					JPA entity exposed as repository with crnk-jpa. See
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
-				</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/schedule">http://127.0.0.1:8080/schedule</a></td>
+                <td>
+                    <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
+                    JPA entity exposed as repository with crnk-jpa. See
+                    <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
+                </td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/schedule?filter[name][GT]=schedule1&page[limit]=3&sort=-name">
-					http://127.0.0.1:8080/schedule?filter[name]<br>[GT]=schedule1&page[limit]=3&amp;sort=-name</a>
-				</td>
-				<td>Sorting, filtering and pagination. Notice the total resource count in the meta data
-					and the various pagination links.
-				</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/schedule?filter[name][GT]=schedule1&page[limit]=3&sort=-name">
+                    http://127.0.0.1:8080/schedule?filter[name]<br>[GT]=schedule1&page[limit]=3&amp;sort=-name</a>
+                </td>
+                <td>Sorting, filtering and pagination. Notice the total resource count in the meta data
+                    and the various pagination links.
+                </td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/scheduleDto">http://127.0.0.1:8080/scheduleDto</a></td>
-				<td>
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
-					mapped to
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleDto.java">ScheduleDto</a>
-					and exposed as repository. Notice the additional
-					computed attribute <i>upperName</i>. For the setup checkout
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
-				</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/scheduleDto">http://127.0.0.1:8080/scheduleDto</a></td>
+                <td>
+                    <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
+                    mapped to
+                    <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleDto.java">ScheduleDto</a>
+                    and exposed as repository. Notice the additional
+                    computed attribute <i>upperName</i>. For the setup checkout
+                    <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
+                </td>
+            </tr>
 
-			<tr>
-				<td><a href="http://127.0.0.1:8080/meta/resource">http://127.0.0.1:8080/meta/resource</a></td>
-				<td>Meta data of all resources provided by crnk-meta. Have a look also at the relationships,
-					such as to the attributes.
-				</td>
-			</tr>
+            <tr>
+                <td><a href="http://127.0.0.1:8080/meta/resource">http://127.0.0.1:8080/meta/resource</a></td>
+                <td>Meta data of all resources provided by crnk-meta. Have a look also at the relationships,
+                    such as to the attributes.
+                </td>
+            </tr>
 
-		</table>
+        </table>
 
-		<p>
-			Have a look at the console when issuing requests. crnk-brave with a log reporter is used for
-			tracing.
-		</p>
+        <p>
+            Have a look at the console when issuing requests. crnk-brave with a log reporter is used for
+            tracing.
+        </p>
 
 
-	</div>
+    </div>
 </div>
 
 <div class="section">
-	<div class="section-content">
+    <div class="section-content">
 
-		<h3>Setup in 5 Minutes</h3>
+        <h3>Setup in 5 Minutes</h3>
 
-		<p>
-			The following gives a brief example of how to setup Crnk with JAX-RS and CDI.
-			For more information have a look at the documentation and join us on <a
-				href="https://gitter.im/crnk-io/Lobby?source=orgpage">Gitter</a> and
-			<a href="https://github.com/crnk-project/">GitHub</a>!
-		</p>
+        <p>
+            The following gives a brief example of how to setup Crnk with JAX-RS and CDI.
+            For more information have a look at the documentation and join us on <a
+                href="https://gitter.im/crnk-io/Lobby?source=orgpage">Gitter</a> and
+            <a href="https://github.com/crnk-project/">GitHub</a>!
+        </p>
 
-		<div>
-			<!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
-				<li role="presentation"
-						class="active"><a href="#dependencies" aria-controls="dependencies" role="tab" data-toggle="tab">Dependencies
-				</a></li>
-				<li
-						role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">JAX-RS
-					integration</a></li>
-				<li
-						role="presentation"><a href="#resource" aria-controls="resource" role="tab" data-toggle="tab">Resource
-				</a></li>
-				<li
-						role="presentation"><a href="#interface" aria-controls="interface" role="tab"
-						data-toggle="tab">Repository Interface
-				</a></li>
-				<li
-						role="presentation"><a href="#repository" aria-controls="repository" role="tab"
-						data-toggle="tab">Repository Implementation
-				</a></li>
-			</ul>
+        <div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation"
+                    class="active"><a href="#dependencies" aria-controls="dependencies" role="tab"
+                                      data-toggle="tab">Dependencies
+                </a></li>
+                <li
+                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">JAX-RS
+                    integration</a></li>
+                <li
+                        role="presentation"><a href="#resource" aria-controls="resource" role="tab"
+                                               data-toggle="tab">Resource
+                </a></li>
+                <li
+                        role="presentation"><a href="#interface" aria-controls="interface" role="tab"
+                                               data-toggle="tab">Repository Interface
+                </a></li>
+                <li
+                        role="presentation"><a href="#repository" aria-controls="repository" role="tab"
+                                               data-toggle="tab">Repository Implementation
+                </a></li>
+            </ul>
 
-			<!-- Tab panes -->
-			<div class="tab-content">
-				<div role="tabpanel" class="tab-pane active" id="dependencies">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="dependencies">
 
-					Add crnk-core together with the CDI and JAX-RS integrations to your classpath:
+                    Add crnk-core together with the CDI and JAX-RS integrations to your classpath:
 
-					<pre class="prettyprint">
+                    <pre class="prettyprint">
 compile 'io.crnk:crnk-core:${version}'
 compile 'io.crnk:crnk-cdi:${version}'
 compile 'io.crnk:crnk-rs:${version}'
 					</pre>
 
 
-				</div>
-				<div role="tabpanel" class="tab-pane" id="jaxrs">
+                </div>
+                <div role="tabpanel" class="tab-pane" id="jaxrs">
 
 
-					<p>
-						Setup a JAX-RS application and add the CrnkFeature. In this example a default page size and some
-						meaningful Jackson settings are further configured.
-					</p>
+                    <p>
+                        Setup a JAX-RS application and add the CrnkFeature. In this example a default page size and
+                        some
+                        meaningful Jackson settings are further configured.
+                    </p>
 
-					<pre class="prettyprint">
+                    <pre class="prettyprint">
 @ApplicationPath("/api")
 @Singleton
 public class DemoApplication extends Application {
@@ -461,12 +478,12 @@ public class DemoApplication extends Application {
 					</pre>
 
 
-				</div>
-				<div role="tabpanel" class="tab-pane" id="resource">
+                </div>
+                <div role="tabpanel" class="tab-pane" id="resource">
 
-					The actual data objects known as resource in JSON API terminology looks like:
+                    The actual data objects known as resource in JSON API terminology looks like:
 
-					<pre class="prettyprint">
+                    <pre class="prettyprint">
 @JsonApiResource(type = "schedules")
 public class Schedule {
 
@@ -495,14 +512,14 @@ public class Schedule {
 
 					</pre>
 
-				</div>
-				<div role="tabpanel" class="tab-pane" id="interface">
+                </div>
+                <div role="tabpanel" class="tab-pane" id="interface">
 
-					Specifying an interface for your repository is an optional step, but can be quite convient when
-					working on the client-side (like for testing). This particular example further specifies the
-					structure of links and meta data attached to the actual data.
+                    Specifying an interface for your repository is an optional step, but can be quite convient when
+                    working on the client-side (like for testing). This particular example further specifies the
+                    structure of links and meta data attached to the actual data.
 
-					<pre class="prettyprint">
+                    <pre class="prettyprint">
 public interface ScheduleRepository extends ResourceRepositoryV2<Schedule, Long> {
 
 	@Override
@@ -540,15 +557,16 @@ public interface ScheduleRepository extends ResourceRepositoryV2<Schedule, Long>
 }
 					</pre>
 
-				</div>
-				<div role="tabpanel" class="tab-pane" id="repository">
+                </div>
+                <div role="tabpanel" class="tab-pane" id="repository">
 
-					The actual implementation of a JSON API repository. This example stores all data in-memory. Notice
-					the QuerySpec.apply to do sorting, filtering and patching in-memory. More advanced use cases
-					will translate the QuerySpec to a native query of the underlying data store. The
-					@ApplicationScoped will lead for the repository to get picked up by the crnk-cdi integration.
+                    The actual implementation of a JSON API repository. This example stores all data in-memory.
+                    Notice
+                    the QuerySpec.apply to do sorting, filtering and patching in-memory. More advanced use cases
+                    will translate the QuerySpec to a native query of the underlying data store. The
+                    @ApplicationScoped will lead for the repository to get picked up by the crnk-cdi integration.
 
-					<pre class="prettyprint">
+                    <pre class="prettyprint">
 
 @ApplicationScoped
 public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, Long&gt; implements ScheduleRepository {
@@ -584,59 +602,57 @@ public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, 
 	}
 }
 					</pre>
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<script>
-				$('#myTabs a').click(function (e) {
-					e.preventDefault()
-					$(this).tab('show')
-				})
-			</script>
+            <script>
+                $('#myTabs a').click(function (e) {
+                    e.preventDefault()
+                    $(this).tab('show')
+                })
+            </script>
 
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 </div>
 
 
 <div class="section">
-	<div class="section-content">
+    <div class="section-content">
 
-		<h3>Roadmap</h3>
+        <h3>Roadmap</h3>
 
-		A first version has been released, but many more improvements are planned for the near-future:
+        <ul>
+            <li>
+                Improvements to examples, documentation and test coverage.
+            </li>
+            <li>
+                More elaborate bindings to UI components like PrimeNG.
+            </li>
+            <li>
+                Asynchronous programming support.
+            </li>
+            <li>
+                GraphQL support to complement JSON API interface.
+            </li>
+            <li>
+                Metric collection and JSON API repositories.
+            </li>
+            <li>
+                Activiti integration.
+            </li>
+            <li>
+                JSR 352 Batch integration.
+            </li>
+        </ul>
 
-		<ul>
-			<li>
-				More documentation and web page updates.
-			</li>
-			<li>
-				Sonar setup and identify any gaps in testing.
-			</li>
-			<li>
-				Extensions to the security module as outlined in the documentation.
-			</li>
-			<li>
-				More examples, including frontend development.
-			</li>
-			<li>
-				Finalize crnk-ui and add further delivery options (docker, webjar, NPM library).
-			</li>
-			<li>
-				Support for more datastores next to JPA.
-			</li>
-			<li>
-				Support to collect and access metrics information.
-			</li>
-		</ul>
-
-	</div>
+    </div>
 </div>
 
 <footer>
-	© 2017 <a href="https://www.adnovum.ch">Adnovum</a>
+    © 2017 <a href="https://www.adnovum.ch">Adnovum</a>
 </footer>
 
 </body>
