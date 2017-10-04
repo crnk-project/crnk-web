@@ -3295,7 +3295,7 @@ This module is in new and in incubation. Feedback and improvements welcomed.
 </table>
 </div>
 <div class="paragraph">
-<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST.
+<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST API.
 The motivation of <code>ActivitiModule</code> is to:</p>
 </div>
 <div class="ulist">
@@ -3307,16 +3307,17 @@ and client-side tooling of JSON API.</p>
 <li>
 <p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
 and task definition, there is a dedicated repository and resource type for it. The resource is comprised of
-both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic variables
-stored by the application. Mapping to static resp. dynamic fields is done automatically by the <code>ActivitiModule</code>
-and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
+both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic fields
+stored by the application as process/task/form variables. Mapping to static resp. dynamic fields is done
+automatically by the <code>ActivitiModule</code> and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
 the application is enabled, for example, to introduce custom security policies for each resource with
-the <code>SecurityModule</code> or otherwise.</p>
+the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>This setup is in stark contrast to the API provided by Activiti that is fully generic.</p>
+<p>This setup differs substantially from the API provided by Activiti that is implemented
+in generic fashion.</p>
 </div>
 <div class="sect3">
 <h4 id="_setup_2">6.9.1. Setup</h4>
@@ -3325,7 +3326,7 @@ the <code>SecurityModule</code> or otherwise.</p>
 It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
 </div>
 <div class="paragraph">
-<p>The <code>ActivitiModule</code> comes with four resource base classes that match the equivalent Activiti classes:</p>
+<p>The <code>ActivitiModule</code> implements four resource base classes that match the equivalent Activiti classes:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3420,6 +3421,9 @@ tasks, you may introduce multiple such relationships.</p>
 <p><code>ScheduleApprovalProcessInstance</code>, <code>ApproveTask</code> and the <code>approveTask</code> relationship are registered.</p>
 </li>
 <li>
+<p><code>ApproveTask</code> is user task that is handled by submitting an <code>ApproveForm</code>.</p>
+</li>
+<li>
 <p><code>filterByProcessDefinitionKey</code> and <code>filterByTaskDefinitionKey</code> ensure that the two repositories
 are isolated from other repositories for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations.</p>
 </li>
@@ -3511,9 +3515,12 @@ interest of consumers of the <code>ActivitiModule</code> as well.</p>
 </li>
 <li>
 <p><code>scheduleChangeApproved</code> invokes <code>${approvalManager.approved(execution)}</code> whereas <code>approvalManager</code> is a Java object
-taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.
-<code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
-changes. Real world use cases may also need to save and reconstruct the security context.</p>
+taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.</p>
+</li>
+<li>
+<p><code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
+changes. This means the regular <code>ScheduleRepository</code> implementation will be called in the same fashion as for
+ a typical request. Real world use cases may also need to save and reconstruct the security context.</p>
 </li>
 </ul>
 </div>
@@ -3530,9 +3537,11 @@ changes. Real world use cases may also need to save and reconstruct the security
 		List&lt;FilterSpec&gt; approvalFilters = Arrays.asList(approvalFilter);
 
 		SimpleModule module = new SimpleModule("approval");
-		module.addRepositoryDecoratorFactory(ApprovalRepositoryDecorator.createFactory(approvalManager));
+		module.addRepositoryDecoratorFactory(
+				ApprovalRepositoryDecorator.createFactory(approvalManager)
+		);
 		module.addRepository(new ApprovalRelationshipRepository(Schedule.class,
-				ScheduleApprovalProcessInstance.class,"approval",
+				ScheduleApprovalProcessInstance.class, "approval",
 				"approval/schedule", approvalFilters)
 		);
 		return module;
@@ -3557,12 +3566,12 @@ relationship. This may or may not be useful depending on how much control there 
 </ul>
 </div>
 <div class="paragraph">
-<p><code>ApprovalIntTest</code> showcases the entire example application and <code>ActivitiModule</code> as test cases doing a change,
-starting the approval process, submitting a form and then verifying the changes have been saved.</p>
-</div>
-<div class="paragraph">
 <p>The chosen setup leads to an approval system that is <strong>fully transparent</strong> to the actual repository implementations
 and can be added to any kind of repository.</p>
+</div>
+<div class="paragraph">
+<p><code>ApprovalIntTest</code> showcases the example workflow by doing a change,
+starting the approval process, submitting a form and then verifying the changes have been saved.</p>
 </div>
 </div>
 <div class="sect3">
