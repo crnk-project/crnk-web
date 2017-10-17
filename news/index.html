@@ -142,11 +142,46 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>17. October 2017</h4>
+
+		<p>
+			2.2.20171015181129 is available:
+		</p>
+
+
+		The architecture of the meta module has undergone some major updates:
+
+		<ul>
+			<li>Support for dynamic repositories (see
+				<a href="http://www.crnk.io/documentation/#_create_repositories_at_runtime">here</a>)
+			</li>
+			<li>Introduction of MetaPartition to allow isolated sets of meta data. This allows, for example, to host
+				JSON API and JPA-related (crnk-jpa) meta-data next to each other
+			</li>
+			<li>
+				MetaFilter interface to intercept and modify meta data both during initialization and on request.
+			</li>
+			<li>
+				MetaModuleExtension to let other Crnk modules extend the meta module.
+			</li>
+			<li>
+				The resource type is used to compute name and id of meta elements. This makes the meta model more closely
+				resemble the JSON API endpoint rather than the underyling implementation. The Typescript generator, in turn,
+				benefits as well from this. The use of package mapping from previous versions is mostly no longer necessary.
+			</li>
+		</ul>
+
+		For more information see also <a href="http://www.crnk.io/documentation/#_meta_module">Meta Module</a>.
+
+		There is further a new release of @crnk/angular-ngrx with performance improvements for form binding.
+		See <a href="https://www.npmjs.com/package/@crnk/angular-ngrx">@crnk/angular-ngrx</a>.
+
+		<p>
 
 		<br><h4>4. October 2017</h4>
 
 		<p>
-			2.1.20171003194426 is avaible:
+			2.1.20171003194426 is available:
 		</p>
 
 		<ul>

@@ -602,13 +602,20 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsr_303_validation_module">6.2. JSR 303 Validation Module</a></li>
 <li><a href="#_tracing_with_zipkin_brave">6.3. Tracing with Zipkin/Brave</a></li>
 <li><a href="#_security_module">6.4. Security Module</a></li>
-<li><a href="#_meta_module">6.5. Meta Module</a></li>
+<li><a href="#_meta_module">6.5. Meta Module</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_2">6.5.1. Setup</a></li>
+<li><a href="#_examples">6.5.2. Examples</a></li>
+<li><a href="#_identifiers_for_meta_elements">6.5.3. Identifiers for Meta Elements</a></li>
+<li><a href="#_extending_the_meta_module">6.5.4. Extending the Meta Module</a></li>
+</ul>
+</li>
 <li><a href="#_home_module">6.6. Home Module</a></li>
 <li><a href="#_operations_module">6.7. Operations Module</a></li>
 <li><a href="#_ui_module">6.8. UI Module</a></li>
 <li><a href="#_activiti_module">6.9. Activiti Module</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_2">6.9.1. Setup</a></li>
+<li><a href="#_setup_3">6.9.1. Setup</a></li>
 <li><a href="#_example_application">6.9.2. Example application</a></li>
 <li><a href="#_limitations">6.9.3. Limitations</a></li>
 </ul>
@@ -2960,6 +2967,8 @@ any future standard implementation will built up on the information from the
 </tr>
 </table>
 </div>
+<div class="sect3">
+<h4 id="_setup_2">6.5.1. Setup</h4>
 <div class="paragraph">
 <p>A setup can look as follows:</p>
 </div>
@@ -2969,6 +2978,13 @@ any future standard implementation will built up on the information from the
 		metaModule.addMetaProvider(new ResourceMetaProvider());</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><code>ResourceMetaProvider</code> exposes all JSON API resources and repositories as meta data. You may add further provides to
+expose more meta data, such as the <code>JpaMetaProvider</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples">6.5.2. Examples</h4>
 <div class="paragraph">
 <p>To learn more about the set of available resources, have a look at the <code>MetaElement</code> class and all its subclasses. Some of the
 most important classes are:</p>
@@ -3049,7 +3065,7 @@ most important classes are:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>{
-    "id" : "io.crnk.example.springboot.domain.model.Project",
+    "id" : "resources.project",
     "type" : "meta/resource",
     "attributes" : {
       "name" : "Project",
@@ -3096,7 +3112,7 @@ most important classes are:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>{
-    "id" : "io.crnk.example.springboot.domain.model.Project.name",
+    "id" : "resources.project.name",
     "type" : "meta/resourceField",
     "attributes" : {
       "filterable" : true,
@@ -3132,8 +3148,58 @@ most important classes are:</p>
   }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_identifiers_for_meta_elements">6.5.3. Identifiers for Meta Elements</h4>
+<div class="paragraph">
+<p>Of importance is the assignment of IDs to meta elements. For resources the resource type is used to compute the meta
+id and a <code>resources</code> prefix is added. In the example above, person gets a <code>resources.person</code> meta id.
+Related objects (DTOs, links/meta info) located in the same or a subpackage of a resource gets the same meta id prefix.
+A <code>ProjectData</code> sitting in a <code>dto</code> subpackage would get a <code>resources.dto.projectdata</code> meta id.</p>
+</div>
+<div class="paragraph">
+<p>The meta ids are used, for example, by the Typescript generator to determine the file structure and dependencies of generated
+source files.</p>
+</div>
+<div class="paragraph">
+<p>Applications are enabled to adapt the id generator process with:</p>
+</div>
+<div class="paragraph">
+<p><code>new ResourceMetaProvider(idPrefix)</code></p>
+</div>
+<div class="paragraph">
+<p>and</p>
+</div>
+<div class="paragraph">
+<p><code>ResourceMetaProvider.putIdMapping(String packageName, String idPrefix)</code></p>
+</div>
+<div class="paragraph">
+<p>to override the default <code>resources</code> prefix and assign a specific prefix for a package.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_extending_the_meta_module">6.5.4. Extending the Meta Module</h4>
+<div class="paragraph">
+<p>There is a <code>MetaModuleExtension</code> extension that allows other Crnk modules contribute <code>MetaProvider</code>
+implementation. This allows to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>add <code>MetaFilter</code> implementations to intercept and modify meta elements upon initialization and request.</p>
+</li>
+<li>
+<p>add <code>MetaPartition</code> implementations to introduce new, isolated areas in the meta model, like a JPA
+meta model next to the JSON API one (like for documentation purposes).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more detailed information have a look at the current <code>ResourceMetaProvider</code>.</p>
+</div>
 <div class="paragraph">
 <p><a id="home_module"></a></p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -3320,7 +3386,7 @@ the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
 in generic fashion.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_2">6.9.1. Setup</h4>
+<h4 id="_setup_3">6.9.1. Setup</h4>
 <div class="paragraph">
 <p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
 It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
@@ -3816,13 +3882,16 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 
 	private static Map&lt;String, Resource&gt; RESOURCES = new HashMap&lt;&gt;();
 
-	public DynamicResourceRepository() {
+	private final String resourceType;
+
+	public DynamicResourceRepository(String resourceType) {
 		super(Resource.class);
+		this.resourceType = resourceType;
 	}
 
 	@Override
 	public String getResourceType() {
-		return "dynamic";
+		return resourceType;
 	}
 
 	@Override
@@ -3853,23 +3922,27 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 
 	@Override
 	public void setupModule(ModuleContext context) {
-		RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
 
-		RegistryEntryBuilder.ResourceRepository resourceRepository = builder.resourceRepository();
-		resourceRepository.instance(new DynamicResourceRepository());
+		for (int i = 0; i &lt; 2; i++) {
+			RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
 
-		RegistryEntryBuilder.RelationshipRepository relationshipRepository = builder.relationshipRepository("dynamic");
-		relationshipRepository.instance(new DynamicRelationshipRepository());
+			String resourceType = "dynamic" + i;
+			RegistryEntryBuilder.ResourceRepository resourceRepository = builder.resourceRepository();
+			resourceRepository.instance(new DynamicResourceRepository(resourceType));
 
-		InformationBuilder.Resource resource = builder.resource();
-		resource.resourceType("dynamic");
-		resource.resourceClass(Resource.class);
-		resource.addField("id", ResourceFieldType.ID, String.class);
-		resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
-		resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType("dynamic");
-		resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType("dynamic");
+			RegistryEntryBuilder.RelationshipRepository relationshipRepository = builder.relationshipRepository(resourceType);
+			relationshipRepository.instance(new DynamicRelationshipRepository(resourceType));
 
-		context.addRegistryEntry(builder.build());
+			InformationBuilder.Resource resource = builder.resource();
+			resource.resourceType(resourceType);
+			resource.resourceClass(Resource.class);
+			resource.addField("id", ResourceFieldType.ID, String.class);
+			resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
+			resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType(resourceType).oppositeName("children");
+			resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType(resourceType).oppositeName("parent");
+
+			context.addRegistryEntry(builder.build());
+		}
 	}
 }</code></pre>
 </div>
@@ -3889,7 +3962,9 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 </div>
 <div class="paragraph">
 <p>Have a look at the complete example
-in <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-client/src/test/java/io/crnk/client/dynamic"><code>crnk-client</code></a>.
+in <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-client/src/test/java/io/crnk/client/dynamic"><code>crnk-client</code></a>
+and
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-test/src/main/java/io/crnk/test/mock/dynamic"><code>crnk-test</code></a>
 There is a further example test case and relationship repository.</p>
 </div>
 </div>
@@ -4017,43 +4092,43 @@ like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>import {Task} from './task';
-import {DefaultPagedLinksInformation} from '@crnk/angular-ngrx/';
+<pre class="CodeRay highlight"><code>import {DefaultPagedLinksInformation} from './default.paged.links.information';
+import {Tasks} from './tasks';
 import {CrnkStoreResource} from '@crnk/angular-ngrx/stub';
 import {ManyQueryResult, OneQueryResult, ResourceRelationship, TypedManyResourceRelationship, TypedOneResourceRelationship} from 'ngrx-json-api/src/interfaces';
 
-export module Schedule {
+export module Schedules {
 	export interface Relationships {
 		[key: string]: ResourceRelationship;
-		task?: TypedOneResourceRelationship&lt;Task&gt;;
-		lazyTask?: TypedOneResourceRelationship&lt;Task&gt;;
-		tasks?: TypedManyResourceRelationship&lt;Task&gt;;
-		tasksList?: TypedManyResourceRelationship&lt;Task&gt;;
+		task?: TypedOneResourceRelationship&lt;Tasks&gt;;
+		lazyTask?: TypedOneResourceRelationship&lt;Tasks&gt;;
+		tasks?: TypedManyResourceRelationship&lt;Tasks&gt;;
+		tasksList?: TypedManyResourceRelationship&lt;Tasks&gt;;
 	}
 	export interface Attributes {
 		name?: string;
 		delayed?: boolean;
 	}
 }
-export interface Schedule extends CrnkStoreResource {
-	relationships?: Schedule.Relationships;
-	attributes?: Schedule.Attributes;
+export interface Schedules extends CrnkStoreResource {
+	relationships?: Schedules.Relationships;
+	attributes?: Schedules.Attributes;
 }
-export interface ScheduleResult extends OneQueryResult {
-	data?: Schedule;
+export interface SchedulesResult extends OneQueryResult {
+	data?: Schedules;
 }
-export module ScheduleListResult {
+export module SchedulesListResult {
 	export interface ScheduleListLinks extends DefaultPagedLinksInformation {
 	}
 	export interface ScheduleListMeta {
 	}
 }
-export interface ScheduleListResult extends ManyQueryResult {
-	data?: Array&lt;Schedule&gt;;
-	links?: ScheduleListResult.ScheduleListLinks;
-	meta?: ScheduleListResult.ScheduleListMeta;
+export interface SchedulesListResult extends ManyQueryResult {
+	data?: Array&lt;Schedules&gt;;
+	links?: SchedulesListResult.ScheduleListLinks;
+	meta?: SchedulesListResult.ScheduleListMeta;
 }
-export let createEmptySchedule = function(id: string): Schedule {
+export let createEmptySchedules = function(id: string): Schedules {
 	return {
 		id: id,
 		type: 'schedules',
@@ -4121,10 +4196,10 @@ typescriptGen{
 		// outputDir = ...
 	}
 
-	includes = ['ch.adnovum.moap.movie.somePackage']
-	excludes = ['ch.adnovum.moap.movie.somePackage.otherPackage']
+	includes = ['resources.task']
+	excludes = ['resources.project']
 
-	packageMapping['ch.adnovum.moap.movie.management'] = '@adnovum/moap-movie-management-api'
+	packageMapping['resources.something'] = '@crnk/some-demo-library'
 	peerDependencies['ngrx-json-api'] = '&gt;=2.0.0-beta.6'
 	generateExpressions = true
 
@@ -4147,16 +4222,9 @@ typescriptGen.init()</code></pre>
 </li>
 <li>
 <p><code>crnk-meta</code> is used to gather a meta model of the underlying resources (or a any other type of object like JPA entities).
-Important to know is that every object is assigned a string-based meta id. For typical, simpler use cases this matches
-the package resp. class name. But for more advanced use cases those may differ.</p>
-</li>
-<li>
-<p>a mapping of Java package name (resp. <code>MetaElement.id</code>) to npm packages must be specified.
-Only resources are generated whose package matches the chosen <code>npm.packageName</code>.
-All other resources are imported as external NPM dependency.</p>
-</li>
-<li>
-<p><code>includes</code> and <code>excludes</code> allow to include and exclude packages from generation.</p>
+Important to know is that every object is assigned a string-based meta id. By default the
+meta id matches <code>resources.&lt;resourceType&gt;</code>. For example a Task resource with resource type <code>task</code> has a
+<code>resources.task</code> meta id.</p>
 </li>
 <li>
 <p>applying <code>crnk-gen-typescript</code> results in a new <code>assembleTypescript</code> task. Consumers may want to add
@@ -4181,6 +4249,15 @@ Setting it to false will result in the generation of the Typescript files only. 
 </li>
 <li>
 <p><code>generateExpressions</code> specifies whether QueryDSL like classes should be generated (<code>false</code> as default).</p>
+</li>
+<li>
+<p><code>packageMapping</code> allows to specify into which libraries resources belong to. By default all resources have
+a <code>resources.</code> meta id prefix and go into the currently generated package. In the example above, all resources with a
+<code>something/*</code> resource type resp. <code>resources.something</code> meta id prefix are included from a <code>@crnk/some-demo-library</code>
+library and no longer get generated manually.</p>
+</li>
+<li>
+<p><code>includes</code> and <code>excludes</code> allow to include and exclude resources from generation based on their meta id.</p>
 </li>
 </ul>
 </div>
