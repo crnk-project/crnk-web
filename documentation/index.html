@@ -2815,8 +2815,8 @@ display the validation errors next to the corresponding input fields.</p>
 <div class="sect2">
 <h3 id="_tracing_with_zipkin_brave">6.3. Tracing with Zipkin/Brave</h3>
 <div class="paragraph">
-<p>A <code>BraveModule</code> provided by <code>io.crnk:crnk-brave</code> provides integration into
-Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
+<p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-brave4</code> provides
+integration into Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
 both a Crnk client or server.</p>
 </div>
 <div class="paragraph">
@@ -2826,26 +2826,38 @@ Accordingly, a matching brave integration must be added to the classpath:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>io.zipkin.brave:brave-okhttp</code></p>
+<p><code>io.zipkin.brave:brave-instrumentation-okhttp3</code></p>
 </li>
 <li>
-<p><code>io.zipkin.brave:brave-apache-http-interceptors</code></p>
+<p><code>io.zipkin.brave:brave-instrumentation-httpclient</code></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>BraveModule</code> then takes care of the integration and will create a client span
+<p>The <code>BraveClientModule</code> then takes care of the integration and will create a client span
 for each request.</p>
 </div>
 <div class="paragraph">
-<p>On the server-side, <code>BraveModule</code> creates a local span for each accessed repository.
+<p>On the server-side, <code>BraveServletModule</code> creates a local span for each accessed repository.
 Every request triggers one or more repository accesses (depending on whether
-relations are included). Note however that <code>BraveModule</code> does not setup tracing
+relations are included). Note however that <code>BraveServletModule</code> does not setup tracing
 for incoming requests. That is the purpose of the JAX-RS/servlet integration of Brave.</p>
 </div>
 <div class="paragraph">
-<p>Have a look at the Spring boot example application to see the <code>BraveModule</code> in use
+<p>Have a look at the Spring boot example application to see the <code>BraveServletModule</code> in use
 together with a log reporter writing the output to console.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>io.crnk:crnk-brave</code> is deprecated and makes use of the Brave 3.x API.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><a id="security_module"></a></p>
@@ -4092,10 +4104,16 @@ like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>import {DefaultPagedLinksInformation} from './default.paged.links.information';
+<pre class="CodeRay highlight"><code>import {DefaultPagedLinksInformation} from './information/default.paged.links.information';
 import {Tasks} from './tasks';
 import {CrnkStoreResource} from '@crnk/angular-ngrx/stub';
-import {ManyQueryResult, OneQueryResult, ResourceRelationship, TypedManyResourceRelationship, TypedOneResourceRelationship} from 'ngrx-json-api/src/interfaces';
+import {
+	ManyQueryResult,
+	OneQueryResult,
+	ResourceRelationship,
+	TypedManyResourceRelationship,
+	TypedOneResourceRelationship
+} from 'ngrx-json-api/src/interfaces';
 
 export module Schedules {
 	export interface Relationships {
@@ -4633,6 +4651,9 @@ export class TestEditorComponent implements OnInit, OnDestroy {
 
 		&lt;input id="nameInput" required [crnkFormExpression]="resource.attributes.name"/&gt;
 
+		&lt;div id="valid"&gt;{{binding.valid | async}}&lt;/div&gt;
+		&lt;div id="dirty"&gt;{{binding.dirty | async}}&lt;/div&gt;
+
 		&lt;crnk-control-errors [expression]="resource.attributes.name"&gt;
 			&lt;ng-template let-errorCode="errorCode"&gt;
 				&lt;span id="controlError"&gt;{{errorCode}}&lt;/span&gt;
@@ -4679,6 +4700,12 @@ is optional and applications can also continue making use of <code>ngModel</code
 appropriate. The name of form controls can follow to patterns: <code>//&lt;type&gt;//&lt;id&gt;//path</code> or just
 <code>path`</code>. The form allows to modify multiple resources, while the later assumes the primary
 resource loaded by the query is being modified.</p>
+</li>
+<li>
+<p><code>FormBinding.dirty</code> notifies whether bound resource(s) were modified.</p>
+</li>
+<li>
+<p><code>FormBinding.valid</code> notifies whether bound resource(s) are invalid.</p>
 </li>
 </ul>
 </div>
@@ -4803,7 +4830,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-06 10:46:06 MESZ
+Last updated 2017-09-06 09:46:06 MESZ
 </div>
 </div>
 </body>

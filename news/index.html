@@ -142,6 +142,34 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>3. November 2017</h4>
+
+		<p>
+			2.3.20171103140100 is available:
+		</p>
+
+		<ul>
+			<li>crnk-monitor-brave4 module with support for Brave 4.x and Zipkin 2.</li>
+			<li>
+				crnk no longer uses a trailing slash in URLs (e.g. http://localhost/api/task instead of
+				http://localhost/api/task) in accordance with the JSON API specification. The backend ignores the trailing
+				slash and continues to support both request formats.
+			</li>
+			<li>
+				@crnk/angular-ngrx: FormBinding now carries a valid and a dirty status property of type Observable&lt;boolean&gt;.
+			</li>
+			<li>
+				Typescript generator now produces sources that pass the most recent Typescript linting checks.
+			</li>
+			<li>
+				Minor fixes/improvements to the url parameter widget in crnk-ui.
+			</li>
+			<li>
+				QuerySpec.apply(...) is hardened against illegal paging offsets.
+			</li>
+		</ul>
+
+
 		<br><h4>17. October 2017</h4>
 
 		<p>
@@ -178,7 +206,7 @@
 
 		<p>
 
-		<br><h4>4. October 2017</h4>
+			<br><h4>4. October 2017</h4>
 
 		<p>
 			2.1.20171003194426 is available:
