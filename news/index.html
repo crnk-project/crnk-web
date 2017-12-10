@@ -142,6 +142,59 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>8. December 2017</h4>
+
+		<p>
+			2.4.20171208083740 is available:
+		</p>
+
+		<ul>
+			<li>Improved Spring integration with support for auto configuration of all modules,
+				RestTemplate support in CrnkClient, Spring Cloud Sleuth support next to Brave and
+				Spring MVC integration into HomeModule. Further improvements are expected
+				in the near future. For more information have a look at the documentation.
+			<li>
+				By default the validation modules not only does exception mapping, but also
+				validates all incoming resources (POST and PATCH). The behavior can also be
+				disabled by passing a flag to `ValidationModule.create(...)`.
+
+			</li>
+			<li>
+				@crnk/angular-ngrx: has been updated to the release candidate of ngrx-json-api, providing
+				a stable base for ngrx 4.x development. The Typescript generator has been updated accordingly.
+			</li>
+			<li>
+				additional ResourceRegistry.getResourceUrl(...) methods to facilitate the computation
+				of URLs for linking purposes.
+			</li>
+			<li>
+				Invalid JSON body will now result in a 400 instead of 500 error.
+			</li>
+			<li>
+				JsonProperty.Access.WRITE_ONLY to have write-only attributes.
+			</li>
+			<li>
+				Typescript generator makes use of a forked process in Gradle. To perform generation, the Typescript
+				generator has to launch the application to get access to the JSON API repositories
+				(typically by following the JUnit setup). Since application may not always properly
+				cleanup after themselves and Gradle daemons keep running after the builds, the new
+				behavior prevents resource leakage and gives more robust builds.
+			</li>
+			<li>
+				GET requests with application/json accept type are now also served by Crnk by default.
+				POST and PATCH request continue to enforce application/vnd.api+json. This is a slight
+				relaxation of the JSON API specification but in line with the more general semantic of
+				the accept header. The behavior is configured with the
+				crnk.config.resource.request.rejectPlainJson property.
+			</li>
+			<li>
+				Both formats for linking from the official specification are now supported.
+				See <a href="http://jsonapi.org/format/#document-links">http://jsonapi.org/format/#document-links</a>.
+				The more simpler format continues to be the default.
+				The behavior is configured by the crnk.config.serialize.object.links.
+			</li>
+		</ul>
+
 		<br><h4>3. November 2017</h4>
 
 		<p>

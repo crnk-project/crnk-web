@@ -532,14 +532,14 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_integrating_using_a_filter">2.3.2. Integrating using a filter</a></li>
 </ul>
 </li>
-<li><a href="#_integration_with_spring">2.4. Integration with Spring</a></li>
+<li><a href="#_integration_with_spring_and_string_boot">2.4. Integration with Spring and String Boot</a></li>
 <li><a href="#_discovery_with_cdi">2.5. Discovery with CDI</a></li>
 <li><a href="#_discovery_with_guice">2.6. Discovery with Guice</a></li>
 <li><a href="#_discovery_with_spring">2.7. Discovery with Spring</a></li>
 <li><a href="#_discovery_without_a_dependency_injection_framework">2.8. Discovery without a dependency injection framework</a></li>
 <li><a href="#_no_discovery">2.9. No Discovery</a></li>
 <li><a href="#_crnkboot">2.10. CrnkBoot</a></li>
-<li><a href="#_parameters">2.11. Parameters</a></li>
+<li><a href="#_properties">2.11. Properties</a></li>
 </ul>
 </li>
 <li><a href="#_resource">3. Resource</a>
@@ -618,6 +618,18 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_setup_3">6.9.1. Setup</a></li>
 <li><a href="#_example_application">6.9.2. Example application</a></li>
 <li><a href="#_limitations">6.9.3. Limitations</a></li>
+</ul>
+</li>
+<li><a href="#_spring_modules_and_auto_configuration">6.10. Spring Modules and Auto Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#_spring_mvc_module">6.10.1. Spring MVC Module</a></li>
+<li><a href="#_spring_cloud_sleuth_module">6.10.2. Spring Cloud Sleuth Module</a></li>
+<li><a href="#_spring_security_module">6.10.3. Spring Security Module</a></li>
+<li><a href="#_jpa_module_auto_configuration">6.10.4. JPA Module Auto Configuration</a></li>
+<li><a href="#_validation_module_auto_configuration">6.10.5. Validation Module Auto Configuration</a></li>
+<li><a href="#_ui_module_auto_configuration">6.10.6. UI Module Auto Configuration</a></li>
+<li><a href="#_operations_module_auto_configuration">6.10.7. Operations Module Auto Configuration</a></li>
+<li><a href="#_meta_module_auto_configuration">6.10.8. Meta Module Auto Configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -1044,13 +1056,14 @@ A code below shows a sample <code>web.xml</code> file with properly defined and 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integration_with_spring">2.4. Integration with Spring</h3>
+<h3 id="_integration_with_spring_and_string_boot">2.4. Integration with Spring and String Boot</h3>
 <div class="paragraph">
-<p>Crnk provides a simple Spring Boot integration using the <code>@Configuration</code> annotated class <code>CrnkConfigV3</code>.
-Using this class, the only thing needed to allow Crnk process requests is parameter configuration.
-An example <code>application.properties</code> file is presented below.</p>
+<p>Crnk provides with <code>crnk-spring</code> a number of utilities to seamlessly integrate with Spring and Spring Boot.
+First and foremost, there is a <code>CrnkConfigV3</code> configuration class to hook Crnk into Spring Web to serve requests.
+The web integration can be customized with the subsequent properties:</p>
 </div>
 <div class="listingblock">
+<div class="title">application.properties</div>
 <div class="content">
 <pre class="CodeRay highlight"><code>  crnk.domainName=http://localhost:8080
   crnk.pathPrefix=/api</code></pre>
@@ -1059,6 +1072,10 @@ An example <code>application.properties</code> file is presented below.</p>
 <div class="paragraph">
 <p>Spring integration uses crnk-servlet <code>AbstractCrnkFilter</code> to fetch the requests. Similar to CDI, repositories
 and modules are picked up from the Spring ApplicationContext with  <code>SpringServiceDiscovery</code>.</p>
+</div>
+<div class="paragraph">
+<p>Next to the Spring Web integration, <code>crnk-spring</code> provides a number modules to hook into other Spring components.
+For a detailed overview see <a href="#spring_modules">Spring modules</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1178,7 +1195,7 @@ your servers depending on the datasize.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_parameters">2.11. Parameters</h3>
+<h3 id="_properties">2.11. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -1233,6 +1250,14 @@ request. For more information see <code>CrnkProperties.RESOURCE_FIELD_IMMUTABLE_
 Enforces a 404 response should a repository return a null value. This is common practice, but
 not strictly mandated by the JSON API specification. In general it is recommended for
 repository to throw <code>ResourceNotFoundException</code>.</p>
+</li>
+<li>
+<p><code>crnk.config.serialize.object.links</code> to serialize links as objects. See
+<a href="http://jsonapi.org/format/#document-links" class="bare">http://jsonapi.org/format/#document-links</a>. Disabled by default.</p>
+</li>
+<li>
+<p><code>crnk.config.resource.request.rejectPlainJson</code> whether to reject GET requests with
+<code>application/json</code> accept headers and enforce <code>application/vnd.api+json</code>. Disabled by default.</p>
 </li>
 </ul>
 </div>
@@ -1412,6 +1437,28 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
+<p>By default links are serialized as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"links": {
+  "self": "http://example.com/posts"
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With <code>crnk.config.serialize.object.links=true</code> links get serialized as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"links": {
+  "self": {
+    "href": "http://example.com/posts",
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><a id="jackson_annotations"></a></p>
 </div>
 </div>
@@ -1442,7 +1489,7 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonProperty.access</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an object can be read and/or written. <code>WRITE_ONLY</code> is not yet supported.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an object can be read and/or written.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2225,12 +2272,17 @@ communicating with JSON-API compliant servers. Two http client libraries are sup
 <div class="ulist">
 <ul>
 <li>
-<p><code>OkHttp <a href="http://square.github.io/okhttp" class="bare">http://square.github.io/okhttp</a></code>
+<p>` &lt;<a href="http://square.github.io/&gt;`" class="bare">http://square.github.io/&gt;`</a>
 Library has been used to allow usage in both Android and server applications and services.</p>
 </li>
 <li>
 <p><code>Apache Http Client <a href="https://hc.apache.org/httpcomponents-client-ga/index.html" class="bare">https://hc.apache.org/httpcomponents-client-ga/index.html</a></code>
 Library widely used in the Java community.</p>
+</li>
+<li>
+<p><code>RestTemplate</code> from Spring that provides a Spring abstraction for `` and other HTTP libraries.
+Spring application benefit from using this over the underlying native implementation to share
+the setup configuration setup. It is used by default if the presence of Spring is detected.</p>
 </li>
 </ul>
 </div>
@@ -2478,9 +2530,9 @@ request headers (like security), as it has to be done in two places (unfortunate
 <div class="sect2">
 <h3 id="_http_customization">5.5. HTTP customization</h3>
 <div class="paragraph">
-<p>It is possible to hook into the HTTP implementation used by Crnk (OkHttp or Apache).
+<p>It is possible to hook into the HTTP implementation used by Crnk ( or Apache).
 Make use of <code>CrnkClient#getHttpAdapter()</code> and cast it to either
-<code>HttpClientAdapter</code> or <code>OkHttpAdapter</code>. Both implementations provide a
+<code>HttpClientAdapter</code> or <code>Adapter</code>. Both implementations provide a
 <code>addListener</code> method, which in turn gives access to the native builder used to construct
 the respective HTTP client implementation. This allows to cover various use cases:</p>
 </div>
@@ -2775,7 +2827,7 @@ match again the entity attribute naming.</p>
 <h3 id="_jsr_303_validation_module">6.2. JSR 303 Validation Module</h3>
 <div class="paragraph">
 <p>A <code>ValidationModule</code> provided by <code>io.crnk:crnk-validation</code> implements
-exception mappers for <code>javax.validation.ValidationException</code> and <code>javax.validation.ConstraintViolationException</code>.
+resource validation and provides exception mappers for <code>javax.validation.ValidationException</code> and <code>javax.validation.ConstraintViolationException</code>.
 Among others, it properly translates 'javax.validation.ConstraintViolation' instances to JSON API errors.
 A JSON API error can, among others, contain a source pointer. This source pointer allows a clients/UI to
 display the validation errors next to the corresponding input fields.</p>
@@ -2807,6 +2859,21 @@ display the validation errors next to the corresponding input fields.</p>
 </div>
 <div class="paragraph">
 <p>Notice the <code>422</code> status code used for such errors.</p>
+</div>
+<div class="paragraph">
+<p>As mentioned above, resource validation mechanism enabled by default will be applied in case of one of the following request
+types: <code>POST</code>, <code>PUT</code> and <code>PATCH</code>. Once described behavior is unwanted,
+module should be defined in the following way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+	@Bean
+    ValidationModule validationModule()
+        return ValidationModule.create(false);
+    }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p><a id="brave_module"></a></p>
@@ -3669,6 +3736,83 @@ out a bit in this area.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><a id="spring_modules"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spring_modules_and_auto_configuration">6.10. Spring Modules and Auto Configuration</h3>
+<div class="paragraph">
+<p>All Spring modules are hosted in the <code>crnk-spring</code> modules without explicit runtime-time dependency.
+Each module comes with an auto configuration that is enabled if the presence of the particular Spring
+component is detected. Each module comes with an enabled property to disable the auto configuration.</p>
+</div>
+<div class="sect3">
+<h4 id="_spring_mvc_module">6.10.1. Spring MVC Module</h4>
+<div class="paragraph">
+<p>Makes Spring MVC services available in the Crnk Home Module next to the json api repositories to have a list of all offered
+services. Auto configuration is provided by <code>CrnkSpringMvcAutoConfiguration</code>.</p>
+</div>
+<div class="paragraph">
+<p>Further integration similar to the JAX-RS one is expected in the future.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_spring_cloud_sleuth_module">6.10.2. Spring Cloud Sleuth Module</h4>
+<div class="paragraph">
+<p>Integrates in the same fashion as the Crnk Brave module to trace calls from a request to the individual repositories.
+Auto configuration is provided by <code>CrnkSpringCloudSleuthAutoConfiguration</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_spring_security_module">6.10.3. Spring Security Module</h4>
+<div class="paragraph">
+<p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON API errors that complements
+the Spring-independent <code>SecurityModule</code>.</p>
+</div>
+<div class="paragraph">
+<p>Auto configuration is provided by <code>CrnkSecurityAutoConfiguration</code>. It sets up <code>SecurityModule</code> and
+<code>SpringSecurityModule</code>. By default access to all repositories is blocked. A bean of type <code>SecurityModuleConfigurer</code>
+can be added to grant access to repositories.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jpa_module_auto_configuration">6.10.4. JPA Module Auto Configuration</h4>
+<div class="paragraph">
+<p><code>CrnkJpaAutoConfiguration</code> setups the <code>JpaModule</code> and <code>SpringTransactionRunner</code>. <code>SpringTransactionRunner</code> let
+all requests run in a transaction that is automatically rolled back in case of an error. The <code>JpaModule</code> is
+by default setup to expose all entities as JSON API repositories. This can be disabled by setting
+<code>crnk.jpa.exposeAll=false</code>. The setup of the JPA module can be customized by providing a bean
+implementing <code>JpaModuleConfigurer</code>. See <code>ExampleJpaModuleConfigurer</code> for an example.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_validation_module_auto_configuration">6.10.5. Validation Module Auto Configuration</h4>
+<div class="paragraph">
+<p><code>CrnkValidationAutoConfiguration</code> sets up the <code>ValidationModule</code>. This will given validation exception to
+JSON API error mapping. And by default all incoming resources are validated. The later can be disabled by setting
+<code>crnk.validation.validateResources=false</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ui_module_auto_configuration">6.10.6. UI Module Auto Configuration</h4>
+<div class="paragraph">
+<p><code>CrnkUIAutoConfiguration</code> sets up the <code>UIModule</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_operations_module_auto_configuration">6.10.7. Operations Module Auto Configuration</h4>
+<div class="paragraph">
+<p><code>CrnkOperationsAutoConfiguration</code> sets up the <code>OperationsModule</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_meta_module_auto_configuration">6.10.8. Meta Module Auto Configuration</h4>
+<div class="paragraph">
+<p><code>CrnkMetaAutoConfiguration</code> sets up the <code>MetaModule</code> and exposes meta data for all JSON API repositories.
+The <code>MetaModule</code> can be customized by providing a bean of type <code>MetaModuleConfigurer</code>.</p>
+</div>
 </div>
 </div>
 </div>
@@ -4113,7 +4257,7 @@ import {
 	ResourceRelationship,
 	TypedManyResourceRelationship,
 	TypedOneResourceRelationship
-} from 'ngrx-json-api/src/interfaces';
+} from 'ngrx-json-api';
 
 export module Schedules {
 	export interface Relationships {
@@ -4217,6 +4361,8 @@ typescriptGen{
 	includes = ['resources.task']
 	excludes = ['resources.project']
 
+	forked = true
+
 	packageMapping['resources.something'] = '@crnk/some-demo-library'
 	peerDependencies['ngrx-json-api'] = '&gt;=2.0.0-beta.6'
 	generateExpressions = true
@@ -4276,6 +4422,12 @@ library and no longer get generated manually.</p>
 </li>
 <li>
 <p><code>includes</code> and <code>excludes</code> allow to include and exclude resources from generation based on their meta id.</p>
+</li>
+<li>
+<p>by default the generation takes place in a forked process. Since the generator typically
+runs the application and that may not properly cleanup, it is recommended to let the
+generator fork a new process to avoid resource leakage in Gradle daemons and
+have more stable builds.</p>
 </li>
 </ul>
 </div>
@@ -4830,7 +4982,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-06 09:46:06 MESZ
+Last updated 2017-11-16 10:50:18 +01:00
 </div>
 </div>
 </body>
