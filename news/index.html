@@ -142,6 +142,63 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>13. January 2018</h4>
+
+		<p>
+			2.4.20180112101521 is available with further Spring improvements:
+		</p>
+
+		<ul>
+			<li>
+				New CrnkErrorController and CrnkErrorControllerAutoConfiguration that let Spring return JSON errors in
+				JSON API format.
+			</li>
+			<li>
+				AccessDeniedExceptions are logged with WARN.
+			</li>
+			<li>
+				Support for crnk.pathPrefix property to move resources into subdirectories (such as &quot;/api/&quot;).
+			</li>
+			<li>
+				RestTemplateAdapter used by crnk-client has a new constructor taking a RestTemplate as argument.
+				Useful to pass a customized instance.
+			</li>
+			<li>
+				AutoConfiguration for crnk-ui.
+			</li>
+			<li>Validation module makes use of the Spring validation factory, enabling the full Spring-feature set in custom
+				validation handlers.
+			</li>
+		</ul>
+
+		<p>
+			Next to that there are other improvements and bug fixes:
+		</p>
+
+		<ul>
+			<li>
+				The Operations module will only process requests with a proper application/json-patch+json accept content type.
+			</li>
+			<li>
+				Added protected default constructors for RelationshipRepositoryBase and ResourceRepositoryBase sometimes needed by
+				dependency injection frameworks like CDI.
+			</li>
+			<li>
+				The &quot;filter&quot; request parameter can also be passed without any attribute parameter (filter=... instead of
+				filter[attr]=...).
+			</li>
+			<li>
+				JPA exceptions within the JPA module are logged as ERROR.
+			</li>
+			<li>
+				New &quot;Crnk-Compact: true&quot; HTTP request header that will omit self, related and relationship links
+				in the response. This can yield response size reductions of up to 65%.
+			</li>
+			<li>SecurityConfig.Builder of the security module allows method chaining.</li>
+		</ul>
+
+
+
 		<br><h4>8. December 2017</h4>
 
 		<p>
@@ -194,6 +251,7 @@
 				The behavior is configured by the crnk.config.serialize.object.links.
 			</li>
 		</ul>
+
 
 		<br><h4>3. November 2017</h4>
 
