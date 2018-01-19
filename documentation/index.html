@@ -597,10 +597,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jpa_module">6.1. JPA Module</a>
 <ul class="sectlevel3">
 <li><a href="#_jpa_setup">6.1.1. JPA Setup</a></li>
-<li><a href="#_pagination_2">6.1.2. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">6.1.3. Criteria API and QueryDSL</a></li>
-<li><a href="#_customizing_the_jpa_repository">6.1.4. Customizing the JPA repository</a></li>
-<li><a href="#_dto_mapping">6.1.5. DTO Mapping</a></li>
+<li><a href="#_jpa_setup_with_spring">6.1.2. JPA Setup with Spring</a></li>
+<li><a href="#_pagination_2">6.1.3. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">6.1.4. Criteria API and QueryDSL</a></li>
+<li><a href="#_customizing_the_jpa_repository">6.1.5. Customizing the JPA repository</a></li>
+<li><a href="#_dto_mapping">6.1.6. DTO Mapping</a></li>
 </ul>
 </li>
 <li><a href="#_jsr_303_validation_module">6.2. JSR 303 Validation Module</a></li>
@@ -2659,8 +2660,23 @@ to Crnk. For example in the case of JAX-RS:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>	TransactionRunner transactionRunner = ...;
-	JpaModule jpaModule = JpaModule.newServerModule(entityManagerFactory, entityManager, transactionRunner);
-	jpaModule.setRepositoryFactory(new ValidatedJpaRepositoryFactory());
+
+	JpaModuleConfig config = new JpaModuleConfig();
+
+	// expose all entitities from provided EntityManagerFactory
+	config.exposeAllEntities(entityManagerFactory);
+
+	// expose single entity
+    config.addRepository(JpaRepositoryConfig.builder(TaskEntity.class).build());
+
+    // expose single entity with additional interface declaration. Interface is used to
+    // extract the list, meta and link information types.
+    config.addRepository(
+      JpaRepositoryConfig.builder(PersonEntity.class)
+           .setInterfaceClass(PersonRepository.class).build()
+    );
+
+	JpaModule jpaModule = JpaModule.createServerModule(config, em, transactionRunner());
 
 	CrnkFeature feature = new CrnkFeature(...);
 	feature.addModule(jpaModule);</code></pre>
@@ -2670,19 +2686,74 @@ to Crnk. For example in the case of JAX-RS:</p>
 <p>The JPA modules by default looks up the entityManagerFactory and obtains a list
 of registered JPA entities. For each entity a instance of <code>JpaEntityRepository</code>
 is registered to Crnk using the module API. Accordingly, every relation
-is registered as <code>JpaRelationshipRepository</code>. <code>JpaModule.setRepositoryFactory</code>
-allows to provide a factory to change or customized the used repositories.
-To manually select the entities exposed to Crnk use <code>JpaModule.addEntityClass(&#8230;&#8203;)</code>
-and <code>JpaModule.removeEntityClass(&#8230;&#8203;)</code>. If no <code>entityManagerFactory</code> is provided
-to newServerModule, then the registration of entities is omitted and can be done
-manually.</p>
+is registered as <code>JpaRelationshipRepository</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JpaModuleConfig.setRepositoryFactory</code> allows to provide a factory to change or customized the used repositories.</p>
+</li>
+<li>
+<p><code>exposeAllEntities</code> takes an <code>EntityManagerFactory</code> and exposes all registered entities as
+JSON API repository.</p>
+</li>
+<li>
+<p>To manually select the entities exposed to Crnk use <code>JpaModuleConfig.addRepository(&#8230;&#8203;)</code>.
+<code>JpaRepositoryConfig</code> provides a number of customization options for the exposed entity.
+ <code>setListClass</code>, <code>setListMetaClass</code> and <code>setListLinksClass</code> allow to set the type information and will
+ then return resources having lists, links and meta data of the given type.  <code>setInterfaceClass</code>
+ is a shortcut that allows to extract those three types from a repository interface definition
+ (see <code>TaskRepository</code> below for an example).</p>
+</li>
+<li>
+<p><code>JpaRepositoryConfig.Builder.setRepositoryDecorator</code> allows to setup a repository decorator that allows to intercept
+the request and responses and perform changes, like setting up additional links and meta information.</p>
+</li>
+<li>
+<p><code>JpaRepositoryConfig</code> allows to specify DTO mapping, have a look at the later section to this topic.</p>
+</li>
+<li>
+<p>Internally the JpaModule will create instances of <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code>
+to register them</p>
+</li>
+<li>
+<p>The transactionRunner needs to be implemented by the application to hook into the transaction processing of the used
+environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
+<code>@Transactional</code> annotation. The JPA module makes sure that every call to a repository happens within such a transaction
+boundary. Crnk comes with two default implementations: <code>SpringTransactionRunner</code> and
+<code>CdiTransactionRunner</code> that come are included in <code>crnk-spring</code> and <code>crnk-cdi</code>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The transactionRunner needs to be implemented by the application to hook into the
-transaction processing of the used environment (Spring, JEE, etc.). This might be
-as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
-<code>@Transactional</code> annotation. The JPA module makes sure that every call to a
-repository happens within such a transaction boundary.</p>
+<p>For crnk-client it might be worthwhile to have an interface definition of the otherwise fully generic
+JSON API entity repositories. The interface has the benefit of providing proper typing of meta information,
+link information and list return type. An example can look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>public interface TaskRepository extends ResourceRepositoryV2&lt;TaskEntity, UUID&gt; {
+
+    static class TaskListLinks implements LinksInformation, SelfLinksInformation {
+
+		public String someLink = "test";
+
+	}
+
+	public static class TaskListMeta implements MetaInformation {
+
+		public String someMeta = "test";
+
+	}
+
+	public class TaskList extends ResourceListBase&lt;TaskEntity, TaskListMeta, TaskListLinks&gt; {
+
+	}
+
+	@Override
+	public TaskList findAll(QuerySpec querySpec);
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>To setup a Crnk client with the JPA module use:</p>
@@ -2693,7 +2764,10 @@ repository happens within such a transaction boundary.</p>
 
 	JpaModule module = JpaModule.newClientModule();
 	setupModule(module, false);
-	client.addModule(module);</code></pre>
+	client.addModule(module);
+
+	ResourceRepositoryV2&lt;TaskEntity, UUID&gt; genericRepo = client.getRepositoryForType(TypeEntity.class)
+	TaskRepository typedRepo = client.getRepositoryForInterface(TaskRepository.class)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2704,7 +2778,14 @@ are discussed in the subsequent sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">6.1.2. Pagination</h4>
+<h4 id="_jpa_setup_with_spring">6.1.2. JPA Setup with Spring</h4>
+<div class="paragraph">
+<p>Have a look at <a href="#jpa_spring">JPA Module Auto Configuration</a>. For Spring Boot an auto configuration is
+available that already takes care of some defaults.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pagination_2">6.1.3. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -2714,7 +2795,7 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">6.1.3. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">6.1.4. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -2724,7 +2805,7 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_jpa_repository">6.1.4. Customizing the JPA repository</h4>
+<h4 id="_customizing_the_jpa_repository">6.1.5. Customizing the JPA repository</h4>
 <div class="paragraph">
 <p>The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
 implementations into the JPA module. The JPA module further provides a more
@@ -2755,7 +2836,7 @@ lightweight filter API to perform various changes to JPA repository requests:</p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dto_mapping">6.1.5. DTO Mapping</h4>
+<h4 id="_dto_mapping">6.1.6. DTO Mapping</h4>
 <div class="paragraph">
 <p>Mapping to DTO objects is supported with <code>JpaModule.registerMappedEntityClass(&#8230;&#8203;)</code>.
 A mapper then can be provided that translates the Entity to a DTO class.
@@ -2782,7 +2863,7 @@ attributes like in the example depicted here:</p>
 	QuerydslQueryFactory queryFactory = (QuerydslQueryFactory) module.getQueryFactory();
 	queryFactory.registerComputedAttribute(TestEntity.class, TestDTO.ATTR_COMPUTED_UPPER_STRING_VALUE,
 		 String.class, basicComputedValueFactory);
-	module.addMappedEntityClass(TestEntity.class, TestDTO.class, new TestDTOMapper(entityManager));</code></pre>
+	module.addRepository(JpaRepositoryConfig.builder(TestEntity.class, TestDTO.class, new TestDTOMapper(entityManager)).build())</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3790,6 +3871,9 @@ the Spring-independent <code>SecurityModule</code>.</p>
 <code>SpringSecurityModule</code>. By default access to all repositories is blocked. A bean of type <code>SecurityModuleConfigurer</code>
 can be added to grant access to repositories.</p>
 </div>
+<div class="paragraph">
+<p><a id="jpa_spring"></a></p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_jpa_module_auto_configuration">6.10.4. JPA Module Auto Configuration</h4>
@@ -3798,7 +3882,101 @@ can be added to grant access to repositories.</p>
 all requests run in a transaction that is automatically rolled back in case of an error. The <code>JpaModule</code> is
 by default setup to expose all entities as JSON API repositories. This can be disabled by setting
 <code>crnk.jpa.exposeAll=false</code>. The setup of the JPA module can be customized by providing a bean
-implementing <code>JpaModuleConfigurer</code>. See <code>ExampleJpaModuleConfigurer</code> for an example.</p>
+implementing <code>JpaModuleConfigurer</code>. See <code>ExampleJpaModuleConfigurer</code> for an example:</p>
+</div>
+<div class="listingblock">
+<div class="title">ExampleJpaModuleConfigurer.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.example.springboot;
+
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
+
+import io.crnk.example.springboot.domain.model.ScheduleDto;
+import io.crnk.example.springboot.domain.model.ScheduleEntity;
+import io.crnk.jpa.JpaModuleConfig;
+import io.crnk.jpa.JpaRepositoryConfig;
+import io.crnk.jpa.mapping.JpaMapper;
+import io.crnk.jpa.query.Tuple;
+import io.crnk.jpa.query.criteria.JpaCriteriaExpressionFactory;
+import io.crnk.jpa.query.criteria.JpaCriteriaQueryFactory;
+import io.crnk.spring.boot.JpaModuleConfigurer;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ExampleJpaModuleConfigurer implements JpaModuleConfigurer {
+
+	@PersistenceContext
+	private EntityManager em;
+
+	/**
+	 * Expose JPA entities as repositories.
+	 *
+	 * @return module
+	 */
+
+	@Override
+	public void configure(JpaModuleConfig config) {
+		// directly expose entity
+		config.addRepository(JpaRepositoryConfig.builder(ScheduleEntity.class).build());
+
+		// additionally expose entity as a mapped dto
+		config.addRepository(
+				JpaRepositoryConfig.builder(ScheduleEntity.class, ScheduleDto.class, new ScheduleMapper()).build());
+
+		JpaCriteriaQueryFactory queryFactory = (JpaCriteriaQueryFactory) config.getQueryFactory();
+
+		// register a computed a attribute
+		// you may consider QueryDSL or generating the Criteria query objects.
+		queryFactory.registerComputedAttribute(ScheduleEntity.class, "upperName", String.class,
+				new JpaCriteriaExpressionFactory&lt;From&lt;?, ScheduleEntity&gt;&gt;() {
+
+					@SuppressWarnings({ "rawtypes", "unchecked" })
+					@Override
+					public Expression&lt;String&gt; getExpression(From&lt;?, ScheduleEntity&gt; entity, CriteriaQuery&lt;?&gt; query) {
+						CriteriaBuilder builder = em.getCriteriaBuilder();
+						return builder.upper((Expression) entity.get("name"));
+					}
+				});
+	}
+
+
+	class ScheduleMapper implements JpaMapper&lt;ScheduleEntity, ScheduleDto&gt; {
+
+		@Override
+		public ScheduleDto map(Tuple tuple) {
+			ScheduleDto dto = new ScheduleDto();
+
+			// first entry in tuple is the queried entity (if not configured otherwise)
+			ScheduleEntity entity = tuple.get(0, ScheduleEntity.class);
+			dto.setId(entity.getId());
+			dto.setName(entity.getName());
+
+			// computed attribute available as additional tuple entry
+			dto.setUpperName(tuple.get(1, String.class));
+			return dto;
+		}
+
+		@Override
+		public ScheduleEntity unmap(ScheduleDto dto) {
+			// get entity from database if already there
+			ScheduleEntity entity = em.find(ScheduleEntity.class, dto.getId());
+			if (entity == null) {
+				entity = new ScheduleEntity();
+				entity.setId(dto.getId());
+			}
+			entity.setName(dto.getName());
+			return entity;
+		}
+
+	}
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -4996,7 +5174,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-11-16 10:50:18 +01:00
+Last updated 2017-09-06 09:46:06 +01:00
 </div>
 </div>
 </body>
