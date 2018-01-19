@@ -2667,14 +2667,14 @@ to Crnk. For example in the case of JAX-RS:</p>
 	config.exposeAllEntities(entityManagerFactory);
 
 	// expose single entity
-    config.addRepository(JpaRepositoryConfig.builder(TaskEntity.class).build());
+	config.addRepository(JpaRepositoryConfig.builder(TaskEntity.class).build());
 
-    // expose single entity with additional interface declaration. Interface is used to
-    // extract the list, meta and link information types.
-    config.addRepository(
-      JpaRepositoryConfig.builder(PersonEntity.class)
-           .setInterfaceClass(PersonRepository.class).build()
-    );
+	// expose single entity with additional interface declaration. Interface is used to
+	// extract the list, meta and link information types.
+	config.addRepository(
+		JpaRepositoryConfig.builder(PersonEntity.class)
+			.setInterfaceClass(PersonRepository.class).build()
+	);
 
 	JpaModule jpaModule = JpaModule.createServerModule(config, em, transactionRunner());
 
@@ -2684,9 +2684,6 @@ to Crnk. For example in the case of JAX-RS:</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p><code>JpaModuleConfig.setRepositoryFactory</code> allows to provide a factory to change or customized the used repositories.</p>
-</li>
 <li>
 <p><code>exposeAllEntities</code> takes an <code>EntityManagerFactory</code> and exposes all registered entities as
 JSON API repository.</p>
@@ -2708,16 +2705,17 @@ the request and responses and perform changes, like setting up additional links 
 </li>
 <li>
 <p>Internally the JpaModule will create instances of <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code>
-to register them</p>
+for each exposed entity. <code>JpaModuleConfig.setRepositoryFactory</code> allows to provide a factory to change or customized the used
+repositories.</p>
 </li>
-<li>
+</ul>
+</div>
+<div class="paragraph">
 <p>The transactionRunner needs to be implemented by the application to hook into the transaction processing of the used
 environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
 <code>@Transactional</code> annotation. The JPA module makes sure that every call to a repository happens within such a transaction
 boundary. Crnk comes with two default implementations: <code>SpringTransactionRunner</code> and
 <code>CdiTransactionRunner</code> that come are included in <code>crnk-spring</code> and <code>crnk-cdi</code>.</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>For crnk-client it might be worthwhile to have an interface definition of the otherwise fully generic
