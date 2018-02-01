@@ -2090,7 +2090,9 @@ allow to replace the implementation.</p>
 <div class="paragraph">
 <p>One can get access to <code>DefaultQuerySpecDeserializer</code> trough the various integrations, e.g.
 <code>CrnkFeature.getQuerySpecDeserializer()</code>. For more information have a look at the
-<a href="#setup">setup chapter</a>.</p>
+<a href="#setup">setup chapter</a>. Next to the setters in the various integrations, it is also possible
+to provide a custom  <code>QuerySpecDeserializer</code> trough the
+service discovery mechanism (like specifying a Spring or CDI bean).</p>
 </div>
 </div>
 </div>
@@ -2667,14 +2669,14 @@ to Crnk. For example in the case of JAX-RS:</p>
 	config.exposeAllEntities(entityManagerFactory);
 
 	// expose single entity
-	config.addRepository(JpaRepositoryConfig.builder(TaskEntity.class).build());
+    config.addRepository(JpaRepositoryConfig.builder(TaskEntity.class).build());
 
-	// expose single entity with additional interface declaration. Interface is used to
-	// extract the list, meta and link information types.
-	config.addRepository(
-		JpaRepositoryConfig.builder(PersonEntity.class)
-			.setInterfaceClass(PersonRepository.class).build()
-	);
+    // expose single entity with additional interface declaration. Interface is used to
+    // extract the list, meta and link information types.
+    config.addRepository(
+      JpaRepositoryConfig.builder(PersonEntity.class)
+           .setInterfaceClass(PersonRepository.class).build()
+    );
 
 	JpaModule jpaModule = JpaModule.createServerModule(config, em, transactionRunner());
 
@@ -2682,8 +2684,17 @@ to Crnk. For example in the case of JAX-RS:</p>
 	feature.addModule(jpaModule);</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The JPA modules by default looks up the entityManagerFactory and obtains a list
+of registered JPA entities. For each entity a instance of <code>JpaEntityRepository</code>
+is registered to Crnk using the module API. Accordingly, every relation
+is registered as <code>JpaRelationshipRepository</code>.</p>
+</div>
 <div class="ulist">
 <ul>
+<li>
+<p><code>JpaModuleConfig.setRepositoryFactory</code> allows to provide a factory to change or customized the used repositories.</p>
+</li>
 <li>
 <p><code>exposeAllEntities</code> takes an <code>EntityManagerFactory</code> and exposes all registered entities as
 JSON API repository.</p>
@@ -2705,17 +2716,16 @@ the request and responses and perform changes, like setting up additional links 
 </li>
 <li>
 <p>Internally the JpaModule will create instances of <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code>
-for each exposed entity. <code>JpaModuleConfig.setRepositoryFactory</code> allows to provide a factory to change or customized the used
-repositories.</p>
+to register them</p>
 </li>
-</ul>
-</div>
-<div class="paragraph">
+<li>
 <p>The transactionRunner needs to be implemented by the application to hook into the transaction processing of the used
 environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
 <code>@Transactional</code> annotation. The JPA module makes sure that every call to a repository happens within such a transaction
 boundary. Crnk comes with two default implementations: <code>SpringTransactionRunner</code> and
 <code>CdiTransactionRunner</code> that come are included in <code>crnk-spring</code> and <code>crnk-cdi</code>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For crnk-client it might be worthwhile to have an interface definition of the otherwise fully generic
@@ -4381,19 +4391,6 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 <div class="sect1">
 <h2 id="_generation">8. Generation</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-this feature is still in incurbation, feedback and contributions welcomed. In particular further frameworks like
-Spring must be supported.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Crnk allows the generation of Typescript stubs for type-safe, client-side web development. Contributions for other
 languages like iOS would be very welcomed.</p>
@@ -4498,8 +4495,8 @@ possibilities to do that. <a href="https://github.com/crnk-project/crnk-framewor
 .gradle[crnk-client-angular-ngrx]
 does such a setup manually in Gradle. Alternatively, there is a Gradle plugin taking care of the generator setup. It makes use
 of the JUnit to get
-the application to a running state at built-time. So far a JUnit setup with Deltaspike for JEE application.
-Other non-CDI integrations like Spring will soon. Such a setup may look like:</p>
+the application to a running state at built-time. Currently supported are CDI and Spring-based applications.
+Such a setup may look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4530,13 +4527,17 @@ typescriptGen{
 
 	runtime {
 		configuration = 'typescriptGenRuntime'
+        spring {
+        	profile = 'test'
+        	configuration = 'ch.adnovum.arch.demo.management.service.ManagementApplication'
+        }
 	}
 
 	npm {
 		packageVersion = '0.0.1'
-		packageName = '@adnovum/moap-movie-management-api'
-		description = 'movie management API to access backend'
-		gitRepository = 'https://.../bitbucket/scm/moap/moap-movie.git'
+		packageName = '@crnk/example-api'
+		description = 'example API to access example backend'
+		gitRepository = 'https://.../bitbucket/scm/crnk/example.git'
 		license = 'MIT'
 		// packagingEnabled = false
 		// outputDir = ...
@@ -4581,6 +4582,10 @@ that task to <code>assemble</code> as dependency.</p>
 <li>
 <p><code>runtime.configuration</code> sets the Gradle configuration to use to obtain a classpath. In the given example
 <code>typescriptGenRuntime</code> is used. You may also use <code>compile</code> or anything else.</p>
+</li>
+<li>
+<p><code>runtime.spring</code> is used to configure the Spring profile and configuration class to use to setup the spring application.
+For CDI application is can be omitted.</p>
 </li>
 <li>
 <p><code>packagingEnabled</code>  triggers the generation of a <code>package.json</code> and <code>tsconfig.json</code> file (<code>true</code> as default).
@@ -5166,7 +5171,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-06 09:46:06 +01:00
+Last updated 2017-09-06 09:46:06 MESZ
 </div>
 </div>
 </body>
