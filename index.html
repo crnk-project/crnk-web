@@ -539,12 +539,12 @@ public class Schedule {
 					structure of links and meta data attached to the actual data.
 
 					<pre class="prettyprint">
-public interface ScheduleRepository extends ResourceRepositoryV2<Schedule, Long> {
+public interface ScheduleRepository extends ResourceRepositoryV2&lt;Schedule, Long&gt; {
 
 	@Override
 	ScheduleList findAll(QuerySpec querySpec);
 
-	class ScheduleList extends ResourceListBase<Schedule, ScheduleListMeta, ScheduleListLinks> {
+	class ScheduleList extends ResourceListBase&lt;Schedule, ScheduleListMeta, ScheduleListLinks&gt; {
 
 	}
 
