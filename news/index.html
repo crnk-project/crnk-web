@@ -142,6 +142,38 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>4. Feburary 2018</h4>
+
+		<p>
+			2.5.20180203134649 is available and is all about simplifying and speeding-up relationship handling:
+		</p>
+
+		<ul>
+			<li>
+				@JsonApiRelationId annotation holding the identifier of a relationship. Crnk will then automatically lookup
+				the full-fledged related resources. It is best suited if the underlying data model gives quick access to
+				that identifier while the lookup of the full-fledged object is (much) more expensive. As further big benfit,
+				<b>no implementation of a relationship repository is necessary</b>.
+			</li>
+			<li>
+				@JsonApiRelation.repositoryType allow to take control of how relationship repositories are implemented.
+				While in the past they had to be implemented manually, two new options are available where a relationship
+				repository is added implicitly and forwards calls to the adjacent resource repositories.
+			</li>
+		</ul>
+
+		<p>
+			For more information have a look at the
+			<a href="http://www.crnk.io/documentation/#_jsonapirelationid">documentation</a>.
+		</p>
+
+		<p>
+			Next to that there is a new end-to-end example application available based on Angular and Spring Boot:
+			<a href="https://github.com/crnk-project/crnk-example/">/crnk-project/crnk-example/</a>. The documentation
+			has also been updated in various places (in particular the first five chapters).
+		</p>
+
+
 		<br><h4>13. January 2018</h4>
 
 		<p>
@@ -196,7 +228,6 @@
 			</li>
 			<li>SecurityConfig.Builder of the security module allows method chaining.</li>
 		</ul>
-
 
 
 		<br><h4>8. December 2017</h4>

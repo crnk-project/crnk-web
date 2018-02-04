@@ -145,7 +145,7 @@
 		<p>
 			Crank up the development of RESTful applications with Crnk (pronounced <i>Crank</i>).
 			Crnk is a <b>native resource-oriented rest library where resources and relationships are first class citizens</b>
-			and not just path mappings from method annotations. This simplifies development and gives many, powerful new
+			and not just path mappings on methods. This simplifies development and opens up many, powerful new
 			possibilities.
 			Crnk follows the <a href="http://jsonapi.org/">JSON API</a>
 			specification and recommendations in Java to facilitate building RESTful applications.
@@ -175,11 +175,11 @@
 
 <div class="section" style="padding-top:0px;padding-bottom: 0px">
 	<div class="section-content" style="background-color: #FFFFC8">
-		13. January 2018: with <a
-			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">2.4.20180112101521</a>
-		is available with improved Spring support, a new Crnk-Compact header and other updates. For more information see in the
-		<a href="/news/">news</a>
-		and <a href="/documentation">documentation</a>.
+		4. February 2018: with <a
+			href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.crnk%22">2.5.20180203134649</a>
+		is available and is all about simplifying and speeding-up relationship handling. Next to that
+		there is a new example application and many documentation improvements. For more information see
+		<a href="/news/">news</a> and <a href="/documentation">documentation</a>.
 	</div>
 </div>
 
@@ -335,50 +335,70 @@
 
 		<h3>Example applications</h3>
 
-		<p>
-			Checkout the various example applications in
-			<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples">crnk-examples</a>.
-			To start the spring boot application (the most advanced one) checkout
-			<a href="https://github.com/crnk-project/crnk-framework">crnk-framework</a> and run:
+		Crnk comes with multiple examples. There is a main example application in a dedicated repository available from
+		<a href="https://github.com/crnk-project/crnk-example">crnk-example</a>. It shows an end-to-end example with Crnk,
+		Angular, Spring Boot and ngrx-json-api. Then there are smaller example applications that how to integrate Crnk into
+		various frameworks like Dropwizard, JEE and Spring Boot, see
+		<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples">crnk-examples</a>.
 
+		<p>
+			The main example application can either be run with docker or by checking it out and run with Gradle:
 		<pre class="prettyprint">
-gradlew :crnk-examples:spring-boot-example:run
-		</pre>
+gradlew run
+docker run --name=crnk -p 8080:8080 crnk/example
+	</pre>
+
+		More information and example URLs that show the power of Crnk are available
+		<a href="https://github.com/crnk-project/crnk-example">here</a>. A number of URLs to play around (there are more on the
+		example page):
 
 		<p>
-			A number of URLs to try:
-		</p>
-
-		<table class="example">
+		<table class="example" style="margin:10px">
 			<tr>
 				<td><a href="http://127.0.0.1:8080/">http://127.0.0.1:8080/</a></td>
+				<td>Angular frontend application.</td>
+			</tr>
+
+			<tr>
+				<td><a href="http://127.0.0.1:8080/api/">http://127.0.0.1:8080/api/</a></td>
 				<td>JSON Home document provided by crnk-home listing all repositories.</td>
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/browse/">http://127.0.0.1:8080/browse/</a></td>
+				<td><a href="http://127.0.0.1:8080/api/browse/">http://127.0.0.1:8080/api/browse/</a></td>
 				<td>crnk-ui allowing to browse all repositories.</td>
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/projects">http://127.0.0.1:8080/projects</a></td>
-				<td>Simple in-memory repository (<a
-						href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository/ProjectRepositoryImpl.java">PersonRepositoryImpl.java</a>).
+				<td><a href="http://127.0.0.1:8080/api/votes">http://127.0.0.1:8080/api/votes</a></td>
+				<td>Simple in-memory repository with an artificial delay (<a
+						href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository/VoteRepositoryImpl.java">VoteRepositoryImpl.java</a>).
 				</td>
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/schedule">http://127.0.0.1:8080/schedule</a></td>
+				<td><a href="http://127.0.0.1:8080/api/movie">http://127.0.0.1:8080/api/movie</a></td>
 				<td>
-					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
+					<a
+							href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/MovieEntity.java">MovieEntity</a>
 					JPA entity exposed as repository with crnk-jpa. See
 					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
 				</td>
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/schedule?filter[name][GT]=schedule1&page[limit]=3&sort=-name">
-					http://127.0.0.1:8080/schedule?filter[name]<br>[GT]=schedule1&page[limit]=3&amp;sort=-name</a>
+				<td><a href="http://127.0.0.1:8080/api/schedule">http://127.0.0.1:8080/api/schedule</a></td>
+				<td>
+					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
+					Another JPA entity exposed as repository with crnk-jpa. See
+					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/ModuleConfig.java">ModuleConfig.java</a>.
+				</td>
+			</tr>
+
+
+			<tr>
+				<td><a href="http://127.0.0.1:8080/api/schedule?filter[name][GT]=schedule1&page[limit]=3&sort=-name">
+					http://127.0.0.1:8080/api/schedule?filter[name]<br>[GT]=schedule1&page[limit]=3&amp;sort=-name</a>
 				</td>
 				<td>Sorting, filtering and pagination. Notice the total resource count in the meta data
 					and the various pagination links.
@@ -386,7 +406,7 @@ gradlew :crnk-examples:spring-boot-example:run
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/scheduleDto">http://127.0.0.1:8080/scheduleDto</a></td>
+				<td><a href="http://127.0.0.1:8080/api/scheduleDto">http://127.0.0.1:8080/api/scheduleDto</a></td>
 				<td>
 					<a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/model/ScheduleEntity.java">ScheduleEntity</a>
 					mapped to
@@ -398,13 +418,14 @@ gradlew :crnk-examples:spring-boot-example:run
 			</tr>
 
 			<tr>
-				<td><a href="http://127.0.0.1:8080/meta/resource">http://127.0.0.1:8080/meta/resource</a></td>
+				<td><a href="http://127.0.0.1:8080/api/meta/resource">http://127.0.0.1:8080/meta/resource</a></td>
 				<td>Meta data of all resources provided by crnk-meta. Have a look also at the relationships,
 					such as to the attributes.
 				</td>
 			</tr>
 
 		</table>
+		</p>
 
 		<p>
 			Have a look at the console when issuing requests. crnk-brave with a log reporter is used for
