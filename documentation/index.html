@@ -3941,8 +3941,14 @@ meta model next to the JSON API one (like for documentation purposes).</p>
 <div class="sect2">
 <h3 id="_home_module">7.6. Home Module</h3>
 <div class="paragraph">
-<p>The <code>HomeModule</code> provides an implementation for <a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>. It allows
-you to obtain a list of available repositories when accessing the parent page of your repositories (typically <code>/api</code>).</p>
+<p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
+directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
+relationship repository serving that particular path.</p>
+</div>
+<div class="paragraph">
+<p>The <code>HomeModule</code> supports two kinds of formats that can be choosen upon creation. A JSON API-style format where a
+links node holds all links to child directories and repositories. And a JSON HOME format as specified by
+<a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3951,35 +3957,36 @@ you to obtain a list of available repositories when accessing the parent page of
 </div>
 </div>
 <div class="paragraph">
-<p>The module is currently in an incubator stage. In the Spring Boot example
-applications it looks like:</p>
+<p>In the Spring Boot example applications it looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>{
-  "resources" : {
-    "tag:schedule" : {
-      "href" : "/schedule/"
-    },
-    "tag:tasks" : {
-      "href" : "/tasks/"
-    },
-    "tag:scheduleDto" : {
-      "href" : "/scheduleDto/"
-    },
-    "tag:meta/collectionType" : {
-      "href" : "/meta/collectionType/"
-    },
-    "tag:projects" : {
-      "href" : "/projects/"
-    },
-     "tag:meta/resource" : {
-	  "href" : "/meta/resource/"
-	},
-	"tag:meta/attribute" : {
-	  "href" : "/meta/attribute/"
-	},
-	...
+  "links" : {
+    "meta" : "http://localhost:8080/api/meta/",
+    "projects" : "http://localhost:8080/api/projects",
+    "resourcesInfo" : "http://localhost:8080/api/resourcesInfo",
+    "schedule" : "http://localhost:8080/api/schedule",
+    "scheduleDto" : "http://localhost:8080/api/scheduleDto",
+    "tasks" : "http://localhost:8080/api/tasks"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the <code>meta</code> entry with a trailing '/' that allows to move to subdirectory <code><a href="http://localhost:8080/api/meta/" class="bare">http://localhost:8080/api/meta/</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "links" : {
+    "arrayType" : "http://localhost:8080/api/meta/arrayType",
+    "attribute" : "http://localhost:8080/api/meta/attribute",
+    "dataObject" : "http://localhost:8080/api/meta/dataObject",
+    "element" : "http://localhost:8080/api/meta/element",
+    "resource" : "http://localhost:8080/api/meta/resource",
+    "type" : "http://localhost:8080/api/meta/type"
+    ...
   }
 }</code></pre>
 </div>
@@ -5902,7 +5909,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-02-04 12:56:50 +01:00
+Last updated 2018-02-05 20:58:00 +01:00
 </div>
 </div>
 </body>
