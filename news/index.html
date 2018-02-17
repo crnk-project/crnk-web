@@ -142,6 +142,43 @@
 <div class="section">
 	<div class="section-content">
 
+		<br><h4>17. Feburary 2018</h4>
+
+		2.5.20180215232038 is available with further incremental improvements to the relationship handling.
+
+		<ul>
+			<li>
+				New RelationshipMatcher class returned by RelationshipRepositoryV2.getMatcher(). It allows
+				for much more flexible control of which relationship repository services which
+				relationships. Before, a relationship repository was limited to a source and target resource
+				class. Now it accepts any combination of source class, source resource type, source field,
+				target class, target resource type and target field,
+			</li>
+			<li>
+				ForwardingRelationshipRepository unifies the functionality of RelationshipRepositoryBase and
+				ImplicitOwnerBasedRelationshipRepository. It is backed by a ForwardingGetStrategy and
+				ForwardingSetStrategy that specify how requests are forwarded to the two adjacent resource
+				repositories to avoid having to implement a custom relationship repository. The repository
+				is be enabled for use with the @JsonApiRelation.repositoryBehavior annotation property.
+			</li>
+			<li>
+				@JsonApiRelation.repositoryBehavior supports a new value FORWARD_OPPOSITE. To forward all calls
+				to the opposite repository.
+			</li>
+			<li>
+				IMPLICIT_FROM_OWNER and IMPLICIT_GET_OPPOSITE_MODIFY_OWNER have been deprecated in favor of
+				FORWARD_OWNER and FORWARD_GET_OPPOSITE_SET_OWNER as @JsonApiRelation.repositoryBehavior values.
+			</li>
+			<li>RegistryEntry.getResourceRepositoryFacade(...) provides an API to access resource repository
+				programmatically from a ResourceRegistry. The facade will run trough all filters and decorates provides by
+				modules.
+			</li>
+			<li>
+				OperationsModule.apply(...) for programmatic access to the operations API.
+			</li>
+		</ul>
+
+
 		<br><h4>6. Feburary 2018</h4>
 
 		2.5.20180205212522 with fixes for the relationship handling (<a
