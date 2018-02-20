@@ -2969,32 +2969,7 @@ of those links is omitted. Further relationships without data are completely omi
 <div class="sectionbody">
 <div class="paragraph">
 <p>There is a client implementation for Java and Android projects to allow
-communicating with JSON-API compliant servers. Three http client libraries are supported:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code><a href="http://square.github.io/" class="bare">http://square.github.io/</a></code>
-Library has been used to allow usage in both Android and server applications and services.</p>
-</li>
-<li>
-<p><code>Apache Http Client <a href="https://hc.apache.org/httpcomponents-client-ga/index.html" class="bare">https://hc.apache.org/httpcomponents-client-ga/index.html</a></code>
-Library widely used in the Java community.</p>
-</li>
-<li>
-<p><code>RestTemplate</code> from Spring that provides a Spring abstraction of other HTTP libraries.
-Spring application benefit from using this over the underlying native implementation to share
-the setup configuration setup. It is used by default if the presence of Spring is detected.
-For some more setup information, have a look at the subsequent sections.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Add one of those library to the classpath and Crnk will pick it up automatically.</p>
-</div>
-<div class="paragraph">
-<p>To start using the client just create an instance of <code>CrnkClient</code> and pass the service
-URL as parameter.</p>
+communicating with JSON-API compliant servers.</p>
 </div>
 <div class="sect2">
 <h3 id="_setup_2">6.1. Setup</h3>
@@ -3005,6 +2980,32 @@ URL as parameter.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>  CrnkClient client = new CrnkClient("http://localhost:8080/api");</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Three underlying http client libraries are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/square/okhttp">OkHttp</a>
+that is popular for Java and Android development. Implemented by
+<code>io.crnk.client.http.okhttp.OkHttpAdapter</code>.</p>
+</li>
+<li>
+<p><a href="https://hc.apache.org/httpcomponents-client-ga/index.html">Apache Http Client</a>
+implemented by <code>io.crnk.client.http.apache.HttpClientAdapter</code>.</p>
+</li>
+<li>
+<p><code>RestTemplate</code> from Spring provides a Spring abstraction of other HTTP libraries.
+Spring application benefit from using this over the underlying native implementation to share
+the setup configuration setup. It is used by default if the presence of Spring is detected.
+Implemented by <code>io.crnk.spring.client.RestTemplateAdapter</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Add one of those library to the classpath and Crnk will pick it up automatically.
+A custom <code>HttpAdapter</code> can also set passed to <code>CrnkClient.setHttpAdapter(&#8230;&#8203;)</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
