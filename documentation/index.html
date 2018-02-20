@@ -591,11 +591,12 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_client">6. Client</a>
 <ul class="sectlevel2">
-<li><a href="#_usage">6.1. Usage</a></li>
-<li><a href="#_modules">6.2. Modules</a></li>
-<li><a href="#_type_safety">6.3. Type-Safety</a></li>
-<li><a href="#_jax_rs_interoperability">6.4. JAX-RS interoperability</a></li>
-<li><a href="#_http_customization">6.5. HTTP customization</a></li>
+<li><a href="#_setup_2">6.1. Setup</a></li>
+<li><a href="#_usage">6.2. Usage</a></li>
+<li><a href="#_modules">6.3. Modules</a></li>
+<li><a href="#_type_safety">6.4. Type-Safety</a></li>
+<li><a href="#_jax_rs_interoperability">6.5. JAX-RS interoperability</a></li>
+<li><a href="#_http_customization">6.6. HTTP customization</a></li>
 </ul>
 </li>
 <li><a href="#_modules_2">7. Modules</a>
@@ -615,7 +616,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_security_module">7.4. Security Module</a></li>
 <li><a href="#_meta_module">7.5. Meta Module</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_2">7.5.1. Setup</a></li>
+<li><a href="#_setup_3">7.5.1. Setup</a></li>
 <li><a href="#_examples_2">7.5.2. Examples</a></li>
 <li><a href="#_identifiers_for_meta_elements">7.5.3. Identifiers for Meta Elements</a></li>
 <li><a href="#_extending_the_meta_module">7.5.4. Extending the Meta Module</a></li>
@@ -626,7 +627,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_ui_module">7.8. UI Module</a></li>
 <li><a href="#_activiti_module">7.9. Activiti Module</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_3">7.9.1. Setup</a></li>
+<li><a href="#_setup_4">7.9.1. Setup</a></li>
 <li><a href="#_example_application">7.9.2. Example application</a></li>
 <li><a href="#_limitations">7.9.3. Limitations</a></li>
 </ul>
@@ -2968,12 +2969,12 @@ of those links is omitted. Further relationships without data are completely omi
 <div class="sectionbody">
 <div class="paragraph">
 <p>There is a client implementation for Java and Android projects to allow
-communicating with JSON-API compliant servers. Two http client libraries are supported:</p>
+communicating with JSON-API compliant servers. Three http client libraries are supported:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>` &lt;<a href="http://square.github.io/&gt;`" class="bare">http://square.github.io/&gt;`</a>
+<p><code><a href="http://square.github.io/" class="bare">http://square.github.io/</a></code>
 Library has been used to allow usage in both Android and server applications and services.</p>
 </li>
 <li>
@@ -2981,9 +2982,10 @@ Library has been used to allow usage in both Android and server applications and
 Library widely used in the Java community.</p>
 </li>
 <li>
-<p><code>RestTemplate</code> from Spring that provides a Spring abstraction for `` and other HTTP libraries.
+<p><code>RestTemplate</code> from Spring that provides a Spring abstraction of other HTTP libraries.
 Spring application benefit from using this over the underlying native implementation to share
-the setup configuration setup. It is used by default if the presence of Spring is detected.</p>
+the setup configuration setup. It is used by default if the presence of Spring is detected.
+For some more setup information, have a look at the subsequent sections.</p>
 </li>
 </ul>
 </div>
@@ -2995,7 +2997,48 @@ the setup configuration setup. It is used by default if the presence of Spring i
 URL as parameter.</p>
 </div>
 <div class="sect2">
-<h3 id="_usage">6.1. Usage</h3>
+<h3 id="_setup_2">6.1. Setup</h3>
+<div class="paragraph">
+<p>The basic setup is as simple as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  CrnkClient client = new CrnkClient("http://localhost:8080/api");</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+For Spring a <strong>reasonable HTTP client implementation must underlie <code>RestTemplate</code></strong>
+in order for <code>crnk-client</code> to work properly. For example, the default Java implementation does not
+support the <code>PATCH</code> method and as such no resources can be updated.
+To explicitly set HTTP implementation use:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  RestTemplateAdapter adapter = (RestTemplateAdapter) client.getHttpAdapter();
+  RestTemplate template = adapter.getImplementation();
+  template.setRequestFactory(new OkHttp3ClientHttpRequestFactory());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  client.setHttpAdapter(new RestTemplateAdapter(customRestTemplate));</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_usage">6.2. Usage</h3>
 <div class="paragraph">
 <p>The client has three main methods:</p>
 </div>
@@ -3030,7 +3073,7 @@ URL as parameter.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_modules">6.2. Modules</h3>
+<h3 id="_modules">6.3. Modules</h3>
 <div class="paragraph">
 <p><code>CrnkClient</code> can be extended by modules:</p>
 </div>
@@ -3082,7 +3125,7 @@ allow a fully automated setup.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_type_safety">6.3. Type-Safety</h3>
+<h3 id="_type_safety">6.4. Type-Safety</h3>
 <div class="paragraph">
 <p>It is possible to work with <code>CrnkClient</code> in a fully type-safe manner.</p>
 </div>
@@ -3140,7 +3183,7 @@ allow a fully automated setup.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jax_rs_interoperability">6.4. JAX-RS interoperability</h3>
+<h3 id="_jax_rs_interoperability">6.5. JAX-RS interoperability</h3>
 <div class="paragraph">
 <p>The interface stubs from the previous section can also be used to make calls to JAX-RS. For example, the
 <code>ScheduleRepository</code> can be complemented with a JAX-RS annotation:</p>
@@ -3229,7 +3272,7 @@ request headers (like security), as it has to be done in two places (unfortunate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_customization">6.5. HTTP customization</h3>
+<h3 id="_http_customization">6.6. HTTP customization</h3>
 <div class="paragraph">
 <p>It is possible to hook into the HTTP implementation used by Crnk ( or Apache).
 Make use of <code>CrnkClient#getHttpAdapter()</code> and cast it to either
@@ -3831,7 +3874,7 @@ any future standard implementation will built up on the information from the
 </table>
 </div>
 <div class="sect3">
-<h4 id="_setup_2">7.5.1. Setup</h4>
+<h4 id="_setup_3">7.5.1. Setup</h4>
 <div class="paragraph">
 <p>A setup can look as follows:</p>
 </div>
@@ -4360,7 +4403,7 @@ the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
 in generic fashion.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_3">7.9.1. Setup</h4>
+<h4 id="_setup_4">7.9.1. Setup</h4>
 <div class="paragraph">
 <p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
 It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
