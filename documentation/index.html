@@ -558,35 +558,39 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_repositories">5. Repositories</a>
 <ul class="sectlevel2">
 <li><a href="#_resourcerepositoryv2">5.1. ResourceRepositoryV2</a></li>
-<li><a href="#_relationshiprepositoryv2">5.2. RelationshipRepositoryV2</a></li>
-<li><a href="#_relationshipmatcher">5.3. RelationshipMatcher</a></li>
-<li><a href="#_resourcefieldcontributor">5.4. ResourceFieldContributor</a></li>
-<li><a href="#_forwardingrelationshiprepository">5.5. ForwardingRelationshipRepository</a></li>
-<li><a href="#_bulkrelationshiprepositoryv2">5.6. BulkRelationshipRepositoryV2</a></li>
-<li><a href="#_resourcelist">5.7. ResourceList</a></li>
-<li><a href="#_query_parameters_with_queryspec">5.8. Query parameters with QuerySpec</a>
+<li><a href="#_relationshiprepositoryv2">5.2. RelationshipRepositoryV2</a>
 <ul class="sectlevel3">
-<li><a href="#_filtering">5.8.1. Filtering</a></li>
-<li><a href="#_sorting">5.8.2. Sorting</a></li>
-<li><a href="#_pagination">5.8.3. Pagination</a></li>
-<li><a href="#_sparse_fieldsets">5.8.4. Sparse Fieldsets</a></li>
-<li><a href="#_inclusion_of_related_resources">5.8.5. Inclusion of Related Resources</a></li>
-<li><a href="#_api">5.8.6. API</a></li>
-<li><a href="#_defaultqueryspecdeserializer">5.8.7. DefaultQuerySpecDeserializer</a></li>
+<li><a href="#_example">5.2.1. Example</a></li>
+<li><a href="#_relationshipmatcher">5.2.2. RelationshipMatcher</a></li>
+<li><a href="#_forwardingrelationshiprepository">5.2.3. ForwardingRelationshipRepository</a></li>
+<li><a href="#_bulkrelationshiprepositoryv2">5.2.4. BulkRelationshipRepositoryV2</a></li>
 </ul>
 </li>
-<li><a href="#_error_handling">5.9. Error Handling</a>
+<li><a href="#_resourcelist">5.3. ResourceList</a></li>
+<li><a href="#_query_parameters_with_queryspec">5.4. Query parameters with QuerySpec</a>
 <ul class="sectlevel3">
-<li><a href="#_throwing_an_exception">5.9.1. Throwing an exception&#8230;&#8203;</a></li>
-<li><a href="#__and_mapping_it_to_json_api_response">5.9.2. &#8230;&#8203;and mapping it to JSON API response</a></li>
+<li><a href="#_filtering">5.4.1. Filtering</a></li>
+<li><a href="#_sorting">5.4.2. Sorting</a></li>
+<li><a href="#_pagination">5.4.3. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.4.4. Sparse Fieldsets</a></li>
+<li><a href="#_inclusion_of_related_resources">5.4.5. Inclusion of Related Resources</a></li>
+<li><a href="#_api">5.4.6. API</a></li>
+<li><a href="#_defaultqueryspecdeserializer">5.4.7. DefaultQuerySpecDeserializer</a></li>
 </ul>
 </li>
-<li><a href="#_meta_information">5.10. Meta Information</a></li>
-<li><a href="#_links_information">5.11. Links Information</a>
+<li><a href="#_error_handling">5.5. Error Handling</a>
 <ul class="sectlevel3">
-<li><a href="#_payload_size_optimizations">5.11.1. Payload Size Optimizations</a></li>
+<li><a href="#_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</a></li>
+<li><a href="#__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON API response</a></li>
 </ul>
 </li>
+<li><a href="#_meta_information">5.6. Meta Information</a></li>
+<li><a href="#_links_information">5.7. Links Information</a>
+<ul class="sectlevel3">
+<li><a href="#_payload_size_optimizations">5.7.1. Payload Size Optimizations</a></li>
+</ul>
+</li>
+<li><a href="#_resourcefieldcontributor">5.8. ResourceFieldContributor</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -677,8 +681,20 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_feature_overview">10.1. Feature overview</a></li>
 <li><a href="#_bulk_support_with_json_patch">10.2. Bulk support with JSON Patch</a></li>
 <li><a href="#_expressions">10.3. Expressions</a></li>
-<li><a href="#_form_binding">10.4. Form Binding</a></li>
-<li><a href="#_table_binding">10.5. Table Binding</a></li>
+<li><a href="#_form_binding">10.4. Form Binding</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_5">10.4.1. Setup</a></li>
+<li><a href="#_updating_data">10.4.2. Updating Data</a></li>
+<li><a href="#_validation_and_error_handling">10.4.3. Validation and Error handling</a></li>
+<li><a href="#_roadmap_and_open_issues">10.4.4. Roadmap and Open Issues</a></li>
+</ul>
+</li>
+<li><a href="#_table_binding">10.5. Table Binding</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_6">10.5.1. Setup</a></li>
+<li><a href="#_usage_2">10.5.2. Usage</a></li>
+</ul>
+</li>
 <li><a href="#_meta_model">10.6. Meta Model</a></li>
 </ul>
 </li>
@@ -1542,6 +1558,27 @@ programmatically at runtime.</p>
   }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>where <code>type</code> parameter specifies the resource&#8217;s name.</p>
+</div>
+<div class="paragraph">
+<p><a id="jsonApiResourcePagingBehavior"></a></p>
+</div>
+<div class="paragraph">
+<p>The optional <code>pagingBehavior</code> parameter allows to set a pagination behavior of the resource.
+In order to do it you have to specify a type which is actually an implementation of a <code>PagingBehavior</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "tasks", pagingBehavior = OffsetLimitPagingBehavior.class)
+  public class Task {
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More detailed information about pagination behaviors could be found at <a href="#pagination">Pagination</a> section.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_jsonapiid">4.2. JsonApiId</h3>
@@ -2025,8 +2062,6 @@ public class TaskRepositoryImpl extends ResourceRepositoryBase&lt;Task, Long&gt;
 
 	private static final AtomicLong ID_GENERATOR = new AtomicLong(4);
 
-
-	@Autowired
 	public TaskRepositoryImpl() {
 		super(Task.class);
 		Task task = new Task(1L, "Create tasks");
@@ -2147,10 +2182,18 @@ insertable, updateable, deltable for such repositories as false.</p>
 </div>
 <div class="sect2">
 <h3 id="_relationshiprepositoryv2">5.2. RelationshipRepositoryV2</h3>
-<div class="paragraph">
-<p>with <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a>. In various scenarios, a custom implementation might not
-IMPORTANT: Before getting started with the development of relationship repositories, may sure you have familiarized yourself
-be necessary!</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+Before getting started with the development of relationship repositories, familiarize yourself
+with <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a>. In various scenarios, a custom implementation is unnecessary!
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Each relationship defined in Crnk (annotation @JsonApiRelation) must have a relationship repository
@@ -2197,80 +2240,13 @@ Finds an Iterable of field&#8217;s values defined by fieldName in a source defin
 <p>All of the methods in this interface have fieldName field as their last parameter in case there
 are multiple relationships between two resources.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_relationshipmatcher">5.3. RelationshipMatcher</h3>
-<div class="paragraph">
-<p>The ProjectToTaskRepository repository from the previous section establishes a relationship between
-project and task. But by implementing <code>RelationshipRepositoryV2.getMatcher()</code>, one can gain much
-more flexibility about which kind of relationships a repository is possible to serve.
-Rules can look like:</p>
-</div>
-<div class="listingblock">
-<div class="title">RelationshipMatcherTest</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>new RelationshipMatcher().rule().source("projects").add().matches(field)
-new RelationshipMatcher().rule().target(Task.class).add().matches(field)
-new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
-new RelationshipMatcher().rule().field("tasks").add().matches(field)
-new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
-[source]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>One can implement, for example, a history relationship repository that introduces a history relationship for every other resource.
-In this example, <code>RelationshipMatcher</code> would match against the history resource as target. Such an example is
-depicated in the next section.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_resourcefieldcontributor">5.4. ResourceFieldContributor</h3>
-<div class="paragraph">
-<p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
-touching them. This is useful, for example, if you have a JPA entity exposed with crnk-jpa and
-want to add further fields like that mentioned history relationship from the previous section. It can be implemented
-by a repository or obtained from the regular service discovery mechanism.</p>
-</div>
-<div class="paragraph">
-<p>Any type of field can be added: meta, links, attribute and relationship fields. For relationship fields
-an application may make use of <code>RelationshipMatcher</code> to provide repository serving those fields.
-Notice the <code>accessor</code> property that is used to obtain the value of that field
-(make sure this method is efficient to execute). An example is given by the <code>HistoryRelationshipRepository</code> in
-<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-example">crnk-examples/spring-boot-example</a>:</p>
-</div>
+<div class="sect3">
+<h4 id="_example">5.2.1. Example</h4>
 <div class="listingblock">
 <div class="title">HistoryRelationshipRepository</div>
 <div class="content">
 <pre class="CodeRay highlight"><code>@Component
-public class HistoryRelationshipRepository extends ReadOnlyRelationshipRepositoryBase&lt;Object, Serializable, History, UUID&gt;
-		implements ResourceFieldContributor {
-
-	@Override
-	public List&lt;ResourceField&gt; getResourceFields(ResourceFieldContributorContext context) {
-		// this method could be omitted if the history field is added regularly to Project and Task resource. This would be
-		// simpler and recommended, but may not always be possible. Here we demonstrate doing it dynamically.
-		InformationBuilder.Field fieldBuilder = context.getInformationBuilder().createResourceField();
-		fieldBuilder.name("history");
-		fieldBuilder.genericType(new TypeToken&lt;List&lt;History&gt;&gt;() {
-		}.getType());
-		fieldBuilder.oppositeResourceType("history");
-		fieldBuilder.fieldType(ResourceFieldType.RELATIONSHIP);
-
-		// field values are "null" on resource and we make use of automated lookup to the relationship repository
-		// instead:
-		fieldBuilder.lookupIncludeBehavior(LookupIncludeBehavior.AUTOMATICALLY_ALWAYS);
-		fieldBuilder.accessor(new ResourceFieldAccessor() {
-			@Override
-			public Object getValue(Object resource) {
-				return null;
-			}
-
-			@Override
-			public void setValue(Object resource, Object fieldValue) {
-			}
-		});
-		return Arrays.asList(fieldBuilder.build());
-	}
+public class HistoryRelationshipRepository extends ReadOnlyRelationshipRepositoryBase&lt;Object, Serializable, History, UUID&gt; {
 
 	@Override
 	public RelationshipMatcher getMatcher() {
@@ -2291,22 +2267,31 @@ public class HistoryRelationshipRepository extends ReadOnlyRelationshipRepositor
 }</code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>getRelationshipFields</code> introduces the field dynamically instead of statically.</p>
-</li>
-<li>
-<p><code>getMatcher</code> attaches the repository to the historized resources.</p>
-</li>
-<li>
-<p><code>findManyTarget</code> implements the lookup of history elements.</p>
-</li>
-</ul>
+</div>
+<div class="sect3">
+<h4 id="_relationshipmatcher">5.2.2. RelationshipMatcher</h4>
+<div class="paragraph">
+<p>With <code>RelationshipRepositoryV2.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
+serving. Rules can look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">RelationshipMatcherTest</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>new RelationshipMatcher().rule().source("projects").add().matches(field)
+new RelationshipMatcher().rule().target(Task.class).add().matches(field)
+new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
+new RelationshipMatcher().rule().field("tasks").add().matches(field)
+new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
+[source]</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_forwardingrelationshiprepository">5.5. ForwardingRelationshipRepository</h3>
+<div class="paragraph">
+<p>One can implement, for example, a history relationship repository that introduces a history relationship for every other resource
+as done in the example from the previous section.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_forwardingrelationshiprepository">5.2.3. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2330,7 +2315,7 @@ on either the source or target resource repository (usually you want to save on 
 The <code>ForwardingRelationshipRepository</code> is a base class that takes care of exactly such use cases.
 <code>ForwardingRelationshipRepository</code> knows to <code>ForwardingDirection</code>: <code>OWNER</code> and <code>OPPOSITE</code>. The former forwards requests
 to the resource repository of the owning side of a relationship, while the later forwards to the opposite side.
-<code>ForwardingDirection</code> and be set separately for <code>GET</code> and modification (<code>POST</code>, <code>PATCH</code>, <code>DELETE</code>) operations.</p>
+<code>ForwardingDirection</code> is set separately for <code>GET</code> and modification operations (<code>POST</code>, <code>PATCH</code>, <code>DELETE</code>).</p>
 </div>
 <div class="paragraph">
 <p>An example to create such a repository looks like:</p>
@@ -2362,8 +2347,8 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_bulkrelationshiprepositoryv2">5.6. BulkRelationshipRepositoryV2</h3>
+<div class="sect3">
+<h4 id="_bulkrelationshiprepositoryv2">5.2.4. BulkRelationshipRepositoryV2</h4>
 <div class="paragraph">
 <p>BulkRelationshipRepositoryV2 extends RelationshipRepositoryV2 and provides an additional
 <code>findTargets</code> method. It allows to fetch a relation for multiple resources at once.
@@ -2377,8 +2362,9 @@ fetch that relation. RelationshipRepositoryBase provides a default implementatio
 and applicable to Crnk servers and client, <code>BulkRelationshipRepositoryV2</code> is applicable on the server-side only.</p>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_resourcelist">5.7. ResourceList</h3>
+<h3 id="_resourcelist">5.3. ResourceList</h3>
 <div class="paragraph">
 <p>ResourceRepositoryV2 and RelationshipRepositoryV2 return lists of type ResourceList. The ResourceList can carry, next
 to the actual resources, also meta and links information:</p>
@@ -2444,7 +2430,7 @@ and used by both servers and clients:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_query_parameters_with_queryspec">5.8. Query parameters with QuerySpec</h3>
+<h3 id="_query_parameters_with_queryspec">5.4. Query parameters with QuerySpec</h3>
 <div class="paragraph">
 <p>Crnk passes JSON API query parameters to repositories trough a QuerySpec parameter. It holds
 request parameters like sorting and filtering specified by JSON API. The subsequent
@@ -2469,7 +2455,7 @@ QuerySpec (like the legacy <code>QueryParams</code>).
 <p>For example showing its use URLs also have a look at the <a href="#resource_repository">ResourceRepositoryV2</a> section.</p>
 </div>
 <div class="sect3">
-<h4 id="_filtering">5.8.1. Filtering</h4>
+<h4 id="_filtering">5.4.1. Filtering</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2566,7 +2552,7 @@ overridden by setting <code>DefaultQuerySpecDeserializer.setDefaultOperator(&#82
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sorting">5.8.2. Sorting</h4>
+<h4 id="_sorting">5.4.2. Sorting</h4>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
 </div>
@@ -2585,9 +2571,14 @@ overridden by setting <code>DefaultQuerySpecDeserializer.setDefaultOperator(&#82
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination">5.8.3. Pagination</h4>
+<h4 id="_pagination">5.4.3. Pagination</h4>
 <div class="paragraph">
-<p>Pagination for the repositories can be achieved by providing <code>page</code> parameter.
+<p>Resources pagination strategies defined by <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.
+By default, each resource has implicit pagination support defined by <code>OffsetLimitPagingBehavior</code>.
+It provides a simple strategy of a pair <code>offset/limit</code> parameters which can be used for filtering amount of results.</p>
+</div>
+<div class="paragraph">
+<p>Pagination executed automatically as soon as client provides a  <code>page</code> parameter.
 The format for pagination: <code>page[offset|limit] = "value", where value is an integer</code></p>
 </div>
 <div class="paragraph">
@@ -2630,9 +2621,25 @@ lets Crnk compute all except the <code>last</code> link.</p>
 determine whether more resources are available rather than counting all resources.
 This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
+<div class="sect4">
+<h5 id="_custom_strategies">Custom strategies</h5>
+<div class="paragraph">
+<p>Resources might have custom pagination strategies. In order to do so, you would have to perform the following actions:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Provide an instance of a custom <code>PagingBehavior</code> implementation.</p>
+</li>
+<li>
+<p>Set it up via <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a> attribute.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_sparse_fieldsets">5.8.4. Sparse Fieldsets</h4>
+<h4 id="_sparse_fieldsets">5.4.4. Sparse Fieldsets</h4>
 <div class="paragraph">
 <p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter.</p>
 </div>
@@ -2648,7 +2655,7 @@ This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.8.5. Inclusion of Related Resources</h4>
+<h4 id="_inclusion_of_related_resources">5.4.5. Inclusion of Related Resources</h4>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing <code>include</code> parameter.
 The format for fields: <code>include[ResourceType] = "property(.property)*"</code></p>
@@ -2680,7 +2687,7 @@ The format for fields: <code>include[ResourceType] = "property(.property)*"</cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="_api">5.8.6. API</h4>
+<h4 id="_api">5.4.6. API</h4>
 <div class="paragraph">
 <p>The QuerySpec API looks like (further setters available as well):</p>
 </div>
@@ -2692,6 +2699,8 @@ The format for fields: <code>include[ResourceType] = "property(.property)*"</cod
 		public Long getLimit() {...}
 
 		public long getOffset() {...}
+
+		public PagingSpec getPagingSpec() {...}
 
 		public List&lt;FilterSpec&gt; getFilters() {...}
 
@@ -2720,6 +2729,11 @@ they get converted to the proper types by the <code>DefaultQuerySpecDeserializer
 type is determined based on the type of the filtered attribute.</p>
 </div>
 <div class="paragraph">
+<p><code>PagingSpec</code> holds a value of defined pagination strategy.
+By default, the values can be accessed via <code>getLimit/getOffset</code> methods.
+In case of custom strategies, <code>getPagingSpec</code> should be used.</p>
+</div>
+<div class="paragraph">
 <p>QuerySpec provides a method <code>apply</code> that allows in-memory sorting, filtering and paging
 on any <code>java.util.Collection</code>. It is useful for testing and on smaller datasets to keep
 the implementation of a repository as simple as possible. It returns a ResourceList
@@ -2727,7 +2741,7 @@ that carries a PagedMetaInformation that lets Crnk automatically compute paginat
 </div>
 </div>
 <div class="sect3">
-<h4 id="_defaultqueryspecdeserializer">5.8.7. DefaultQuerySpecDeserializer</h4>
+<h4 id="_defaultqueryspecdeserializer">5.4.7. DefaultQuerySpecDeserializer</h4>
 <div class="paragraph">
 <p>Crnk make use of <code>DefaultQuerySpecDeserializer</code> to map URL parameters to a QuerySpec instance.
 This instance is accessible from the various integrations, such as from the <code>CrnkFeature</code>. It
@@ -2736,17 +2750,15 @@ provides a number of customization options:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>setDefaultLimit(Long)</code>
-Sets the page limit if none is specified by the request.</p>
-</li>
-<li>
-<p><code>setMaxPageLimit(Long)</code>
-Sets the maximum page limit allowed to be requested.</p>
-</li>
-<li>
 <p><code>setAllowUnknownAttributes(boolean)</code>
 <code>DefaultQuerySpecDeserializer</code> validates all passed parameters against the domain model and fails
-if one of the attributes is unknown. This flag allows to disable that check in case the should be necessary.</p>
+if one of the attributes is unknown. This flag allows to disable that check in case this should be necessary.</p>
+</li>
+<li>
+<p><code>setAllowUnknownParameters(boolean)</code>
+<code>DefaultQuerySpecDeserializer</code> validates all passed parameters to be one of the following types: <code>filter</code>, <code>sort</code>, <code>page</code>, <code>fields</code> or <code>include</code>.
+In case of any custom query parameter <code>ParametersDeserializationException</code> will be thrown.
+This flag allows to disable that check and ignore any unknown ones.</p>
 </li>
 <li>
 <p><code>setIgnoreParseExceptions(boolean)</code>
@@ -2786,13 +2798,13 @@ service discovery mechanism (like specifying a Spring or CDI bean).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling">5.9. Error Handling</h3>
+<h3 id="_error_handling">5.5. Error Handling</h3>
 <div class="paragraph">
 <p>Processing errors in Crnk can be handled by throwing an exception and providing
 a corresponding exception mapper which defines mapping to a proper JSON API error response.</p>
 </div>
 <div class="sect3">
-<h4 id="_throwing_an_exception">5.9.1. Throwing an exception&#8230;&#8203;</h4>
+<h4 id="_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</h4>
 <div class="paragraph">
 <p>Here is an example of throwing an Exception in the code:</p>
 </div>
@@ -2830,7 +2842,7 @@ a corresponding exception mapper which defines mapping to a proper JSON API erro
 </div>
 </div>
 <div class="sect3">
-<h4 id="__and_mapping_it_to_json_api_response">5.9.2. &#8230;&#8203;and mapping it to JSON API response</h4>
+<h4 id="__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON API response</h4>
 <div class="paragraph">
 <p>Class responsible for mapping the exception should:</p>
 </div>
@@ -2902,7 +2914,7 @@ care of JSR-303 bean validation exception mapping.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_information">5.10. Meta Information</h3>
+<h3 id="_meta_information">5.6. Meta Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2927,7 +2939,7 @@ It contains a single method <code>MetaInformation getMetaInformation(Iterable&lt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_links_information">5.11. Links Information</h3>
+<h3 id="_links_information">5.7. Links Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2951,15 +2963,82 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 <p>When using annotated versions of repositories, a method that returns a <code>LinksInformation</code> object should be annotated with <code>JsonApiLinks</code> and the first parameter of the method has to be a list of resources.</p>
 </div>
 <div class="sect3">
-<h4 id="_payload_size_optimizations">5.11.1. Payload Size Optimizations</h4>
+<h4 id="_payload_size_optimizations">5.7.1. Payload Size Optimizations</h4>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
 of those links is omitted. Further relationships without data are completely omitted.</p>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resourcefieldcontributor">5.8. ResourceFieldContributor</h3>
+<div class="paragraph">
+<p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
+touching them. This is useful, for example, if you have a JPA entity exposed with crnk-jpa and
+want to add further fields like that mentioned history relationship from the earlier relationship example.
+<code>ResourceFieldContributor</code> can
+be implemented by a repository or obtained from the regular service discovery mechanism.</p>
+</div>
+<div class="paragraph">
+<p>Any type of field can be added: meta, links, attribute and relationship fields. For relationship fields
+an application may make use of <code>RelationshipMatcher</code> to provide repository serving those fields.
+Notice the <code>accessor</code> property that is used to obtain the value of that field
+(make sure this method is efficient to execute). An example is given by the <code>HistoryRelationshipRepository</code> in
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-example">crnk-examples/spring-boot-example</a>:</p>
+</div>
+<div class="listingblock">
+<div class="title">HistoryFieldContributor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@Component
+public class HistoryFieldContributor implements ResourceFieldContributor {
+
+	@Override
+	public List&lt;ResourceField&gt; getResourceFields(ResourceFieldContributorContext context) {
+		// this method could be omitted if the history field is added regularly to Project and Task resource. This would be
+		// simpler and recommended, but may not always be possible. Here we demonstrate doing it dynamically.
+		InformationBuilder.Field fieldBuilder = context.getInformationBuilder().createResourceField();
+		fieldBuilder.name("history");
+		fieldBuilder.genericType(new TypeToken&lt;List&lt;History&gt;&gt;() {
+		}.getType());
+		fieldBuilder.oppositeResourceType("history");
+		fieldBuilder.fieldType(ResourceFieldType.RELATIONSHIP);
+
+		// field values are "null" on resource and we make use of automated lookup to the relationship repository
+		// instead:
+		fieldBuilder.lookupIncludeBehavior(LookupIncludeBehavior.AUTOMATICALLY_ALWAYS);
+		fieldBuilder.accessor(new ResourceFieldAccessor() {
+			@Override
+			public Object getValue(Object resource) {
+				return null;
+			}
+
+			@Override
+			public void setValue(Object resource, Object fieldValue) {
+			}
+		});
+		return Arrays.asList(fieldBuilder.build());
+	}
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getRelationshipFields</code> introduces the field dynamically instead of statically.</p>
+</li>
+<li>
+<p><code>getMatcher</code> attaches the repository to the historized resources.</p>
+</li>
+<li>
+<p><code>findManyTarget</code> implements the lookup of history elements.
+:basedir: ../../../..
+:clientdir: ../../../../crnk-client</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p><a id="client"></a></p>
-</div>
 </div>
 </div>
 </div>
@@ -3639,7 +3718,7 @@ and <code>QuerydslQueryFactory</code> provide a <code>registerComputedAttribute<
 register an expression factory to create such computed attributes. The registration requires
 the target entity and a name. To make the computed attribute available
 to consumers, the mapper class has access to it trough the provided
-tuple class. Have a look at <a href="https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java" class="bare">https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java</a> to see everything in use.</p>
+tuple class. Have a look at <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java" class="bare">https://github.com/crnk-project/crnk-framework/blob/master/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java</a> to see everything in use.</p>
 </div>
 <div class="paragraph">
 <p>There is currently not yet any support for renaming of attribute. If attributes
@@ -3710,7 +3789,7 @@ module should be defined in the following way:</p>
 <div class="sect2">
 <h3 id="_tracing_with_zipkin_brave">7.3. Tracing with Zipkin/Brave</h3>
 <div class="paragraph">
-<p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-brave4</code> provides
+<p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-monitor-brave4</code> provides
 integration into Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
 both a Crnk client or server.</p>
 </div>
@@ -5734,6 +5813,12 @@ care of that. In this case usage looks like:</p>
 			type: 'meta/attribute',
 			attributes: {
 				name: 'someName'
+			},
+			relationships: {
+				type: {
+					data: { type: 'testType', id: 'testId' },
+					reference: { type: 'testType', id: 'testId', attributes: { name: 'testName' } },
+				}
 			}
 		};
 		qbean = new QMetaAttribute(new BeanBinding(bean));
@@ -5746,10 +5831,14 @@ care of that. In this case usage looks like:</p>
 		expect(qbean.attributes.name.toString()).toEqual('attributes.name');
 		expect(qbean.id.getResource()).toBe(bean);
 		expect(qbean.attributes.name.getResource()).toBe(bean);
+		expect(qbean.relationships.type.data.id.getValue()).toBe('testId');
+		expect(qbean.relationships.type.data.type.getValue()).toBe('testType');
+		expect(qbean.relationships.type.reference.attributes.name.getValue()).toBe('testName');
+		expect(qbean.relationships.type.reference.attributes.name.toQueryPath()).toBe('type.name');
 	});
 
 	it('should update bean', () =&gt; {
-		qbean.attributes.name.setValue("updatedName");
+		qbean.attributes.name.setValue('updatedName');
 		expect(bean.attributes.name).toEqual('updatedName');
 	});
 
@@ -5785,6 +5874,10 @@ will be setup.</p>
 <li>
 <p><code>toFormName</code> computes a default (unique) form name for that path. The name is composed of the
 resource type, resource id and path to allow editing of multiple resources on the same screen.</p>
+</li>
+<li>
+<p><code>toQueryPath</code> constructs a path used for sorting and filtering. Such a path does not include any
+<code>attributes</code>, <code>relationships</code> or <code>data</code> elements necessary to navigate through JSON API structures.</p>
 </li>
 <li>
 <p>QMetaAttribute can also be constructed without a bean binding. In this case it can still
@@ -5841,15 +5934,21 @@ in the next sections.</p>
 <p>components may get server-side validation errors using the JSON API error format.</p>
 </li>
 <li>
-<p>components may perform client-side validation within the store with effects. The JSON API
-error mechanism can reused for this purpose. The <code>ModifyStoreResourceErrorsAction</code>
-action  of <code>ngrx-json-api</code> can be triggered by a (validation) effect listing to value changes and makes arbitrarily
-complex, client-side validation logic possible.</p>
+<p>components may perform complex client-side validation using <code>@ngrx/effects</code>. JSON API is
+well suited for this purpose. For example,  a (validation) effect can listen to value changes
+in the store and trigger <code>ModifyStoreResourceErrorsAction</code> of <code>ngrx-json-api</code> when necessary.
+That validation effect is free to perform any kind of validation logic cleanly decoupled
+from the presentation component.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>There is a <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> that takes care of exactly this:</p>
+<p>The <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> can take care of exactly this.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_5">10.4.1. Setup</h4>
+<div class="paragraph">
+<p>An example setup looks like:</p>
 </div>
 <div class="listingblock">
 <div class="title">crnk.test.editor.component.ts</div>
@@ -5909,7 +6008,11 @@ export class TestEditorComponent implements OnInit, OnDestroy {
 <pre class="CodeRay highlight"><code>&lt;form #formRef="ngForm"&gt;
 	&lt;div *ngIf="resource != null"&gt;
 
-		&lt;input id="nameInput" required [crnkFormExpression]="resource.attributes.name"/&gt;
+		&lt;div&gt;
+			{{binding.unmappedErrors | json}}
+		&lt;/div&gt;
+
+		&lt;input id="nameInput" required [crnkFormExpression]="resource.attributes.name" /&gt;
 
 		&lt;div id="valid"&gt;{{binding.valid | async}}&lt;/div&gt;
 		&lt;div id="dirty"&gt;{{binding.dirty | async}}&lt;/div&gt;
@@ -5930,37 +6033,43 @@ export class TestEditorComponent implements OnInit, OnDestroy {
 </div>
 </div>
 <div class="paragraph">
-<p>Note that:</p>
+<p>The <code>FormBinding</code> takes a <code>FormBindingConfig</code> as parameter. The most important parameters
+are <code>queryId</code> and <code>form</code>. <code>queryId</code> specifies the <code>ngrx-json-api</code> query the form is bound to, typically
+a query retrieving a single resource. <code>form</code> is the <code>NgForm</code> instance to interface with the
+Angular form mechanisms. Additionally, <code>zoneId</code>  can specify in which <code>ngrx-json-api</code> zone the
+query is located.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_updating_data">10.4.2. Updating Data</h4>
+<div class="paragraph">
+<p><code>FormBinding</code> listens to value changes of the bound form and updates accordingly updates the store through <code>ngrx-json-api</code>
+actions. To have a mapping between JSON API resource fields and form controls, the later must follow a naming pattern.
+There are two possibilities for form control names:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>It is fully type-safe.</p>
+<p><code>//&lt;type&gt;//&lt;id&gt;//path</code> to reference a field by the resource type, resource id and path within the resource, e.g.
+<code>//person//13//attributes.name</code>.</p>
 </li>
 <li>
-<p>It is compact.</p>
+<p>just <code>path</code> to reference a field of the resource returned by the <code>ngrx-json-api</code> query, e.g. 'attributes.name.
+The query must return a unique result for this to work.</p>
 </li>
-<li>
-<p>There are two flavors to display errors. Only one is needed for a real application.
-Usually <code>crnk-control-errors</code> is used and allows to display any <code>FormControl</code> validation issue,
-either from a local validator or from the JSON API resource.
-<code>crnk-resource-errors</code> is a standalone flavor that is not bound to any <code>FormControl</code> and displays
-JSON API errors only. In both case a template must be specified how the error is rendered.
-In case of multiple errors, the template is rendered multiple times. <code>errorCode</code> and <code>errorData</code>
-are available as variable. <code>errorData</code> contains the full JSON API error object in case of
-a JSON API error.</p>
-</li>
-<li>
-<p><code>FormBinding</code> does not push changes to the store as long as local validation (<code>required</code>, <code>min-length</code>, etc.)
-do not pass.</p>
-</li>
-<li>
-<p><code>FormBinding</code> makes use of the form name to update the store. Therefore, the use of the expression model
-is optional and applications can also continue making use of <code>ngModel</code> and <code>formControlName</code> where
-appropriate. The name of form controls can follow to patterns: <code>//&lt;type&gt;//&lt;id&gt;//path</code> or just
-<code>path`</code>. The form allows to modify multiple resources, while the later assumes the primary
-resource loaded by the query is being modified.</p>
-</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>crnkFormExpression</code> directive from the previous section already supports the naming schema natively. Meaning that any
+component making use of it, does not have to specify a name, but it will be computed based on the passed expression.
+This allows for type-safe development and reduces some of the typical boiler-plate.</p>
+</div>
+<div class="paragraph">
+<p>Note that <code>FormBinding</code> does not push changes to the store as long as local validation (<code>required</code>, <code>min-length</code>, etc.)
+do not pass. Two fields give access to that status information:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
 <p><code>FormBinding.dirty</code> notifies whether bound resource(s) were modified.</p>
 </li>
@@ -5969,53 +6078,117 @@ resource loaded by the query is being modified.</p>
 </li>
 </ul>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_validation_and_error_handling">10.4.3. Validation and Error handling</h4>
+<div class="paragraph">
+<p><code>FormBinding</code> takes care of error handling. It maps back any JSON API errors back to the form controls of the
+configured form. Internally it matches the source pointers of JSON API errors against the form names (see previous section)
+to match errors with form control. The <code>FormBinding</code> has an <code>unmappedErrors</code> property that lists any JSON API error that could not be assigned to a specific form
+control instance, either because the matching instance does not exists or the JSON API error is not specific to given attribute
+but concerns the entire resource (like a conflict).</p>
+</div>
+<div class="paragraph">
+<p>There are two possibilities how to display errors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Make use of the default Angular API and display the errors of the <code>FormControl</code> instances.</p>
+</li>
+<li>
+<p>Access the JSON API errors from the store directly.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are two components for this purpose that work together with the expression model from the previous section. Both
+components take an expression as parameter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>crnk-control-errors</code> retrieves the errors from the <code>FormControl</code> having been bound to the same expression. As a consequence,
+it displays both local and JSON API errors.</p>
+</li>
+<li>
+<p><code>crnk-resource-errors</code> retrieves the JSON API error directory from the store. As such, it works independently of the forms
+but can display JSON API errors only.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In both case a template must be specified how the error is rendered. In case of multiple errors, the template is rendered
+multiple times. <code>errorCode</code> and <code>errorData</code>  are available as variable. <code>errorData</code> contains the full JSON API error
+in case of a JSON API error.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_roadmap_and_open_issues">10.4.4. Roadmap and Open Issues</h4>
 <div class="paragraph">
 <p>The Angular <code>FormModule</code> gives a number of restrictions. In the future we expect to also support the use
 <code>FormBinding</code> without a <code>NgForm</code> instance (for some performance and simplicity benefits). Please
 provide feedback in this area of what is most helpful.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Intellij IDEA seems to have some issues when it comes to using the async pipe and code completion. For this
+ reason the current example makes use of a subscription and avoid the async pipe.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_table_binding">10.5. Table Binding</h3>
 <div class="paragraph">
-<p>Similar to <code>FormBinding</code> there is a <code>TableBinding</code> class that looks like:</p>
+<p>Similar to <code>FormBinding</code> there is a <code>DataTableBinding</code> class. It can help
+taking care of interfacing a table component with JSON API.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_6">10.5.1. Setup</h4>
+<div class="paragraph">
+<p>An example looks like:</p>
 </div>
 <div class="listingblock">
 <div class="title">crnk.test.table.component.ts</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MetaAttributeListResult} from '../meta/meta.attribute';
-import {Subscription} from 'rxjs/Subscription';
-import {CrnkBindingService} from '../binding/crnk.binding.service';
-import {DataTableBinding} from '../binding/crnk.binding.table';
+<pre class="CodeRay highlight"><code>import { Component, OnInit } from '@angular/core';
+import { MetaAttributeListResult } from '../meta/meta.attribute';
+import { CrnkBindingService } from '../binding/crnk.binding.service';
+import { DataTableBinding } from '../binding/crnk.binding.table';
+import { DataTableBindingConfig } from '../binding';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'test-table',
 	templateUrl: 'crnk.test.table.component.html'
 })
-export class TestTableComponent implements OnInit, OnDestroy {
+export class TestTableComponent implements OnInit {
 
-	binding: DataTableBinding;
+	public binding: DataTableBinding;
 
-	private subscription: Subscription;
+	public result: Observable&lt;MetaAttributeListResult&gt;;
 
-	public result: MetaAttributeListResult;
+	public config: DataTableBindingConfig = {
+		queryId: 'tableQuery',
+		fromServer: false
+	}
 
 	constructor(private bindingService: CrnkBindingService) {
 	}
 
 	ngOnInit() {
-		this.binding = this.bindingService.bindDataTable({
-			queryId: 'tableQuery',
-			fromServer: false
-		});
-		this.subscription = this.binding.result$.subscribe(
-			it =&gt; this.result = it as MetaAttributeListResult
+		this.binding = this.bindingService.bindDataTable(this.config);
+		this.result = this.binding.result$.map(
+			it =&gt; it as MetaAttributeListResult
 		);
-	}
-
-	ngOnDestroy() {
-		this.subscription.unsubscribe();
 	}
 }</code></pre>
 </div>
@@ -6026,10 +6199,9 @@ export class TestTableComponent implements OnInit, OnDestroy {
 <div class="listingblock">
 <div class="title">crnk.test.table.component.html</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>&lt;div *ngIf="result != null"&gt;
+<pre class="CodeRay highlight"><code>&lt;div *ngIf="result | async as result"&gt;
 	&lt;p-dataTable [value]="result.data"
 			     selectionMode="single"
-				 [(selection)]="binding.selectedResource"
 				 [lazy]="true" [rows]="10" [paginator]="true"
 				 (onLazyLoad)="binding.onLazyLoad($event)"
 				 (onRowDblclick)="open($event.data)"
@@ -6042,20 +6214,40 @@ export class TestTableComponent implements OnInit, OnDestroy {
 </div>
 </div>
 <div class="paragraph">
+<p><code>DataTableBinding</code> takes a <code>DataTableBindingConfig</code> as parameters to configure the binding.
+Most important is the <code>queryId</code> that allows to specify which <code>ngrx-json-api</code> query should be
+bound to the table. <code>zoneId</code> additionally can specify in which <code>ngrx-json-api</code> zone the query is located.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usage_2">10.5.2. Usage</h4>
+<div class="paragraph">
+<p><code>DataTableBinding</code>  makes use of a <code>DataTableImplementationAdapter</code> and offers a
+<code>onLazyLoad(&#8230;&#8203;)</code> method to translate native event of the table implementation
+to JSON API query parameters and then updates the query in the store accordingly. The update of the store in turns
+triggers a refresh from the server and lets the table component get the new data through the <code>result$</code> variable
+of type <code>Observable&lt;ManyQueryResult&gt;</code>. <code>ManyQueryResult</code> holds, next to the resources, information about
+linking, meta data, loading state and errors.</p>
+</div>
+<div class="paragraph">
 <p>Note that:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Also type-safe with the generated <code>MetaAttributeListResult</code>.</p>
+<p><code>DataTableBinding</code> supports the PrimeNG DataTable out-of-the-box with <code>DataTablePrimengAdapter</code>.
+Other tables can be supported by implementing <code>DataTableImplementationAdapter</code> and passing it as
+<code>DataTableBindingConfig.implementationAdapter</code>.</p>
 </li>
 <li>
-<p>It currently is limited to the PrimeNG <code>DataTable</code>, but PRs for other implementations are welcomed.</p>
+<p><code>DataTableBindingConfig.customQueryParams</code> allows to pass custom query parameters next to the one provided by the
+table and initial query.</p>
 </li>
 <li>
-<p><code>TableBinding.onLazyLoad</code> translates PrimeNG query, sort and page parameters to JSON API parameters.</p>
+<p>The example is fully type-safe with the generated <code>MetaAttributeListResult</code>.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -6090,7 +6282,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-02-05 20:58:00 +01:00
+Last updated 2018-02-06 08:56:54 MEZ
 </div>
 </div>
 </body>
