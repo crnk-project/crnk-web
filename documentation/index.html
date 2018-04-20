@@ -519,29 +519,30 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_setup">3. Setup</a>
 <ul class="sectlevel2">
 <li><a href="#_requirements">3.1. Requirements</a></li>
-<li><a href="#_integration_with_jax_rs">3.2. Integration with JAX-RS</a>
+<li><a href="#_bom">3.2. BOM</a></li>
+<li><a href="#_integration_with_jax_rs">3.3. Integration with JAX-RS</a>
 <ul class="sectlevel3">
-<li><a href="#_crnkfeature">3.2.1. CrnkFeature</a></li>
-<li><a href="#_exception_mapping_for_jax_rs_services">3.2.2. Exception mapping for JAX-RS services</a></li>
-<li><a href="#_use_json_api_format_with_jax_rs_services">3.2.3. Use JSON API format with JAX-RS services</a></li>
-<li><a href="#_jax_rs_service_interoperability">3.2.4. JAX-RS service interoperability</a></li>
+<li><a href="#_crnkfeature">3.3.1. CrnkFeature</a></li>
+<li><a href="#_exception_mapping_for_jax_rs_services">3.3.2. Exception mapping for JAX-RS services</a></li>
+<li><a href="#_use_json_api_format_with_jax_rs_services">3.3.3. Use JSON API format with JAX-RS services</a></li>
+<li><a href="#_jax_rs_service_interoperability">3.3.4. JAX-RS service interoperability</a></li>
 </ul>
 </li>
-<li><a href="#_integration_with_servlet_api">3.3. Integration with Servlet API</a>
+<li><a href="#_integration_with_servlet_api">3.4. Integration with Servlet API</a>
 <ul class="sectlevel3">
-<li><a href="#_integrating_using_a_servlet">3.3.1. Integrating using a Servlet</a></li>
-<li><a href="#_integrating_using_a_filter">3.3.2. Integrating using a filter</a></li>
+<li><a href="#_integrating_using_a_servlet">3.4.1. Integrating using a Servlet</a></li>
+<li><a href="#_integrating_using_a_filter">3.4.2. Integrating using a filter</a></li>
 </ul>
 </li>
-<li><a href="#_integration_with_spring_and_string_boot">3.4. Integration with Spring and String Boot</a></li>
-<li><a href="#_discovery_with_cdi">3.5. Discovery with CDI</a></li>
-<li><a href="#_discovery_with_guice">3.6. Discovery with Guice</a></li>
-<li><a href="#_discovery_with_spring">3.7. Discovery with Spring</a></li>
-<li><a href="#_discovery_without_a_dependency_injection_framework">3.8. Discovery without a dependency injection framework</a></li>
-<li><a href="#_no_discovery">3.9. No Discovery</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism">3.10. Implement a custom discovery mechanism</a></li>
-<li><a href="#_crnkboot">3.11. CrnkBoot</a></li>
-<li><a href="#_properties">3.12. Properties</a></li>
+<li><a href="#_integration_with_spring_and_string_boot">3.5. Integration with Spring and String Boot</a></li>
+<li><a href="#_discovery_with_cdi">3.6. Discovery with CDI</a></li>
+<li><a href="#_discovery_with_guice">3.7. Discovery with Guice</a></li>
+<li><a href="#_discovery_with_spring">3.8. Discovery with Spring</a></li>
+<li><a href="#_discovery_without_a_dependency_injection_framework">3.9. Discovery without a dependency injection framework</a></li>
+<li><a href="#_no_discovery">3.10. No Discovery</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism">3.11. Implement a custom discovery mechanism</a></li>
+<li><a href="#_crnkboot">3.12. CrnkBoot</a></li>
+<li><a href="#_properties">3.13. Properties</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -585,12 +586,10 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#_meta_information">5.6. Meta Information</a></li>
-<li><a href="#_links_information">5.7. Links Information</a>
-<ul class="sectlevel3">
-<li><a href="#_payload_size_optimizations">5.7.1. Payload Size Optimizations</a></li>
-</ul>
-</li>
-<li><a href="#_resourcefieldcontributor">5.8. ResourceFieldContributor</a></li>
+<li><a href="#_links_information">5.7. Links Information</a></li>
+<li><a href="#_payload_size_optimizations">5.8. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.9. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.10. ResourceFieldContributor</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -603,102 +602,125 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_http_customization">6.6. HTTP customization</a></li>
 </ul>
 </li>
-<li><a href="#_modules_2">7. Modules</a>
+<li><a href="#_reactive_programming">7. Reactive Programming</a>
 <ul class="sectlevel2">
-<li><a href="#_jpa_module">7.1. JPA Module</a>
-<ul class="sectlevel3">
-<li><a href="#_jpa_setup">7.1.1. JPA Setup</a></li>
-<li><a href="#_jpa_setup_with_spring">7.1.2. JPA Setup with Spring</a></li>
-<li><a href="#_pagination_2">7.1.3. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">7.1.4. Criteria API and QueryDSL</a></li>
-<li><a href="#_customizing_the_jpa_repository">7.1.5. Customizing the JPA repository</a></li>
-<li><a href="#_dto_mapping">7.1.6. DTO Mapping</a></li>
+<li><a href="#_servlet_example">7.1. Servlet Example</a></li>
+<li><a href="#_interacting_with_traditional_repositories">7.2. Interacting with traditional repositories</a></li>
+<li><a href="#_roadmap_and_limitations">7.3. Roadmap and Limitations</a></li>
 </ul>
 </li>
-<li><a href="#_jsr_303_validation_module">7.2. JSR 303 Validation Module</a></li>
-<li><a href="#_tracing_with_zipkin_brave">7.3. Tracing with Zipkin/Brave</a></li>
-<li><a href="#_security_module">7.4. Security Module</a></li>
-<li><a href="#_meta_module">7.5. Meta Module</a>
-<ul class="sectlevel3">
-<li><a href="#_setup_3">7.5.1. Setup</a></li>
-<li><a href="#_examples_2">7.5.2. Examples</a></li>
-<li><a href="#_identifiers_for_meta_elements">7.5.3. Identifiers for Meta Elements</a></li>
-<li><a href="#_extending_the_meta_module">7.5.4. Extending the Meta Module</a></li>
-</ul>
-</li>
-<li><a href="#_home_module">7.6. Home Module</a></li>
-<li><a href="#_operations_module">7.7. Operations Module</a></li>
-<li><a href="#_ui_module">7.8. UI Module</a></li>
-<li><a href="#_activiti_module">7.9. Activiti Module</a>
-<ul class="sectlevel3">
-<li><a href="#_setup_4">7.9.1. Setup</a></li>
-<li><a href="#_example_application">7.9.2. Example application</a></li>
-<li><a href="#_limitations">7.9.3. Limitations</a></li>
-</ul>
-</li>
-<li><a href="#_spring_modules_and_auto_configuration">7.10. Spring Modules and Auto Configuration</a>
-<ul class="sectlevel3">
-<li><a href="#_spring_mvc_module">7.10.1. Spring MVC Module</a></li>
-<li><a href="#_spring_cloud_sleuth_module">7.10.2. Spring Cloud Sleuth Module</a></li>
-<li><a href="#_spring_security_module">7.10.3. Spring Security Module</a></li>
-<li><a href="#_jpa_module_auto_configuration">7.10.4. JPA Module Auto Configuration</a></li>
-<li><a href="#_validation_module_auto_configuration">7.10.5. Validation Module Auto Configuration</a></li>
-<li><a href="#_ui_module_auto_configuration">7.10.6. UI Module Auto Configuration</a></li>
-<li><a href="#_operations_module_auto_configuration">7.10.7. Operations Module Auto Configuration</a></li>
-<li><a href="#_meta_module_auto_configuration">7.10.8. Meta Module Auto Configuration</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#_module_development">8. Module Development</a>
+<li><a href="#_security">8. Security</a>
 <ul class="sectlevel2">
-<li><a href="#_request_filtering">8.1. Request Filtering</a></li>
-<li><a href="#_resource_filtering">8.2. Resource Filtering</a></li>
-<li><a href="#_filter_modifications">8.3. Filter Modifications</a></li>
-<li><a href="#_filter_priority">8.4. Filter Priority</a></li>
-<li><a href="#_access_to_http_layer">8.5. Access to HTTP layer</a></li>
-<li><a href="#_module_extensions_and_dependencies">8.6. Module Extensions and dependencies</a></li>
-<li><a href="#_integrate_third_party_data_stores">8.7. Integrate third-party data stores</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism_2">8.8. Implement a custom discovery mechanism</a></li>
-<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">8.9. Let a module hook into the Crnk HTTP client implementation</a></li>
-<li><a href="#_implement_a_custom_integration">8.10. Implement a custom integration</a></li>
-<li><a href="#_create_repositories_at_runtime">8.11. Create repositories at runtime</a>
+<li><a href="#_authentication">8.1. Authentication</a></li>
+<li><a href="#_resource_based_access_control_with_the_securitymodule">8.2. Resource-based Access Control with the SecurityModule</a></li>
+<li><a href="#_role_based_access_control_with_resourcefilter">8.3. Role-based Access Control with ResourceFilter</a></li>
+<li><a href="#_dataroom_access_control">8.4. Dataroom Access Control</a></li>
+<li><a href="#_adapt_user_interfaces_based_on_authorizations">8.5. Adapt User Interfaces based on Authorizations</a>
 <ul class="sectlevel3">
-<li><a href="#_implementing_repositories_dynamically_at_runtime">8.11.1. Implementing repositories dynamically at runtime</a></li>
-<li><a href="#_registering_repositories_at_runtime">8.11.2. Registering repositories at runtime</a></li>
+<li><a href="#_resourcepermissioninformation">8.5.1. ResourcePermissionInformation</a></li>
+<li><a href="#_home_and_meta_module">8.5.2. Home and Meta Module</a></li>
 </ul>
 </li>
-<li><a href="#_discovery_of_modules_by_crnkclient">8.12. Discovery of Modules by CrnkClient</a></li>
+<li><a href="#_provide_authentication_information_to_the_user">8.6. Provide Authentication Information to the User</a></li>
+<li><a href="#_exception_mapping">8.7. Exception Mapping</a></li>
+<li><a href="#__potential_future_work">8.8. (Potential) Future Work</a></li>
 </ul>
 </li>
-<li><a href="#_generation">9. Generation</a>
+<li><a href="#_modules_2">9. Modules</a>
 <ul class="sectlevel2">
-<li><a href="#_typescript">9.1. Typescript</a></li>
+<li><a href="#_jpa_module">9.1. JPA Module</a>
+<ul class="sectlevel3">
+<li><a href="#_jpa_setup">9.1.1. JPA Setup</a></li>
+<li><a href="#_jpa_setup_with_spring">9.1.2. JPA Setup with Spring</a></li>
+<li><a href="#_pagination_2">9.1.3. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</a></li>
+<li><a href="#_customizing_the_jpa_repository">9.1.5. Customizing the JPA repository</a></li>
+<li><a href="#_dto_mapping">9.1.6. DTO Mapping</a></li>
 </ul>
 </li>
-<li><a href="#_angular_development_with_ngrx">10. Angular Development with ngrx</a>
+<li><a href="#_jsr_303_validation_module">9.2. JSR 303 Validation Module</a></li>
+<li><a href="#_tracing_with_zipkin_brave">9.3. Tracing with Zipkin/Brave</a></li>
+<li><a href="#_meta_module">9.4. Meta Module</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_3">9.4.1. Setup</a></li>
+<li><a href="#_examples_2">9.4.2. Examples</a></li>
+<li><a href="#_identifiers_for_meta_elements">9.4.3. Identifiers for Meta Elements</a></li>
+<li><a href="#_extending_the_meta_module">9.4.4. Extending the Meta Module</a></li>
+</ul>
+</li>
+<li><a href="#_home_module">9.5. Home Module</a></li>
+<li><a href="#_operations_module">9.6. Operations Module</a></li>
+<li><a href="#_ui_module">9.7. UI Module</a></li>
+<li><a href="#_activiti_module">9.8. Activiti Module</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_4">9.8.1. Setup</a></li>
+<li><a href="#_example_application">9.8.2. Example application</a></li>
+<li><a href="#_limitations">9.8.3. Limitations</a></li>
+</ul>
+</li>
+<li><a href="#_spring_modules_and_auto_configuration">9.9. Spring Modules and Auto Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#_spring_mvc_module">9.9.1. Spring MVC Module</a></li>
+<li><a href="#_spring_cloud_sleuth_module">9.9.2. Spring Cloud Sleuth Module</a></li>
+<li><a href="#_spring_security_module">9.9.3. Spring Security Module</a></li>
+<li><a href="#_jpa_module_auto_configuration">9.9.4. JPA Module Auto Configuration</a></li>
+<li><a href="#_validation_module_auto_configuration">9.9.5. Validation Module Auto Configuration</a></li>
+<li><a href="#_ui_module_auto_configuration">9.9.6. UI Module Auto Configuration</a></li>
+<li><a href="#_operations_module_auto_configuration">9.9.7. Operations Module Auto Configuration</a></li>
+<li><a href="#_meta_module_auto_configuration">9.9.8. Meta Module Auto Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_module_development">10. Module Development</a>
 <ul class="sectlevel2">
-<li><a href="#_feature_overview">10.1. Feature overview</a></li>
-<li><a href="#_bulk_support_with_json_patch">10.2. Bulk support with JSON Patch</a></li>
-<li><a href="#_expressions">10.3. Expressions</a></li>
-<li><a href="#_form_binding">10.4. Form Binding</a>
+<li><a href="#_request_filtering">10.1. Request Filtering</a></li>
+<li><a href="#_resource_filtering">10.2. Resource Filtering</a></li>
+<li><a href="#_filter_modifications">10.3. Filter Modifications</a></li>
+<li><a href="#_filter_priority">10.4. Filter Priority</a></li>
+<li><a href="#_access_to_http_layer">10.5. Access to HTTP layer</a></li>
+<li><a href="#_module_extensions_and_dependencies">10.6. Module Extensions and dependencies</a></li>
+<li><a href="#_integrate_third_party_data_stores">10.7. Integrate third-party data stores</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism_2">10.8. Implement a custom discovery mechanism</a></li>
+<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">10.9. Let a module hook into the Crnk HTTP client implementation</a></li>
+<li><a href="#_implement_a_custom_integration">10.10. Implement a custom integration</a></li>
+<li><a href="#_create_repositories_at_runtime">10.11. Create repositories at runtime</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_5">10.4.1. Setup</a></li>
-<li><a href="#_updating_data">10.4.2. Updating Data</a></li>
-<li><a href="#_validation_and_error_handling">10.4.3. Validation and Error handling</a></li>
-<li><a href="#_roadmap_and_open_issues">10.4.4. Roadmap and Open Issues</a></li>
+<li><a href="#_implementing_repositories_dynamically_at_runtime">10.11.1. Implementing repositories dynamically at runtime</a></li>
+<li><a href="#_registering_repositories_at_runtime">10.11.2. Registering repositories at runtime</a></li>
 </ul>
 </li>
-<li><a href="#_table_binding">10.5. Table Binding</a>
+<li><a href="#_discovery_of_modules_by_crnkclient">10.12. Discovery of Modules by CrnkClient</a></li>
+</ul>
+</li>
+<li><a href="#_generation">11. Generation</a>
+<ul class="sectlevel2">
+<li><a href="#_typescript">11.1. Typescript</a></li>
+</ul>
+</li>
+<li><a href="#_angular_development_with_ngrx">12. Angular Development with ngrx</a>
+<ul class="sectlevel2">
+<li><a href="#_feature_overview">12.1. Feature overview</a></li>
+<li><a href="#_bulk_support_with_json_patch">12.2. Bulk support with JSON Patch</a></li>
+<li><a href="#_expressions">12.3. Expressions</a></li>
+<li><a href="#_form_binding">12.4. Form Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_6">10.5.1. Setup</a></li>
-<li><a href="#_usage_2">10.5.2. Usage</a></li>
+<li><a href="#_setup_5">12.4.1. Setup</a></li>
+<li><a href="#_updating_data">12.4.2. Updating Data</a></li>
+<li><a href="#_validation_and_error_handling">12.4.3. Validation and Error handling</a></li>
+<li><a href="#_roadmap_and_open_issues">12.4.4. Roadmap and Open Issues</a></li>
 </ul>
 </li>
-<li><a href="#_meta_model">10.6. Meta Model</a></li>
+<li><a href="#_table_binding">12.5. Table Binding</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_6">12.5.1. Setup</a></li>
+<li><a href="#_usage_2">12.5.2. Usage</a></li>
 </ul>
 </li>
-<li><a href="#_faq">11. FAQ</a></li>
+<li><a href="#_meta_model">12.6. Meta Model</a></li>
+</ul>
+</li>
+<li><a href="#_faq">13. FAQ</a></li>
 </ul>
 </div>
 </div>
@@ -773,6 +795,9 @@ third-party libraries and frameworks.</p>
 </li>
 <li>
 <p>Spring: run Crnk with Spring, including support for Spring Boot, ORM, Security and Sleuth.</p>
+</li>
+<li>
+<p>Reactor: for support of reactive programming.</p>
 </li>
 <li>
 <p>Servlet API: run Crnk as servlet.</p>
@@ -982,7 +1007,8 @@ happen manually.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>The subsequent sections explain various possibilities resp. how to implement a custom one.</p>
+<p>The subsequent sections explain various possibilities resp. how to implement a custom one.
+The <a href="#reactive">[reactive]</a> chapter further outlines how to setup Crnk in an asynchronous/reactive setting.</p>
 </div>
 <div class="sect2">
 <h3 id="_requirements">3.1. Requirements</h3>
@@ -993,14 +1019,53 @@ released every three years.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integration_with_jax_rs">3.2. Integration with JAX-RS</h3>
+<h3 id="_bom">3.2. BOM</h3>
+<div class="paragraph">
+<p>With <code>io.crnk:crnk-bom</code> a Maven BOM is provided that manages the dependencies of all crnk artifacts.
+In Gradle the setup then looks as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>buildscript {
+	dependencies {
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE"
+	}
+}
+
+gradle.beforeProject { Project project -&gt;
+	project.with {
+		apply plugin: 'io.spring.dependency-management'
+		dependencyManagement {
+			imports {
+				mavenBom "io.crnk:crnk-bom:$CRNK_VERSION"
+			}
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The crnk modules can then simply be used without having to specify a version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>dependencies {
+	compile 'io.crnk:crnk-rs'
+	compile 'io.crnk:crnk-spring'
+	...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_integration_with_jax_rs">3.3. Integration with JAX-RS</h3>
 <div class="paragraph">
 <p>Crnk allows integration with JAX-RS environments through the usage of JAX-RS specification. JAX-RS 2.0 is
 required for this integration. Under the hood there is a @PreMatching filter which checks each request for
 JSON API processing. The Setup can look as simple as:</p>
 </div>
 <div class="sect3">
-<h4 id="_crnkfeature">3.2.1. CrnkFeature</h4>
+<h4 id="_crnkfeature">3.3.1. CrnkFeature</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>@ApplicationPath("/")
@@ -1061,7 +1126,7 @@ up automatically and do not manual registration.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_exception_mapping_for_jax_rs_services">3.2.2. Exception mapping for JAX-RS services</h4>
+<h4 id="_exception_mapping_for_jax_rs_services">3.3.2. Exception mapping for JAX-RS services</h4>
 <div class="paragraph">
 <p>In many cases Crnk repositories are used along regular JAX-RS services. In such scenarios it can be worthwhile
 if Crnk repositories and JAX-RS services make use of the same exception handling and response format. To make
@@ -1074,7 +1139,7 @@ takes <code>CrnkFeature</code> as parameter.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_use_json_api_format_with_jax_rs_services">3.2.3. Use JSON API format with JAX-RS services</h4>
+<h4 id="_use_json_api_format_with_jax_rs_services">3.3.3. Use JSON API format with JAX-RS services</h4>
 <div class="paragraph">
 <p>Similar to <code>JsonapiExceptionMapperBridge</code> in the previous section, it is possible for JAX-RS services to return
 resources in JSON API format with <strong>JsonApiResponseFilter</strong>. <code>JsonApiResponseFilter</code> wraps primitive
@@ -1136,7 +1201,7 @@ as JSON API responses.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jax_rs_service_interoperability">3.2.4. JAX-RS service interoperability</h4>
+<h4 id="_jax_rs_service_interoperability">3.3.4. JAX-RS service interoperability</h4>
 <div class="paragraph">
 <p>It is possible to implement repositories that host both JAX-RS and JSON-API methods to complement JSON
 API repositories with non-resource based services. Have a look at the <a href="#client_jaxrs">Crnk Client chapter</a> for an example.</p>
@@ -1144,7 +1209,7 @@ API repositories with non-resource based services. Have a look at the <a href="#
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integration_with_servlet_api">3.3. Integration with Servlet API</h3>
+<h3 id="_integration_with_servlet_api">3.4. Integration with Servlet API</h3>
 <div class="paragraph">
 <p>There are two ways of integrating crnk using Servlets:</p>
 </div>
@@ -1159,7 +1224,7 @@ API repositories with non-resource based services. Have a look at the <a href="#
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_integrating_using_a_servlet">3.3.1. Integrating using a Servlet</h4>
+<h4 id="_integrating_using_a_servlet">3.4.1. Integrating using a Servlet</h4>
 <div class="paragraph">
 <p>There is a <code>CrnkServlet</code> implementation allowing to integrate Crnk into a Servlet environment.
 It can be configured with all the parameters outlined in the subsequent sections. Many times
@@ -1206,7 +1271,7 @@ The code below shows a sample <code>web.xml</code> file with a properly defined 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_integrating_using_a_filter">3.3.2. Integrating using a filter</h4>
+<h4 id="_integrating_using_a_filter">3.4.2. Integrating using a filter</h4>
 <div class="paragraph">
 <p>Integrating Crnk as a Servlet filter works in a very similar fashion as for servlets:</p>
 </div>
@@ -1247,7 +1312,7 @@ A code below shows a sample <code>web.xml</code> file with properly defined and 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integration_with_spring_and_string_boot">3.4. Integration with Spring and String Boot</h3>
+<h3 id="_integration_with_spring_and_string_boot">3.5. Integration with Spring and String Boot</h3>
 <div class="paragraph">
 <p>Crnk provides with <code>crnk-spring</code> a number of utilities to seamlessly integrate with Spring and Spring Boot.
 First and foremost, there is a <code>CrnkConfigV3</code> configuration class to hook Crnk into Spring Web to serve requests.</p>
@@ -1281,7 +1346,7 @@ The <a href="#spring_modules">Spring modules</a> and their auto configurations m
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_cdi">3.5. Discovery with CDI</h3>
+<h3 id="_discovery_with_cdi">3.6. Discovery with CDI</h3>
 <div class="paragraph">
 <p>To enable CDI support, add <code>io.crnk:crnk-cdi</code> to your classpath. Crnk will then pickup the
 <code>CdiServiceDiscovery</code> implementation and use it to discover its modules and repositories. Modules, repositories,
@@ -1307,7 +1372,7 @@ it is highly recommended to set the <code>BeanManager manually</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_guice">3.6. Discovery with Guice</h3>
+<h3 id="_discovery_with_guice">3.7. Discovery with Guice</h3>
 <div class="paragraph">
 <p>A <code>GuiceServiceDiscovery</code> implementation is provided. The various integrations like <code>CrnkFeature</code> provide
 a <code>setServiceDiscovery</code> method to set the instance. For an example have a look at the dropwizard example
@@ -1315,14 +1380,14 @@ application (<a href="https://github.com/crnk-project/crnk-framework/tree/master
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_spring">3.7. Discovery with Spring</h3>
+<h3 id="_discovery_with_spring">3.8. Discovery with Spring</h3>
 <div class="paragraph">
 <p>The Spring integration comes with a <code>SpringServiceDiscovery</code> that makes use of the Spring <code>ApplicationContext</code>
 to discover beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_without_a_dependency_injection_framework">3.8. Discovery without a dependency injection framework</h3>
+<h3 id="_discovery_without_a_dependency_injection_framework">3.9. Discovery without a dependency injection framework</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1371,7 +1436,7 @@ class that makes use of Crnk interfaces, like repositories, exception mappers an
 </div>
 </div>
 <div class="sect2">
-<h3 id="_no_discovery">3.9. No Discovery</h3>
+<h3 id="_no_discovery">3.10. No Discovery</h3>
 <div class="paragraph">
 <p>It is also possible to make use of no discovery mechanism at all. In this case it is still possible to add repositories
 and other features through modules. A simple example looks like:</p>
@@ -1393,14 +1458,14 @@ and other features through modules. A simple example looks like:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism">3.10. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism">3.11. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Application can bring along there own implementation of <code>ServiceDiscovery</code>. For more information
 see <a href="#customdiscovery">here</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crnkboot">3.11. CrnkBoot</h3>
+<h3 id="_crnkboot">3.12. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
 Crnk. Every integration will provide access to it, which in turn allows for virtually any kind of customization.</p>
@@ -1444,7 +1509,7 @@ your servers depending on the datasize.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_properties">3.12. Properties</h3>
+<h3 id="_properties">3.13. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -2041,7 +2106,9 @@ public class Task {
 	@JsonApiRelationId
 	private Long projectId;
 
-	@JsonApiRelation(opposite = "tasks", lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL)
+	@JsonApiRelation(opposite = "tasks", lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,
+			repositoryBehavior = RelationshipRepositoryBehavior.FORWARD_OWNER,
+			serialize = SerializeType.ONLY_ID)
 	private Project project;
 
    ...
@@ -2064,15 +2131,6 @@ public class TaskRepositoryImpl extends ResourceRepositoryBase&lt;Task, Long&gt;
 
 	public TaskRepositoryImpl() {
 		super(Task.class);
-		Task task = new Task(1L, "Create tasks");
-		task.setProjectId(123L);
-		save(task);
-		task = new Task(2L, "Make coffee");
-		task.setProjectId(123L);
-		save(task);
-		task = new Task(3L, "Do things");
-		task.setProjectId(123L);
-		save(task);
 	}
 
 	@Override
@@ -2962,17 +3020,79 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 <div class="paragraph">
 <p>When using annotated versions of repositories, a method that returns a <code>LinksInformation</code> object should be annotated with <code>JsonApiLinks</code> and the first parameter of the method has to be a list of resources.</p>
 </div>
-<div class="sect3">
-<h4 id="_payload_size_optimizations">5.7.1. Payload Size Optimizations</h4>
+</div>
+<div class="sect2">
+<h3 id="_payload_size_optimizations">5.8. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
 of those links is omitted. Further relationships without data are completely omitted.</p>
 </div>
+<div class="paragraph">
+<p><a id="repository_decoration"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.8. ResourceFieldContributor</h3>
+<h3 id="_repository_decoration">5.9. Repository Decoration</h3>
+<div class="paragraph">
+<p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the main repository implementation comes from a third-party library and can/should not directly be modified.</p>
+</li>
+<li>
+<p>the feature is unrelated to the main repository feature set, for example, cross-cutting concerns like security, caching, tracing and metrics.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>RepositoryDecoratorFactory</code> allows to do exactly that. It puts a <strong>decorating</strong> resource or relationship repository inbetween
+the Crnk engine and the main repository. It implements the same interface contract as the main repository,
+intercept all requests and can do arbitrary modifications. The modifications may or may not include calling the main repository.</p>
+</div>
+<div class="paragraph">
+<p>An example can look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">ApprovalRepositoryDecorator.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	public static final RepositoryDecoratorFactory createFactory(ApprovalManager approvalManager) {
+		return new RepositoryDecoratorFactoryBase() {
+
+			@Override
+			public &lt;T, I extends Serializable&gt; ResourceRepositoryDecorator&lt;T, I&gt; decorateRepository(
+					ResourceRepositoryV2&lt;T, I&gt; repository) {
+				if (repository.getResourceClass() == Schedule.class) {
+					return (ResourceRepositoryDecorator&lt;T, I&gt;) new ApprovalRepositoryDecorator(approvalManager);
+				}
+				return null;
+			}
+		};
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The particular example, for example, intercepts the <code>save</code> operation and may trigger an approval workflow:</p>
+</div>
+<div class="listingblock">
+<div class="title">ApprovalRepositoryDecorator.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	@Override
+	public &lt;S extends T&gt; S save(S entity) {
+		if (approvalManager.needsApproval(entity, HttpMethod.PATCH)) {
+			return approvalManager.requestApproval(entity, HttpMethod.PATCH);
+		}
+		else {
+			return super.save(entity);
+		}
+	}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resourcefieldcontributor">5.10. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-jpa and
@@ -3242,7 +3362,7 @@ allow a fully automated setup.</p>
 <div class="listingblock">
 <div class="title">QuerySpecClientTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		ScheduleRepository scheduleRepository = client.getResourceRepository(ScheduleRepository.class);
+<pre class="CodeRay highlight"><code>		ScheduleRepository scheduleRepository = ((ClientTestContainer) testContainer).getClient().getResourceRepository(ScheduleRepository.class);
 
 		Schedule schedule = new Schedule();
 		schedule.setId(13L);
@@ -3374,23 +3494,609 @@ the respective HTTP client implementation. This allows to cover various use case
 </ul>
 </div>
 <div class="paragraph">
-<p>You may have a look at <code>crnk-brave</code> for an advanced example.
-:basedir: ../../../..</p>
+<p>You may have a look at <code>crnk-brave</code> for an advanced example.</p>
 </div>
 <div class="paragraph">
-<p><a id="modules"></a></p>
+<p><a id="reactive"></a></p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_modules_2">7. Modules</h2>
+<h2 id="_reactive_programming">7. Reactive Programming</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Initial support is available, but still considered (very) experimental. The implementation is expected to mature over the coming weeks. Breaking changes
+  to the reactive API might be possible. The traditional API is left unchanged.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>ReactiveModule</code> of <code>crnk-reactive</code> bring support for reactive programming to Crnk.
+It allows to build more responsive, elastic, resilient, message-driven applications (see
+<a href="https://www.reactivemanifesto.org/" class="bare">https://www.reactivemanifesto.org/</a>). <a href="https://projectreactor.io/" class="bare">https://projectreactor.io/</a> was chosen as library.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+Traditional and reactive-style programming are considered being equally important and both have their respective advantages and disadvantages. The reactive API
+is by no means going to replace the traditional one!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>crnk-reactive</code> brings along three new interfaces that act as reactive counter-parts of the traditional resource and relationship interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ReactiveResourceRepository</code></p>
+</li>
+<li>
+<p><code>ReactiveOneRelationshipRepository</code></p>
+</li>
+<li>
+<p><code>ReactiveManyRelationshipRepository</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The differences to the traditional ones are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Single and multi-valued relationships are served by different interfaces (minor cleanup, usually one or the other is necessary).</p>
+</li>
+<li>
+<p><code>ResourceField</code> instead of a simple <code>String</code> give more detailed information about the accessed relationship.</p>
+</li>
+<li>
+<p>Most importantly, <code>reactor.core.publisher.Mono</code> is used as return type to enable reactive programming.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>NOTE that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A potential future V3 version of the traditional interfaces will align the first two differences.</p>
+</li>
+<li>
+<p><code>Mono</code> rather than <code>Flux</code> is used for list return types since meta and links information must be returned as well, not just a sequence of resources.
+For large number of resources, the JSON API pagination mechanisms can be applied.</p>
+</li>
+<li>
+<p>Internally the traditional and reactive repositories are served by the same Crnk engine and share virtually all of the code base.
+The difference lies in the used <code>ResultFactory</code> implementation. <code>ImmediateResultFactory</code> is used by the traditional API. <code>MonoResultFactory</code> by
+reactive setups.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_servlet_example">7.1. Servlet Example</h3>
+<div class="paragraph">
+<p>The subsequent example shows as simple reactive resource repository holding its data in-memory:</p>
+</div>
+<div class="listingblock">
+<div class="title">InMemoryReactiveResourceRepository.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.test.mock.reactive;
+
+import io.crnk.core.engine.information.resource.ResourceField;
+import io.crnk.core.engine.internal.utils.PreconditionUtil;
+import io.crnk.core.engine.registry.RegistryEntry;
+import io.crnk.core.queryspec.QuerySpec;
+import io.crnk.core.resource.list.ResourceList;
+import io.crnk.reactive.repository.ReactiveResourceRepositoryBase;
+import io.crnk.test.mock.TestException;
+import io.crnk.test.mock.UnknownException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class InMemoryReactiveResourceRepository&lt;T, I&gt; extends ReactiveResourceRepositoryBase&lt;T, I&gt; {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryReactiveResourceRepository.class);
+
+	protected Map&lt;I, T&gt; resources = new ConcurrentHashMap&lt;&gt;();
+
+	private long nextId = 0;
+
+	public InMemoryReactiveResourceRepository(Class&lt;T&gt; clazz) {
+		super(clazz);
+	}
+
+
+	@Override
+	public Mono&lt;T&gt; findOne(I id, QuerySpec querySpec) {
+		if ((Long) id == 10000L) {
+			return Mono.error(new TestException("msg"));
+		}
+		if ((Long) id == 10001L) {
+			return Mono.error(new UnknownException("msg"));
+		}
+		return super.findOne(id, querySpec);
+	}
+
+
+	@Override
+	public Mono&lt;ResourceList&lt;T&gt;&gt; findAll(QuerySpec querySpec) {
+		LOGGER.debug("findAll {}", querySpec);
+		return Mono.fromCallable(() -&gt; querySpec.apply(resources.values()));
+	}
+
+	@Override
+	public Mono&lt;T&gt; create(T entity) {
+		LOGGER.debug("create {}", entity);
+
+		RegistryEntry entry = resourceRegistry.findEntry(getResourceClass());
+		ResourceField idField = entry.getResourceInformation().getIdField();
+		Long id = (Long) idField.getAccessor().getValue(entity);
+		if (id == null) {
+			idField.getAccessor().setValue(entity, nextId++);
+		}
+		return save(entity);
+	}
+
+
+	@Override
+	public Mono&lt;T&gt; save(T entity) {
+		LOGGER.debug("save {}", entity);
+		RegistryEntry entry = resourceRegistry.findEntry(getResourceClass());
+		ResourceField idField = entry.getResourceInformation().getIdField();
+		I id = (I) idField.getAccessor().getValue(entity);
+		PreconditionUtil.assertNotNull("no id specified", entity);
+		if ((Long) id == 10000L) {
+			return Mono.error(new TestException("msg"));
+		}
+		if ((Long) id == 10001L) {
+			return Mono.error(new UnknownException("msg"));
+		}
+		resources.put(id, entity);
+		return Mono.just(entity);
+	}
+
+	@Override
+	public Mono&lt;Boolean&gt; delete(I id) {
+		LOGGER.debug("delete {}", id);
+		return Mono.fromCallable(() -&gt; resources.remove(id) != null);
+	}
+
+	public Map&lt;I, T&gt; getMap() {
+		return resources;
+	}
+
+	public void clear() {
+		resources.clear();
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following snipped shows how to setup the <code>ReactiveModule</code> together with <code>AsyncCrnkServlet</code> in Spring:</p>
+</div>
+<div class="listingblock">
+<div class="title">ReactiveServletTestApplication.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	@Bean
+	public AsyncCrnkServlet asyncCrnkServlet(SlowResourceRepository slowResourceRepository) {
+		SimpleModule slowModule = new SimpleModule("slow");
+		slowModule.addRepository(slowResourceRepository);
+
+		AsyncCrnkServlet servlet = new AsyncCrnkServlet();
+		servlet.getBoot().addModule(new ReactiveModule());
+		servlet.getBoot().addModule(testModule);
+		servlet.getBoot().addModule(slowModule);
+
+		return servlet;
+	}
+
+	@Bean
+	public ServletRegistrationBean crnkServletRegistration(AsyncCrnkServlet servlet) {
+		ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/api/*");
+		bean.setLoadOnStartup(1);
+		return bean;
+	}
+
+	@Bean
+	public CrnkBoot crnkBoot(AsyncCrnkServlet servlet) {
+		return servlet.getBoot();
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ready-to-use integrations into Spring, Vert.x and Ratpack are planned for the near future.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interacting_with_traditional_repositories">7.2. Interacting with traditional repositories</h3>
+<div class="paragraph">
+<p>Reactive and traditional repositories work well together side-by-side and can also be used in a mixed setting, for example when requesting the inclusion
+of related resources. Since the traditional repositories will block the caller, there are two mechanisms in place to remedy the issue:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A repository can be annotated with <code>ImmediateRepository</code>. In this case the traditional repository is marked as being non-blocking and can be safely invoked.</p>
+</li>
+<li>
+<p><code>ReactiveModule.setWorkerScheduler(&#8230;&#8203;)</code> allows to set the scheduler to use to invoke traditional repositories. By default <code>Schedulers.elastic</code> is used where
+worker threads are spanned as necessary.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_roadmap_and_limitations">7.3. Roadmap and Limitations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DocumentFilter</code>, <code>RepositoryFilter</code> cannot be used in a reactive setup. Reactive counter-party will be available in the near future.</p>
+</li>
+<li>
+<p><code>HttpRequestContextProvider.getRequestContext</code> can only be used in a non-reactive setting or while the reactive request is being setup.
+<code>HttpRequestContextProvider.getRequestContextResult</code> must be used instead that makes use of the subscriber context of Reactor.</p>
+</li>
+<li>
+<p><code>crnk-jpa</code> has not yet been ported yet. JDBC and JPA are blocking and require a transaction.</p>
+</li>
+<li>
+<p>Spring, Vert.x and Ratpack integrations are target for the near future.</p>
+</li>
+<li>
+<p>More testing will be necessary.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Contributions in any area welcomed.
+:basedir: ../../../..</p>
+</div>
+<div class="paragraph">
+<p><a id="security_module"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security">8. Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The resource-oriented nature of Crnk makes a number of quite powerful security schemes possible
+to authorize access to resources. The semantics of JSON API with resources, relationships, fields
+and parameters provide much more information about an application compared to, for example, a
+more classical JAX-RS oder Spring MVC application. This in turn allows to automate and simplify
+many security-related topics, which in turn allows for a more robust authorization.</p>
+</div>
+<div class="paragraph">
+<p>Authorization can happen on three levels:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Resource-based authorization: only a subset of all resource types are accessible to the user.</p>
+</li>
+<li>
+<p>Field-based authorization: only a subset of the fields (attributes and relationships) of a resource are accessible to the user.</p>
+</li>
+<li>
+<p>Data-based authorization: only a subset of all resources of a given type are accessible to the user
+based on the contents of the resources. Typically denominated Dataroom access control (DAC).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Crnk comes with support for all three. The subsequent sections outline a number of different strategies how to apply them.</p>
+</div>
+<div class="sect2">
+<h3 id="_authentication">8.1. Authentication</h3>
+<div class="paragraph">
+<p>Authorization requires to first know the calling user through authentication. Crnk is agnostic to
+the used authorization scheme and is usually provided by the underlying integration, for example,
+the <code>Principal</code> of JEE or the <code>SecurityContext</code> of Spring Security. They in turn are populated
+from a scheme like OAuth, JWT or SAML.</p>
+</div>
+<div class="paragraph">
+<p>Crnk makes use of <code>SecurityProvider</code> to integrate with such systems and check access to roles
+for the current user:</p>
+</div>
+<div class="listingblock">
+<div class="title">SecurityProvider.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.core.engine.security;
+
+public interface SecurityProvider {
+
+	boolean isUserInRole(String role);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JAX-RS and servlet integration of Crnk come both with a <code>SecurityProvider</code> implementation. Which in
+turn also provides an implementation for all integrations derived from them, such as Spring.</p>
+</div>
+<div class="paragraph">
+<p>The <code>SecurityProvider</code> is accessible from the module API and can be used to perform both DAC and RBAC
+or any other kind of check.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resource_based_access_control_with_the_securitymodule">8.2. Resource-based Access Control with the SecurityModule</h3>
+<div class="paragraph">
+<p>There is a <code>SecurityModule</code> provided by <code>crnk-security</code> that intercepts all repository requests and
+perform access control. Currently it supports resource-based access control.
+A setup can looks as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">SecurityModuleIntTest.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>			Builder builder = SecurityConfig.builder();
+			builder.permitRole("allRole", ResourcePermission.ALL);
+			builder.permitRole("getRole", ResourcePermission.GET);
+			builder.permitRole("patchRole", ResourcePermission.PATCH);
+			builder.permitRole("postRole", ResourcePermission.POST);
+			builder.permitRole("deleteRole", ResourcePermission.DELETE);
+			builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
+			builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
+			builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
+			builder.permitAll(ResourcePermission.GET);
+			builder.permitAll(Project.class, ResourcePermission.POST);
+			module = SecurityModule.newServerModule(builder.build());
+
+			CrnkFeature feature = new CrnkFeature();
+			feature.addModule(module);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A builder is used to construct rules. Each rule grants access to either a given or all resources.
+Thereby <code>ResourcePermission</code> specifies the set of authorized methods: <code>GET</code>, <code>POST</code>, <code>PATCH</code>, <code>DELETE</code>.</p>
+</div>
+<div class="paragraph">
+<p>Once the rules are defined, the runtime checks go well beyond more traditional approaches like
+JEE <code>@RolesAllowed</code> annotation. The rules are enforced in various contexts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access to resource repositories are checked.</p>
+</li>
+<li>
+<p>Access to relationship repositories are checked based on the target (return) type.</p>
+</li>
+<li>
+<p>Relationship fields targeting resources the user is not authorized to see are omitted from results and cannot
+be modified.</p>
+</li>
+<li>
+<p>A request may span multiple repository accesses in case of inclusions with the <code>include</code> parameter. In this
+case every access is checked individually.</p>
+</li>
+<li>
+<p><code>HomeModule</code> and <code>MetaModule</code> show only resources the user is authorized to see. In case of the <code>MetaModule</code>
+the <code>MetaAttribute</code> and <code>MetaResource</code> provide further information about what can be read, inserted, updated and
+deleted.</p>
+</li>
+<li>
+<p>(soon) Query parameters for sorting and filtering are checked against unauthorized access to
+related resources.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Internally the security module makes use of <code>ResourceFilter</code> to perform this task. More information about that is
+available in a subsequent section.</p>
+</div>
+<div class="paragraph">
+<p>Is is up to the application how and when to configure the <code>SecurityModule</code>. The set of rules can be static
+or created dynamically. <code>SecurityModule.reconfigure(&#8230;&#8203;)</code> allows to replace the security
+rules at runtime.</p>
+</div>
+<div class="paragraph">
+<p><a id="resourcefilter"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_role_based_access_control_with_resourcefilter">8.3. Role-based Access Control with ResourceFilter</h3>
+<div class="paragraph">
+<p>The <code>SecurityModule</code> is only one example how to implement security. Underlying it is the <code>ResourceFilter</code> interface
+provided by the Crnk engine:</p>
+</div>
+<div class="listingblock">
+<div class="title">ResourceFilter.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>public interface ResourceFilter {
+	FilterBehavior filterResource(ResourceInformation resourceInformation, HttpMethod method);
+	FilterBehavior filterField(ResourceField field, HttpMethod method);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ResourceFilter</code> allows to restrict access to resources and fields. To methods <code>filterResource</code> and
+<code>filterField</code> can be implemented for this purpose. Both return a <code>FilterBehavior</code> which allows to
+distinguish between <code>NONE</code>, <code>IGNORE</code> and <code>FORBIDDEN</code>. For example, a field like a
+lock count can make use of <code>IGNORE</code> in order to be ignored for POST and PATCH requests (the current value
+on the server is left untouched). While access to an unauthorized resource or
+field results in a forbidden error with <code>FORBIDDEN</code>. An example is given by the
+<code>SecurityResourceFilter</code> of <code>SecurityModule</code> in 'crnk-security`. Since <code>ResourceFilter</code> methods are
+invoked often, it is important for them to return quickly.</p>
+</div>
+<div class="paragraph">
+<p>There is a <code>ResourceFilterDirectory</code> that complements <code>ResourceFilter</code>. It allows to query the authorization status
+of a particular resource or field in context of the current request. The <code>ResourceFilterDirectory</code> makes
+use of per-request caching as the information may be accessed repeatedly for a request.
+It can be obtained with <code>ModuleContext.getResourceFilterDirectory(&#8230;&#8203;)</code> from the module API. For example, the <code>MetaModule</code> and
+<code>HomeModule</code> make use of <code>ResourceFilterDirectory</code> to only list authorized elements.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dataroom_access_control">8.4. Dataroom Access Control</h3>
+<div class="paragraph">
+<p>Filtering of resources is one of the main building blocks of JSON API. As such it is typically
+not too hard to implement DAC. The roles of a user can be checked and if necessary
+for filters specific to that user can be added. There are two possibilities
+to add such filters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>by updating the repository filters.</p>
+</li>
+<li>
+<p>by implementing a repository decorator that intercepts the request before reaching the repository.
+For more information see <a href="#repository_decoration">Repository Decoration</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the future the <code>SecurityModule</code> may be enhanced to also support DAC.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adapt_user_interfaces_based_on_authorizations">8.5. Adapt User Interfaces based on Authorizations</h3>
+<div class="paragraph">
+<p>In many cases it is desired to adjust UIs based on the authorizations of a user to guide the
+user early what he is authorized to do. There are two mechanisms that are outlined
+in the next sections.</p>
+</div>
+<div class="sect3">
+<h4 id="_resourcepermissioninformation">8.5.1. ResourcePermissionInformation</h4>
+<div class="paragraph">
+<p>The <code>ResourcePermissionInformation</code> interface specializes <code>MetaInformation</code> to
+give access to the <code>ResourcePermission</code> of that particular element, either a list
+or a single resource. If either of the two carries a <code>MetaInformation</code> implementing <code>ResourcePermissionInformation</code>, then the <code>SecurityModule</code>
+will fill-in the <code>ResourcePermission</code> for the current request.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_home_and_meta_module">8.5.2. Home and Meta Module</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HomeModule</code> and <code>MetaModule</code> hide resources the user is not authorized to see.
+Any UI can query their respective URLs to gain information about what the user is authorized to see.</p>
+</li>
+<li>
+<p>The <code>MetaAttribute</code>  and <code>MetaResource</code> resources from the <code>MetaModule</code>  further show
+information about which resources and fields can be inserted, updated and deleted.
+The resources are available from <code>/meta/attributes</code> and <code>/meta/resource</code> respectively.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provide_authentication_information_to_the_user">8.6. Provide Authentication Information to the User</h3>
+<div class="paragraph">
+<p>A frequent use case is to display user/login related information for a user. However, Crnk does not
+do authentication on its own and the set of provided information is typically application-specific.
+As such there is no direct support from Crnk, but a custom repository can look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">LoginRepository.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code> public class LoginRepository extends ResourceRepositoryBase&lt;Login, String&gt; {
+
+
+ 	public LoginRepository() {
+ 		super(Login.class);
+ 	}
+
+ 	@Override
+ 	public ResourceList&lt;Login&gt; findAll(QuerySpec querySpec) {
+ 		List&lt;Login&gt; logins = new ArrayList&lt;&gt;();
+ 		SecurityContext context = SecurityContextHolder.getContext();
+ 		if (context != null) {
+ 			Authentication authentication = context.getAuthentication();
+ 			Login me = new Login();
+ 			me.setId("me");
+ 			me.setUserName(authentication.getName());
+ 			logins.add(me);
+ 		}
+ 		return querySpec.apply(logins);
+ 	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This particular example has been taken from
+<a href="https://github.com/crnk-project/crnk-example/blob/master/crnk-example-service/src/main/java/io/crnk/example/service/security/LoginRepository.java">crnk-example</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exception_mapping">8.7. Exception Mapping</h3>
+<div class="paragraph">
+<p>Crnk comes with four exceptions that are relevant in a security context:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.crnk.core.exception.ForbiddenException</code> results in a HTTP <code>403</code> status code and forbids access to the requested element.</p>
+</li>
+<li>
+<p><code>io.crnk.core.exception.UnauthorizedException</code> results in a HTTP <code>401</code> status code to trigger authentication.</p>
+</li>
+<li>
+<p><code>io.crnk.core.exception.RepositoryNotFoundException</code> and <code>io.crnk.core.exception.ResourceNotFoundException</code> may be
+used in favor of <code>io.crnk.core.exception.ForbiddenException</code> to completely hide unauthorized resources with a status <code>404</code>
+indistinguishable from non-existing ones.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__potential_future_work">8.8. (Potential) Future Work</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Authorize access to fields with <code>SecurityModule</code>.</p>
+</li>
+<li>
+<p>Authorize sort and filter parameters.</p>
+</li>
+<li>
+<p>Resource annotations to configure <code>SecurityModule</code>.</p>
+</li>
+<li>
+<p>Deny rules for <code>SecurityModule</code>.</p>
+</li>
+<li>
+<p>Potentially give security-related information through <code>OPTIONS</code> requests.</p>
+</li>
+<li>
+<p>DAC support for <code>SecurityModule</code>.
+<a id="modules"></a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modules_2">9. Modules</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a id="jpa_module"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_jpa_module">7.1. JPA Module</h3>
+<h3 id="_jpa_module">9.1. JPA Module</h3>
 <div class="paragraph">
 <p>The JPA module allows to automatically expose JPA entities as JSON API repositories. No implementation
 or Crnk-specific annotations are necessary.</p>
@@ -3468,7 +4174,7 @@ and computed attributes.</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_jpa_setup">7.1.1. JPA Setup</h4>
+<h4 id="_jpa_setup">9.1.1. JPA Setup</h4>
 <div class="paragraph">
 <p>To use the module, add a dependency to <code>io.crnk:crnk-jpa</code> and register the <code>JpaModule</code>
 to Crnk. For example in the case of JAX-RS:</p>
@@ -3594,14 +4300,14 @@ are discussed in the subsequent sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jpa_setup_with_spring">7.1.2. JPA Setup with Spring</h4>
+<h4 id="_jpa_setup_with_spring">9.1.2. JPA Setup with Spring</h4>
 <div class="paragraph">
 <p>Have a look at <a href="#jpa_spring">JPA Module Auto Configuration</a>. For Spring Boot an auto configuration is
 available that already takes care of some defaults.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">7.1.3. Pagination</h4>
+<h4 id="_pagination_2">9.1.3. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -3611,7 +4317,7 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">7.1.4. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -3621,7 +4327,7 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_jpa_repository">7.1.5. Customizing the JPA repository</h4>
+<h4 id="_customizing_the_jpa_repository">9.1.5. Customizing the JPA repository</h4>
 <div class="paragraph">
 <p>The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
 implementations into the JPA module. The JPA module further provides a more
@@ -3652,7 +4358,7 @@ lightweight filter API to perform various changes to JPA repository requests:</p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dto_mapping">7.1.6. DTO Mapping</h4>
+<h4 id="_dto_mapping">9.1.6. DTO Mapping</h4>
 <div class="paragraph">
 <p>Mapping to DTO objects is supported with <code>JpaModule.registerMappedEntityClass(&#8230;&#8203;)</code>.
 A mapper then can be provided that translates the Entity to a DTO class.
@@ -3731,7 +4437,7 @@ match again the entity attribute naming.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsr_303_validation_module">7.2. JSR 303 Validation Module</h3>
+<h3 id="_jsr_303_validation_module">9.2. JSR 303 Validation Module</h3>
 <div class="paragraph">
 <p>A <code>ValidationModule</code> provided by <code>io.crnk:crnk-validation</code> implements
 resource validation and provides exception mappers for <code>javax.validation.ValidationException</code> and <code>javax.validation.ConstraintViolationException</code>.
@@ -3787,7 +4493,7 @@ module should be defined in the following way:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_tracing_with_zipkin_brave">7.3. Tracing with Zipkin/Brave</h3>
+<h3 id="_tracing_with_zipkin_brave">9.3. Tracing with Zipkin/Brave</h3>
 <div class="paragraph">
 <p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-monitor-brave4</code> provides
 integration into Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
@@ -3834,101 +4540,11 @@ together with a log reporter writing the output to console.</p>
 </table>
 </div>
 <div class="paragraph">
-<p><a id="security_module"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_security_module">7.4. Security Module</h3>
-<div class="paragraph">
-<p>This is an module that intercepts all repository requests and performs role-based access
-control. Have a look at the <code>SecurityModule</code> and the related <code>SecurityConfig</code> class.
-A setup can looks as follows:</p>
-</div>
-<div class="listingblock">
-<div class="title">SecurityModuleIntTest.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>			Builder builder = SecurityConfig.builder();
-			builder.permitRole("allRole", ResourcePermission.ALL);
-			builder.permitRole("getRole", ResourcePermission.GET);
-			builder.permitRole("patchRole", ResourcePermission.PATCH);
-			builder.permitRole("postRole", ResourcePermission.POST);
-			builder.permitRole("deleteRole", ResourcePermission.DELETE);
-			builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
-			builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
-			builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
-			builder.permitAll(ResourcePermission.GET);
-			builder.permitAll(Project.class, ResourcePermission.POST);
-			module = SecurityModule.newServerModule(builder.build());
-
-			CrnkFeature feature = new CrnkFeature();
-			feature.addModule(module);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The security module is a bit more advanced than the more typical <code>@RolesAllowed</code> annotation. As such the
-configuration is not done trough annotations, but with the <code>SecurityConfig</code> object where rules specify
-which resources and methods are available to users. A rule can grant access for role to a single or
-all resources for a given set of methods. Those rules are then applied in various contexts:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Accesses to repositories for checked (for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> requests).</p>
-</li>
-<li>
-<p>Both resources repository and relationship repositories are checked. For the later access to the
-return type is checked (TODO consider checking the source as well).</p>
-</li>
-<li>
-<p>A request may span multiple repository accesses in case of inclusions with the <code>include</code> parameter. In this
-case every access is checked individually.</p>
-</li>
-<li>
-<p>Relationship fields to resources the user is not authorized to see are omitted from results and can also
-not be modified.</p>
-</li>
-<li>
-<p><code>HomeModule</code> and <code>MetaModule</code> show only resources the user is authorized to see. In case of the <code>MetaModule</code>
-the <code>MetaAttribute</code> and <code>MetaResource</code> show also information about what can be read, inserted, updated and
-deleted.</p>
-</li>
-<li>
-<p><code>ResourcePermission</code> is added to the response as meta-data to inform the client about the authorized methods.</p>
-</li>
-<li>
-<p>(soon) Query parameters like filters, sort and inclusions are checked against unauthorized access to
-related resources.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Internally the security module makes use of <code>ResourceFilter</code> to perform this task. It is quite simple to
-add further custom behavior. Have a look at the module development chapter for this.</p>
-</div>
-<div class="paragraph">
-<p>The security module further serializes javax.security
-authorization and authentication exceptions. As such it is also recommended to be
-used by CrnkClient.</p>
-</div>
-<div class="paragraph">
-<p>Future work:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Authorized access to fields.</p>
-</li>
-<li>
-<p>Check query parameters.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
 <p><a id="meta_module"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_module">7.5. Meta Module</h3>
+<h3 id="_meta_module">9.4. Meta Module</h3>
 <div class="paragraph">
 <p>This is a module that exposes the internal workings of Crnk as JSON API repositories.
 It lets you browse the set of available resources, their types, their attributes, etc. For example,
@@ -3954,7 +4570,7 @@ any future standard implementation will built up on the information from the
 </table>
 </div>
 <div class="sect3">
-<h4 id="_setup_3">7.5.1. Setup</h4>
+<h4 id="_setup_3">9.4.1. Setup</h4>
 <div class="paragraph">
 <p>A setup can look as follows:</p>
 </div>
@@ -3970,7 +4586,7 @@ expose more meta data, such as the <code>JpaMetaProvider</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_2">7.5.2. Examples</h4>
+<h4 id="_examples_2">9.4.2. Examples</h4>
 <div class="paragraph">
 <p>To learn more about the set of available resources, have a look at the <code>MetaElement</code> class and all its subclasses. Some of the
 most important classes are:</p>
@@ -4136,7 +4752,7 @@ most important classes are:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_identifiers_for_meta_elements">7.5.3. Identifiers for Meta Elements</h4>
+<h4 id="_identifiers_for_meta_elements">9.4.3. Identifiers for Meta Elements</h4>
 <div class="paragraph">
 <p>Of importance is the assignment of IDs to meta elements. For resources the resource type is used to compute the meta
 id and a <code>resources</code> prefix is added. In the example above, person gets a <code>resources.person</code> meta id.
@@ -4164,7 +4780,7 @@ source files.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_extending_the_meta_module">7.5.4. Extending the Meta Module</h4>
+<h4 id="_extending_the_meta_module">9.4.4. Extending the Meta Module</h4>
 <div class="paragraph">
 <p>There is a <code>MetaModuleExtension</code> extension that allows other Crnk modules contribute <code>MetaProvider</code>
 implementation. This allows to:</p>
@@ -4189,7 +4805,7 @@ meta model next to the JSON API one (like for documentation purposes).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_home_module">7.6. Home Module</h3>
+<h3 id="_home_module">9.5. Home Module</h3>
 <div class="paragraph">
 <p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
 directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
@@ -4246,7 +4862,7 @@ links node holds all links to child directories and repositories. And a JSON HOM
 </div>
 </div>
 <div class="sect2">
-<h3 id="_operations_module">7.7. Operations Module</h3>
+<h3 id="_operations_module">9.6. Operations Module</h3>
 <div class="paragraph">
 <p>By its nature RESTful applications are limited to the insertion, update and deletion of single resources. As such, developers
 have to design resources accordingly while having to consider aspects like transaction handling and atomicity. It is not
@@ -4418,7 +5034,7 @@ The limitations are expected to be addressed at some point as well, contribution
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ui_module">7.8. UI Module</h3>
+<h3 id="_ui_module">9.7. UI Module</h3>
 <div class="paragraph">
 <p>The UI module makes <code>crnk-ui</code> accessible trough the module system. It allows to browse and edit all the repositories
 and resources. The setup looks like:</p>
@@ -4444,7 +5060,7 @@ Have a look at the Spring Boot example application to see a working example.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_activiti_module">7.9. Activiti Module</h3>
+<h3 id="_activiti_module">9.8. Activiti Module</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4483,7 +5099,7 @@ the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
 in generic fashion.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_4">7.9.1. Setup</h4>
+<h4 id="_setup_4">9.8.1. Setup</h4>
 <div class="paragraph">
 <p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
 It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
@@ -4598,7 +5214,7 @@ closely related to the resource classes and fields.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_application">7.9.2. Example application</h4>
+<h4 id="_example_application">9.8.2. Example application</h4>
 <div class="paragraph">
 <p>The example application goes a few steps further in the setup. The patterns of those steps might be of
 interest of consumers of the <code>ActivitiModule</code> as well.</p>
@@ -4738,7 +5354,7 @@ starting the approval process, submitting a form and then verifying the changes 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_limitations">7.9.3. Limitations</h4>
+<h4 id="_limitations">9.8.3. Limitations</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -4760,14 +5376,14 @@ out a bit in this area.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spring_modules_and_auto_configuration">7.10. Spring Modules and Auto Configuration</h3>
+<h3 id="_spring_modules_and_auto_configuration">9.9. Spring Modules and Auto Configuration</h3>
 <div class="paragraph">
 <p>All Spring modules are hosted in the <code>crnk-spring</code> modules without explicit runtime-time dependency.
 Each module comes with an auto configuration that is enabled if the presence of the particular Spring
 component is detected. Each module comes with an enabled property to disable the auto configuration.</p>
 </div>
 <div class="sect3">
-<h4 id="_spring_mvc_module">7.10.1. Spring MVC Module</h4>
+<h4 id="_spring_mvc_module">9.9.1. Spring MVC Module</h4>
 <div class="paragraph">
 <p>Makes Spring MVC services available in the Crnk Home Module next to the json api repositories to have a list of all offered
 services. Auto configuration is provided by <code>CrnkSpringMvcAutoConfiguration</code>.</p>
@@ -4781,14 +5397,14 @@ provided that returns errors in JSON API format. <code>crnk.spring.mvc.errorCont
 </div>
 </div>
 <div class="sect3">
-<h4 id="_spring_cloud_sleuth_module">7.10.2. Spring Cloud Sleuth Module</h4>
+<h4 id="_spring_cloud_sleuth_module">9.9.2. Spring Cloud Sleuth Module</h4>
 <div class="paragraph">
 <p>Integrates in the same fashion as the Crnk Brave module to trace calls from a request to the individual repositories.
 Auto configuration is provided by <code>CrnkSpringCloudSleuthAutoConfiguration</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_spring_security_module">7.10.3. Spring Security Module</h4>
+<h4 id="_spring_security_module">9.9.3. Spring Security Module</h4>
 <div class="paragraph">
 <p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON API errors that complements
 the Spring-independent <code>SecurityModule</code>.</p>
@@ -4803,7 +5419,7 @@ can be added to grant access to repositories.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jpa_module_auto_configuration">7.10.4. JPA Module Auto Configuration</h4>
+<h4 id="_jpa_module_auto_configuration">9.9.4. JPA Module Auto Configuration</h4>
 <div class="paragraph">
 <p><code>CrnkJpaAutoConfiguration</code> setups the <code>JpaModule</code> and <code>SpringTransactionRunner</code>. <code>SpringTransactionRunner</code> let
 all requests run in a transaction that is automatically rolled back in case of an error. The <code>JpaModule</code> is
@@ -4907,7 +5523,7 @@ public class ExampleJpaModuleConfigurer implements JpaModuleConfigurer {
 </div>
 </div>
 <div class="sect3">
-<h4 id="_validation_module_auto_configuration">7.10.5. Validation Module Auto Configuration</h4>
+<h4 id="_validation_module_auto_configuration">9.9.5. Validation Module Auto Configuration</h4>
 <div class="paragraph">
 <p><code>CrnkValidationAutoConfiguration</code> sets up the <code>ValidationModule</code>. This will given validation exception to
 JSON API error mapping. And by default all incoming resources are validated. The later can be disabled by setting
@@ -4915,19 +5531,19 @@ JSON API error mapping. And by default all incoming resources are validated. The
 </div>
 </div>
 <div class="sect3">
-<h4 id="_ui_module_auto_configuration">7.10.6. UI Module Auto Configuration</h4>
+<h4 id="_ui_module_auto_configuration">9.9.6. UI Module Auto Configuration</h4>
 <div class="paragraph">
 <p><code>CrnkUIAutoConfiguration</code> sets up the <code>UIModule</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_operations_module_auto_configuration">7.10.7. Operations Module Auto Configuration</h4>
+<h4 id="_operations_module_auto_configuration">9.9.7. Operations Module Auto Configuration</h4>
 <div class="paragraph">
 <p><code>CrnkOperationsAutoConfiguration</code> sets up the <code>OperationsModule</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_meta_module_auto_configuration">7.10.8. Meta Module Auto Configuration</h4>
+<h4 id="_meta_module_auto_configuration">9.9.8. Meta Module Auto Configuration</h4>
 <div class="paragraph">
 <p><code>CrnkMetaAutoConfiguration</code> sets up the <code>MetaModule</code> and exposes meta data for all JSON API repositories.
 The <code>MetaModule</code> can be customized by providing a bean of type <code>MetaModuleConfigurer</code>.</p>
@@ -4940,7 +5556,7 @@ The <code>MetaModule</code> can be customized by providing a bean of type <code>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_module_development">8. Module Development</h2>
+<h2 id="_module_development">10. Module Development</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Crnk has a module API that allows to extend the core functionality by third-party contributions.
@@ -4957,7 +5573,7 @@ module API.</p>
 <p><a id="requestfilter"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_request_filtering">8.1. Request Filtering</h3>
+<h3 id="_request_filtering">10.1. Request Filtering</h3>
 <div class="paragraph">
 <p>Crnk provides three different, complementing mechanisms to hook into the request processing.</p>
 </div>
@@ -4987,7 +5603,7 @@ notified about every repository registration and is then free do decorate it or 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resource_filtering">8.2. Resource Filtering</h3>
+<h3 id="_resource_filtering">10.2. Resource Filtering</h3>
 <div class="paragraph">
 <p><code>ResourceFilter</code> allows to restrict access to resources and fields. To methods <code>filterResource</code> and
 <code>filterField</code> can be implemented for this purpose. Both return a <code>FilterBehavior</code> which allows to
@@ -5009,7 +5625,7 @@ may be accessed repeatedly for a request.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_modifications">8.3. Filter Modifications</h3>
+<h3 id="_filter_modifications">10.3. Filter Modifications</h3>
 <div class="paragraph">
 <p>Changes to attributes and relationships can be tracked by implementing
 <code>ResourceModificationFilter</code>. The filter is invoked upon an incoming request
@@ -5018,7 +5634,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_priority">8.4. Filter Priority</h3>
+<h3 id="_filter_priority">10.4. Filter Priority</h3>
 <div class="paragraph">
 <p><code>DocumentFilter</code>, <code>RepositoryFilter</code> and <code>ResourceModificationFilter</code> can implement
 <code>Prioritizable</code> to introduce a priority among multiple filters.</p>
@@ -5028,7 +5644,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_access_to_http_layer">8.5. Access to HTTP layer</h3>
+<h3 id="_access_to_http_layer">10.5. Access to HTTP layer</h3>
 <div class="paragraph">
 <p><code>HttpRequestContext</code> resp. <code>HttpRequestContextProvider</code> provides access to the HTTP requests. Most
 notably to get and set HTTP request and response headers. In many cases, the underlying
@@ -5048,7 +5664,7 @@ access to <code>HttpRequestContextProvider</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_module_extensions_and_dependencies">8.6. Module Extensions and dependencies</h3>
+<h3 id="_module_extensions_and_dependencies">10.6. Module Extensions and dependencies</h3>
 <div class="paragraph">
 <p>ModuleExtension is an interface can can be implemented by modules to specify a contract how
 others can extend it. The interface has two mandator properties: targetModule and
@@ -5070,7 +5686,7 @@ over time.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integrate_third_party_data_stores">8.7. Integrate third-party data stores</h3>
+<h3 id="_integrate_third_party_data_stores">10.7. Integrate third-party data stores</h3>
 <div class="paragraph">
 <p>The core of Crnk is quite flexible when it comes to implementing repositories. As such, it is
 not mandatory to make use of the Crnk annotations and conventions. Instead, it is also
@@ -5087,7 +5703,7 @@ Such a module can then register additional (usually dynamic) repositories with
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism_2">8.8. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism_2">10.8. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Crnk comes with out-of-the-box support for Spring and CDI. Both of them implement
 <code>ServiceDiscovery</code>. You may provide your own implementation which can be hooked into the
@@ -5105,7 +5721,7 @@ through the Java service mechanism. For example, <code>crnk-cdi</code> makes use
 </div>
 </div>
 <div class="sect2">
-<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">8.9. Let a module hook into the Crnk HTTP client implementation</h3>
+<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">10.9. Let a module hook into the Crnk HTTP client implementation</h3>
 <div class="paragraph">
 <p>Modules for the Crnk client can additionally implement <code>HttpAdapterAware</code>. It gives
 the module access to the underlying HTTP client implementation and allows arbitrary
@@ -5116,7 +5732,7 @@ customizations of it. Have a look at the Crnk client documentation for more info
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_integration">8.10. Implement a custom integration</h3>
+<h3 id="_implement_a_custom_integration">10.10. Implement a custom integration</h3>
 <div class="paragraph">
 <p>Adding a new integration has become quite simple in recent times.
 Have a look at <code>crnk-servlet</code> and <code>crnk-rs</code>. Most functionality
@@ -5148,7 +5764,7 @@ and <code>PropertiesProvider</code> to interface with that particular systems.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_repositories_at_runtime">8.11. Create repositories at runtime</h3>
+<h3 id="_create_repositories_at_runtime">10.11. Create repositories at runtime</h3>
 <div class="paragraph">
 <p>Repositories are usually created at compile-time, either by making use of the various annotations or a module
 such as the ´JpaModule´. However, the module API also allows the creation of repositories at runtime.
@@ -5167,7 +5783,7 @@ this feature is in incubation, more refinements are expected in upcoming release
 </table>
 </div>
 <div class="sect3">
-<h4 id="_implementing_repositories_dynamically_at_runtime">8.11.1. Implementing repositories dynamically at runtime</h4>
+<h4 id="_implementing_repositories_dynamically_at_runtime">10.11.1. Implementing repositories dynamically at runtime</h4>
 <div class="paragraph">
 <p>There are different possibilities to implement a repository at runtime:</p>
 </div>
@@ -5293,7 +5909,7 @@ There is a further example test case and relationship repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_registering_repositories_at_runtime">8.11.2. Registering repositories at runtime</h4>
+<h4 id="_registering_repositories_at_runtime">10.11.2. Registering repositories at runtime</h4>
 <div class="paragraph">
 <p>There are two possibilities to register a new repository at runtime:</p>
 </div>
@@ -5324,7 +5940,7 @@ provides an up-to-date set of repositories that is used by the Crnk engine.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_of_modules_by_crnkclient">8.12. Discovery of Modules by CrnkClient</h3>
+<h3 id="_discovery_of_modules_by_crnkclient">10.12. Discovery of Modules by CrnkClient</h3>
 <div class="paragraph">
 <p>If a module does not need configuration, it can provide a <code>ClientModuleFactory</code>
 implementation and register it to the <code>java.util.ServiceLoader</code> by adding a
@@ -5366,14 +5982,14 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_generation">9. Generation</h2>
+<h2 id="_generation">11. Generation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Crnk allows the generation of Typescript stubs for type-safe, client-side web development. Contributions for other
 languages like iOS would be very welcomed.</p>
 </div>
 <div class="sect2">
-<h3 id="_typescript">9.1. Typescript</h3>
+<h3 id="_typescript">11.1. Typescript</h3>
 <div class="paragraph">
 <p>The Typescript generator allows the generation of:</p>
 </div>
@@ -5636,7 +6252,7 @@ have more stable builds.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_angular_development_with_ngrx">10. Angular Development with ngrx</h2>
+<h2 id="_angular_development_with_ngrx">12. Angular Development with ngrx</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -5676,7 +6292,7 @@ For more information about Typescript generation have a look
 at the <a href="#generation">[generation]</a> chapter.</p>
 </div>
 <div class="sect2">
-<h3 id="_feature_overview">10.1. Feature overview</h3>
+<h3 id="_feature_overview">12.1. Feature overview</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx</code> provides a number of different components:</p>
 </div>
@@ -5722,7 +6338,7 @@ at the <a href="#generation">[generation]</a> chapter.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bulk_support_with_json_patch">10.2. Bulk support with JSON Patch</h3>
+<h3 id="_bulk_support_with_json_patch">12.2. Bulk support with JSON Patch</h3>
 <div class="paragraph">
 <p><code>CrnkOperationsModule</code> imported from <code>@crnk/angular-ngrx/operations</code> provides client side support
 for <a href="http://jsonpatch.com/">JSON PATCH</a>. This enables clients to issue bulk requests. See <a href="#operations_module">Operations module</a> for
@@ -5742,7 +6358,7 @@ issue a single bulk JSON Patch request. The bulk response triggers the usual <co
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions">10.3. Expressions</h3>
+<h3 id="_expressions">12.3. Expressions</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx/expression</code> provides a QueryDSL-like expression model for Typescript. It is used  to
  address boiler-plate when working with the Angular <code>FormModule</code> resp. <code>ngModel</code> directly. For example,
@@ -5915,7 +6531,7 @@ in the next sections.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_form_binding">10.4. Form Binding</h3>
+<h3 id="_form_binding">12.4. Form Binding</h3>
 <div class="paragraph">
 <p>Working with forms and JSON API is the same for many use cases:</p>
 </div>
@@ -5946,7 +6562,7 @@ from the presentation component.</p>
 <p>The <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> can take care of exactly this.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">10.4.1. Setup</h4>
+<h4 id="_setup_5">12.4.1. Setup</h4>
 <div class="paragraph">
 <p>An example setup looks like:</p>
 </div>
@@ -6041,7 +6657,7 @@ query is located.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_updating_data">10.4.2. Updating Data</h4>
+<h4 id="_updating_data">12.4.2. Updating Data</h4>
 <div class="paragraph">
 <p><code>FormBinding</code> listens to value changes of the bound form and updates accordingly updates the store through <code>ngrx-json-api</code>
 actions. To have a mapping between JSON API resource fields and form controls, the later must follow a naming pattern.
@@ -6080,7 +6696,7 @@ do not pass. Two fields give access to that status information:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_validation_and_error_handling">10.4.3. Validation and Error handling</h4>
+<h4 id="_validation_and_error_handling">12.4.3. Validation and Error handling</h4>
 <div class="paragraph">
 <p><code>FormBinding</code> takes care of error handling. It maps back any JSON API errors back to the form controls of the
 configured form. Internally it matches the source pointers of JSON API errors against the form names (see previous section)
@@ -6124,7 +6740,7 @@ in case of a JSON API error.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap_and_open_issues">10.4.4. Roadmap and Open Issues</h4>
+<h4 id="_roadmap_and_open_issues">12.4.4. Roadmap and Open Issues</h4>
 <div class="paragraph">
 <p>The Angular <code>FormModule</code> gives a number of restrictions. In the future we expect to also support the use
 <code>FormBinding</code> without a <code>NgForm</code> instance (for some performance and simplicity benefits). Please
@@ -6146,13 +6762,13 @@ Intellij IDEA seems to have some issues when it comes to using the async pipe an
 </div>
 </div>
 <div class="sect2">
-<h3 id="_table_binding">10.5. Table Binding</h3>
+<h3 id="_table_binding">12.5. Table Binding</h3>
 <div class="paragraph">
 <p>Similar to <code>FormBinding</code> there is a <code>DataTableBinding</code> class. It can help
 taking care of interfacing a table component with JSON API.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_6">10.5.1. Setup</h4>
+<h4 id="_setup_6">12.5.1. Setup</h4>
 <div class="paragraph">
 <p>An example looks like:</p>
 </div>
@@ -6220,7 +6836,7 @@ bound to the table. <code>zoneId</code> additionally can specify in which <code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_usage_2">10.5.2. Usage</h4>
+<h4 id="_usage_2">12.5.2. Usage</h4>
 <div class="paragraph">
 <p><code>DataTableBinding</code>  makes use of a <code>DataTableImplementationAdapter</code> and offers a
 <code>onLazyLoad(&#8230;&#8203;)</code> method to translate native event of the table implementation
@@ -6251,7 +6867,7 @@ table and initial query.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_model">10.6. Meta Model</h3>
+<h3 id="_meta_model">12.6. Meta Model</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx/meta</code> hosts a Typescript API for <a href="#meta_module">Meta Module</a> generated by <code>crnk-gen-typescript</code>.</p>
 </div>
@@ -6259,7 +6875,7 @@ table and initial query.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_faq">11. FAQ</h2>
+<h2 id="_faq">13. FAQ</h2>
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
@@ -6282,7 +6898,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-02-06 08:56:54 MEZ
+Last updated 2018-04-20 09:20:17 +02:00
 </div>
 </div>
 </body>
