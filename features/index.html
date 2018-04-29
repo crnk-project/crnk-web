@@ -1,0 +1,361 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Crnk: Resource-oriented Rest Development with JSON API </title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script src="../crnk.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../crnk.css">
+</head>
+<body style="padding:0px;margin:0px">
+
+<div class="header">
+    <div class="pattern">
+        <div class="topbar">
+            <div class="title"><a href="/">JSON API with <b>Crnk</b></a></div>
+            <div class="menu">
+                <a href="/releases/">Releases</a>
+                &nbsp;&nbsp;
+                <a href="/features/">Features</a>
+                &nbsp;&nbsp;
+                <a href="/examples/">Examples</a>
+                &nbsp;&nbsp;
+                <a href="/documentation/">Docs</a>
+                &nbsp;&nbsp;
+                <a href="/related/">Related</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <h3>JSON API features</h3>
+
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">JSON API client and server</span> implementation with the possibility
+                    of <span class="highlight">shared, fully type-safe repository interfaces</span>.
+                    The server implementation allows implement JSON API compliant endpoints. The client allows
+                    to access and test such endpoints.
+                </div>
+            </div>
+
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Pattern for <span class="highlight">Sorting, filtering and pagination</span> that can be
+                    reused across all resources in an application.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">All batteries included:</span> Setup the resource model of your
+                    application and implement the methods to access them. Crnk comes with defaults
+                    that takes care of rest from parameter parsing to exception handling. This
+                    allows you to <span class="highlight">focus what what matters: your application</span>.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Mobile friendly</span>. Fetch complex object graphs in a
+                    single request with JSON API inclusions. Fetch partial objects with JSON API sparse field sets.
+                    Use together with the popular <a href="http://square.github.io/okhttp/">OkHttp</a> library on
+                    Android devices.
+                </div>
+            </div>
+
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Atomically</span> insert, update and delete multiple resources with <a
+                        href="http://jsonpatch.com/">JSON
+                    Patch</a>. Operations thereby may be executed within the same transaction. Each operation
+                    may thereby separately perform validation and return a status and any potential errors.
+                </div>
+            </div>
+
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Standardized and consistent error handling</span> across your application.
+                    JSON API thereby comes with many predefined fields. For example, source pointers allow
+                    user interfaces automatically associate validation errors with the fields causing them.
+                    Crnk comes with exception mappers for many &quot;popular&quot; exceptions and allows to
+                    add custom further mappers.
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Not limited to JSON API</span> through a flexible,
+                    resource-oriented architecture. Serializers allow to implement other REST protocols
+                    or support for formats like CSV/Excel.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Traditional and (<b>experimental</b>) <span class="highlight">reactive programming API for responsive, resilient,
+                    elastic applications</span>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <h3>Security features</h3>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    The resource-oriented nature of Crnk gives more insights into applications. This
+                    makes it possible to more simply and consistently
+                    <span class="highlight">secure applications on a type, resource and field level</span>.
+                    Automated checks will protect against unauthorized accesses to repositories;
+                    including checks against sort, filter, field and inclusion parameters.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Crnk is <span class="highlight">agnostic to the used authentication pattern</span>
+                    like SAML, OAuth or JWT and allows to implement
+                    powerful access control mechanisms.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Authorization-aware directory listings and meta model</span>
+                    to hide resources and links a user is not allowed to access.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <h3>Modular and Open Source</h3>
+
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Up-to-date documentation</span> with Asciidoc.
+                    The documentation is versioned and aligned with the latest and past releases.
+                    Code snippets are taken out of example applications and test cases.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Modular design</span> to tailor Crnk towards the application in use.
+                    A module API allows to create, share and reuse modules with other applications. Crnk itself
+                    already comes with various modules for integration, data access, security and monitoring.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Focus on quality with continuous releases</span> and extensive test
+                    coverage.
+                    <p>
+                        <img src='https://coveralls.io/repos/github/crnk-project/crnk-framework/badge.svg'
+                             alt='Coverage Status'/></a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <h3>Integration features</h3>
+
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Integrate well with popular frameworks</span> like
+                    Spring Boot, Vert.x, Dropwizard, Eclipse JEE and Eclipse MicroProfile.
+                    Use Crnk together with the framework of your choice. Further integrations are simple
+                    to add and a TestKit can ensure compatibility.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Long-term support to ease enterprise adoption</span>. Supports the
+                    most
+                    recent Java
+                    releases and Java LTS releases. New major versions of Crnk are introduced every
+                    one, two years without breaking changes, but only removal of already deprecated API.
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Lightweight</span> with only <span
+                        class="highlight">few dependencies</span>
+                    of the core libraries, most notably the <a
+                        href="https://github.com/FasterXML/jackson">Jackson library</a>. Ensure
+                    compatibility with a wide range of framework and application. Gives fast start-up times
+                    when using Crnk for development and production.
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Integrates with <span class="highlight"><a href="http://zipkin.io/">Zipkin</a> and
+                    <a href="https://cloud.spring.io/spring-cloud-sleuth/">Spring Cloud Sleuth</a>
+                    to trace</span> access to repositories and correlate with requests and
+                    other systems.
+                    Further
+                    integrations like Micrometer are planned for the near future.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Typescript friendly</span>. Generate Typescript interfaces to access
+                    your
+                    repositories and resources in a type-safe manner. An expression language together
+                    with generated classes further allows
+                    to build filter, sort, include and field sets in the same type-safe manner.
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Support for <span class="highlight">Angular development</span> with
+                    <a href="https://www.npmjs.com/package/@crnk/angular-ngrx">@crnk/angular-ngrx</a>.
+                    It complements the Typescript generation and provides binding of Angular
+                    table and form components to JSON API.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <h3>Data access features</h3>
+
+        <div class="row">
+
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Expose any JPA entity</span> as JSON API resource with
+                    out-of-the-box
+                    sorting, filtering, paging and CRUD. No implementation is necessary, but further customizations
+                    can introduce additional behavior through decorators or introduce, for example, a mapping to DTOs.
+                </div>
+            </div>
+
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">support for JSR-303 Bean
+                          Validation</span>
+                    for JSON API compliant errors.
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    <span class="highlight">Extensive meta model of your application</span> available as JSON
+                    API
+                    endpoint for the purpose of documentation and UI automation. It gives access to all your
+                    repositories, resources and fields and holds information like naming, typing and access
+                    control information. Any elements not allowed to be seen by a user are automatically
+                    hidden from the meta model as well.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="content">
+                    Support for <span class="highlight">Actiti workflow engine</span> to expose
+                    processes, tasks and forms as JSON API resources. A dedicated resource is created for
+                    each definition. This gives an API tailored towards your application. Thereby each resource
+                    can make use of the full Crnk feature set like access control or decorators for further
+                    customizations.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+
+        <h3>Roadmap</h3>
+
+        <ul>
+            <li>
+                Improvements to examples, documentation and test coverage.
+            </li>
+            <li>
+                Advance the experimental reactive/asynchronous programming support.
+            </li>
+            <li>
+                GraphQL support to complement JSON API interface.
+            </li>
+            <li>
+                Metric collection and JSON API repositories.
+            </li>
+            <li>
+                JSR 352 Batch integration.
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+
+</body>
+</html>
+
+
+
+
+
+

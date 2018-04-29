@@ -1,0 +1,192 @@
+.body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.pattern {
+    background: radial-gradient(rgba(255, 255, 255, .01) 25%, transparent 16%) 0 0,
+    radial-gradient(rgba(255, 255, 255, .01) 25%, transparent 16%) 8px 8px;
+    background-size: 16px 16px;
+    background-color: transparent;
+
+    padding: 30px 50px 50px 30px
+}
+
+.header {
+    background: linear-gradient(to right, #113844, #154854);
+    margin: 0;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: #F8F8F8;
+}
+
+.teaser {
+    padding: 100px 0px 10px 0px;
+    font-size: 200%;
+}
+
+.more {
+    padding: 20px 0px 20px 0px;
+    font-size: 110%;
+}
+
+.more a {
+    color: WHITE;
+    text-decoration: underline;
+}
+
+.social {
+    margin-bottom: 40px;
+}
+
+.social-element {
+    float: left;
+    vertical-align: middle;
+    margin: 7px;
+}
+
+.topbar {
+
+}
+
+.topbar a {
+    color: WHITE;
+    decoration: none
+}
+
+.topbar a:hover {
+    color: WHITE;
+    decoration: underline
+}
+
+.topbar .title {
+    float: left;
+}
+
+.topbar .menu {
+    float: right;
+}
+
+.section {
+    padding: 10px;
+}
+
+h3 {
+    color: #155270;
+    font-size: 130%;
+    font-weight: bold;
+}
+
+.images {
+    margin-top: 25px;
+    float: right;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+}
+
+.images img {
+    width: 425px;
+    height: auto;
+}
+
+.section-content {
+    background: #F8F8F8;
+    padding: 10px;
+}
+
+.breaking {
+    background: linear-gradient(to right, #113844, #154854);
+    margin: 0;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: #F8F8F8;
+}
+
+.breaking a {
+    color: WHITE;
+    decoration: none
+}
+
+.breaking a:hover {
+    color: WHITE;
+    decoration: underline
+}
+
+.breaking .section-content {
+    background: radial-gradient(rgba(255, 255, 255, .01) 25%, transparent 16%) 0 0,
+    radial-gradient(rgba(255, 255, 255, .01) 25%, transparent 16%) 8px 8px;
+    background-size: 16px 16px;
+    background-color: transparent;
+    padding: 15px 30px 15px 30px
+}
+
+.section .part {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.highlight {
+    color: #216884;
+    font-weight: bold;
+}
+
+.part a {
+    color: #216884;
+    text-decoration: none;
+}
+
+.part a:hover {
+    color: #216884;
+    text-decoration: underline;
+}
+
+.section .part .content {
+    padding: 5px;
+}
+
+pre.prettyprint {
+    margin: 15px 7px 15px 7px;
+    padding: 7px;
+    border-width: 1px;
+    border-color: #DDDDDD;
+    background-color: white;
+}
+
+.tab-content {
+    padding: 10px;
+    background: #FFFFFF;
+    border-left: 1px solid #E0E0E0;
+    border-right: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+footer {
+    background: #F8F8F8;
+    padding: 10px;
+}
+
+table tr td, table tr th {
+    vertical-align: top;
+    font-size: 90%;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.example {
+    margin: 15px 7px 15px 7px;
+    padding: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #DDDDDD;
+    background-color: white;
+}
+
+.example td {
+    padding-left: 7px;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

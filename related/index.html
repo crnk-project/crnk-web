@@ -1,141 +1,42 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Crnk: Java JSON API framework</title>
+    <title>Crnk: Resource-oriented Rest Development with JSON API </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
 
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-101263796-1', 'auto');
-        ga('send', 'pageview');
-
-    </script>
-
+    <script src="../crnk.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <style>
-        .section {
-            padding: 20px;
-        }
-
-        .section-content {
-            background: #F8F8F8;
-            padding: 10px;
-        }
-
-        .section .part {
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        .section .part .content {
-            padding: 5px;
-        }
-
-        pre.prettyprint {
-            padding-top: 10px;
-            border: none;
-            background-color: transparent;
-        }
-
-        .tab-content {
-            padding: 10px;
-            background: #FFFFFF;
-            border-left: 1px solid #E0E0E0;
-            border-right: 1px solid #E0E0E0;
-            border-bottom: 1px solid #E0E0E0;
-        }
-
-        footer {
-            background: #F8F8F8;
-            padding: 10px;
-        }
-
-        .example tr td {
-            padding-right: 10px;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            font-size: 90%;
-            vertical-align: top;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="../crnk.css">
 </head>
 <body style="padding:0px;margin:0px">
 
-
-
-<div style="height:55px; padding:10px; background:#113844;color:#F8F8F8">
-
-    <div style="float:left; font-size: 200%">
-        <a href="http://www.crnk.io" style="color:WHITE;decoration:none">Crnk: JSON API library</a>
-    </div>
-
-    <div style="float:right;vertical-align: middle;padding-left:10px;padding-top:3px">
-
-        <a class="github-button" href="https://github.com/crnk-project/crnk-framework" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star crnk-project/crnk-framework on GitHub">Star</a>
-    </div>
-
-    <div style="float:right;vertical-align: middle;padding-left:10px;">
-        <a href="https://github.com/crnk-project/">
-            <svg aria-hidden="true" style="color:WHITE;fill:WHITE;" class="octicon octicon-mark-github"
-                 height="32"
-                 version="1.1" viewBox="0 0 16 16" width="32">
-
-                <path fill-rule="evenodd"
-                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-            </svg>
-        </a>
-    </div>
-
-    <div style="float:right;vertical-align: middle;padding-left:10px;">
-        <div style="width:32px;height:32px">
-            <a href="https://gitter.im/crnk-io/Lobby?source=orgpage" style="color:WHITE;text-decoration: none">
-                <img src="https://cdn03.gitter.im/_s/88aafe0/images/svg/gitter-logos/logo-white-default.svg"
-                     title="Get in touch on Gitter">
-            </a>
+<div class="header">
+    <div class="pattern">
+        <div class="topbar">
+            <div class="title"><a href="/">JSON API with <b>Crnk</b></a></div>
+            <div class="menu">
+                <a href="/releases/">Releases</a>
+                &nbsp;&nbsp;
+                <a href="/features/">Features</a>
+                &nbsp;&nbsp;
+                <a href="/examples/">Examples</a>
+                &nbsp;&nbsp;
+                <a href="/documentation/">Docs</a>
+                &nbsp;&nbsp;
+                <a href="/related/">Related</a>
+            </div>
         </div>
-    </div>
-
-
-    <div style="float:right;vertical-align: middle;padding-left:10px;">
-        <div style="width:32px;height:32px">
-            <a href="https://twitter.com/crnk_io" style="color:WHITE;text-decoration: none">
-                <img src="../images/twitter-xxl.png" width="32" title="Follow us on Twitter">
-            </a>
-        </div>
-    </div>
-
-    <div style="float:right;vertical-align: middle;padding-right:50px; padding-top:7px; font-size: 125%">
-        <a href="/news/" style="color:WHITE;decoration:none">News</a>
-        &nbsp;&nbsp;
-        <a href="/documentation/" style="color:WHITE;decoration:none">Documentation</a>
-        &nbsp;&nbsp;
-        <a href="/related/" style="color:WHITE;decoration:none">Related Projects</a>
     </div>
 </div>
 
