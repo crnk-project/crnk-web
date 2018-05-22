@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.4">
+<meta name="generator" content="Asciidoctor 1.5.5">
 <title>Crnk Documentation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -17,7 +17,6 @@ audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
 a{background:transparent}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
@@ -52,7 +51,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -64,7 +63,6 @@ img{-ms-interpolation-mode:bicubic}
 .text-center{text-align:center!important}
 .text-justify{text-align:justify!important}
 .hide{display:none}
-body{-webkit-font-smoothing:antialiased}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
@@ -119,13 +117,16 @@ table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-body{tab-size:4}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
 .clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
 pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
@@ -633,12 +634,13 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_jpa_module">9.1. JPA Module</a>
 <ul class="sectlevel3">
-<li><a href="#_jpa_setup">9.1.1. JPA Setup</a></li>
-<li><a href="#_jpa_setup_with_spring">9.1.2. JPA Setup with Spring</a></li>
-<li><a href="#_pagination_2">9.1.3. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</a></li>
-<li><a href="#_customizing_the_jpa_repository">9.1.5. Customizing the JPA repository</a></li>
-<li><a href="#_dto_mapping">9.1.6. DTO Mapping</a></li>
+<li><a href="#_jpa_module_setup">9.1.1. JPA Module Setup</a></li>
+<li><a href="#_jpa_entity_setup">9.1.2. JPA Entity Setup</a></li>
+<li><a href="#_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</a></li>
+<li><a href="#_pagination_2">9.1.4. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</a></li>
+<li><a href="#_customizing_the_jpa_repository">9.1.6. Customizing the JPA repository</a></li>
+<li><a href="#_dto_mapping">9.1.7. DTO Mapping</a></li>
 </ul>
 </li>
 <li><a href="#_jsr_303_validation_module">9.2. JSR 303 Validation Module</a></li>
@@ -698,7 +700,12 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_generation">11. Generation</a>
 <ul class="sectlevel2">
-<li><a href="#_typescript">11.1. Typescript</a></li>
+<li><a href="#_typescript">11.1. Typescript</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_5">11.1.1. Setup</a></li>
+<li><a href="#_error_handling_2">11.1.2. Error Handling</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_angular_development_with_ngrx">12. Angular Development with ngrx</a>
@@ -708,7 +715,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_expressions">12.3. Expressions</a></li>
 <li><a href="#_form_binding">12.4. Form Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_5">12.4.1. Setup</a></li>
+<li><a href="#_setup_6">12.4.1. Setup</a></li>
 <li><a href="#_updating_data">12.4.2. Updating Data</a></li>
 <li><a href="#_validation_and_error_handling">12.4.3. Validation and Error handling</a></li>
 <li><a href="#_roadmap_and_open_issues">12.4.4. Roadmap and Open Issues</a></li>
@@ -716,7 +723,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_table_binding">12.5. Table Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_6">12.5.1. Setup</a></li>
+<li><a href="#_setup_7">12.5.1. Setup</a></li>
 <li><a href="#_usage_2">12.5.2. Usage</a></li>
 </ul>
 </li>
@@ -855,6 +862,9 @@ with Crnk, Angular, Spring Boot and ngrx-json-api.</p>
 </li>
 <li>
 <p><code>jersey-example</code></p>
+</li>
+<li>
+<p><code>dagger-vertx-example</code> showcasing a very lightweight setup with Dagger, Vert.x, Proguard, OpenJ9 VM having a small size, startup time and memory footprint.</p>
 </li>
 </ul>
 </div>
@@ -3939,7 +3949,7 @@ worker threads are spanned as necessary.</p>
 <p>The resource-oriented nature of Crnk makes a number of quite powerful security schemes possible
 to authorize access to resources. The semantics of JSON API with resources, relationships, fields
 and parameters provide much more information about an application compared to, for example, a
-more classical JAX-RS or Spring MVC application. This in turn allows to automate and simplify
+more classical JAX-RS oder Spring MVC application. This in turn allows to automate and simplify
 many security-related topics, which in turn allows for a more robust authorization.</p>
 </div>
 <div class="paragraph">
@@ -4320,17 +4330,10 @@ to the usually more interesting exceptions like
 and computed attributes.</p>
 </div>
 <div class="paragraph">
-<p>Not yet supported are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>sparse field sets.</p>
-</li>
-</ul>
+<p>Not yet supported are sparse field sets queried by tuple queries.</p>
 </div>
 <div class="sect3">
-<h4 id="_jpa_setup">9.1.1. JPA Setup</h4>
+<h4 id="_jpa_module_setup">9.1.1. JPA Module Setup</h4>
 <div class="paragraph">
 <p>To use the module, add a dependency to <code>io.crnk:crnk-jpa</code> and register the <code>JpaModule</code>
 to Crnk. For example in the case of JAX-RS:</p>
@@ -4456,14 +4459,75 @@ are discussed in the subsequent sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jpa_setup_with_spring">9.1.2. JPA Setup with Spring</h4>
+<h4 id="_jpa_entity_setup">9.1.2. JPA Entity Setup</h4>
+<div class="paragraph">
+<p>Most features of JPA are supported and get mapped to JSON API:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Entities are mapped to resources.</p>
+</li>
+<li>
+<p>Embeddables are mapped to nested json structures.</p>
+</li>
+<li>
+<p>Embeddables used as primary keys are mapped to/from a simple string to remain addressable as resource id. The order of attributes thereby determines the position
+of the values in the string.</p>
+</li>
+<li>
+<p>Not yet supported are relationships within embeddables.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is possible to add additional JSON API related fields to entities by making use of the <code>@Transient</code> annotation of <code>javax.persistence</code> (or the other way around by marking
+it with <code>@JsonIgnore</code>):</p>
+</div>
+<div class="listingblock">
+<div class="title">JpaTransientTestEntity.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@Entity
+public class JpaTransientTestEntity extends TestMappedSuperclass {
+
+	@Id
+	private Long id;
+
+	@Transient
+	@JsonApiRelation(serialize = SerializeType.LAZY, lookUp = LookupIncludeBehavior.NONE)
+	private Task task;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, for more complex scenarios application may rather make use of <a href="#dto_mapping">DTO mapping</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</h4>
 <div class="paragraph">
 <p>Have a look at <a href="#jpa_spring">JPA Module Auto Configuration</a>. For Spring Boot an auto configuration is
 available that already takes care of some defaults.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">9.1.3. Pagination</h4>
+<h4 id="_pagination_2">9.1.4. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -4473,7 +4537,7 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -4483,9 +4547,11 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_jpa_repository">9.1.5. Customizing the JPA repository</h4>
+<h4 id="_customizing_the_jpa_repository">9.1.6. Customizing the JPA repository</h4>
 <div class="paragraph">
-<p>The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
+<p>In general JPA repositories support the same set of <a href="#repository_decoration">decoration</a> and <a href="#requestfilter">filtering</a> mechanisms as any other repository.
+They allow to intercept and customize request before or after hitting the JPA repositories. Next to that, there are further
+mechanisms to customize the JPA repositories themselves. The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
 implementations into the JPA module. The JPA module further provides a more
 lightweight filter API to perform various changes to JPA repository requests:</p>
 </div>
@@ -4512,9 +4578,12 @@ lightweight filter API to perform various changes to JPA repository requests:</p
 <div class="paragraph">
 <p>The various filter methods allow a wide variety of customizations or also to replace the passed object in question.</p>
 </div>
+<div class="paragraph">
+<p><a id="dto_mapping"></a></p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_dto_mapping">9.1.6. DTO Mapping</h4>
+<h4 id="_dto_mapping">9.1.7. DTO Mapping</h4>
 <div class="paragraph">
 <p>Mapping to DTO objects is supported with <code>JpaModule.registerMappedEntityClass(&#8230;&#8203;)</code>.
 A mapper then can be provided that translates the Entity to a DTO class.
@@ -6190,7 +6259,7 @@ import {
 	TypedOneResourceRelationship
 } from 'ngrx-json-api';
 
-export module Schedules {
+export module Schedule {
 	export interface Relationships {
 		[key: string]: ResourceRelationship;
 		task?: TypedOneResourceRelationship&lt;Tasks&gt;;
@@ -6206,28 +6275,28 @@ export module Schedules {
 		delayed?: boolean;
 	}
 }
-export interface Schedules extends CrnkStoreResource {
-	relationships?: Schedules.Relationships;
-	attributes?: Schedules.Attributes;
+export interface Schedule extends CrnkStoreResource {
+	relationships?: Schedule.Relationships;
+	attributes?: Schedule.Attributes;
 }
-export interface SchedulesResult extends OneQueryResult {
-	data?: Schedules;
+export interface ScheduleResult extends OneQueryResult {
+	data?: Schedule;
 }
-export module SchedulesListResult {
+export module ScheduleListResult {
 	export interface ScheduleListLinks extends DefaultPagedLinksInformation {
 	}
 	export interface ScheduleListMeta {
 	}
 }
-export interface SchedulesListResult extends ManyQueryResult {
-	data?: Array&lt;Schedules&gt;;
-	links?: SchedulesListResult.ScheduleListLinks;
-	meta?: SchedulesListResult.ScheduleListMeta;
+export interface ScheduleListResult extends ManyQueryResult {
+	data?: Array&lt;Schedule&gt;;
+	links?: ScheduleListResult.ScheduleListLinks;
+	meta?: ScheduleListResult.ScheduleListMeta;
 }
-export let createEmptySchedules = function(id: string): Schedules {
+export let createEmptySchedule = function(id: string): Schedule {
 	return {
 		id: id,
-		type: 'schedules',
+		type: 'schedule',
 		attributes: {
 		},
 		relationships: {
@@ -6245,6 +6314,8 @@ export let createEmptySchedules = function(id: string): Schedules {
 <div class="paragraph">
 <p>For an example have a look at the Crnk example application, see <a href="https://github.com/crnk-project/crnk-example">crnk-project/crnk-example</a>.</p>
 </div>
+<div class="sect3">
+<h4 id="_setup_5">11.1.1. Setup</h4>
 <div class="paragraph">
 <p>Internally the generator has to make use of the running application to gather the necessary information for generation. This
 approach not only supports the typical, manual implement resources and repositories manually, but also
@@ -6253,8 +6324,10 @@ possibilities to do that. <a href="https://github.com/crnk-project/crnk-framewor
 .gradle[crnk-client-angular-ngrx]
 does such a setup manually in Gradle. Alternatively, there is a Gradle plugin taking care of the generator setup. It makes use
 of the JUnit to get
-the application to a running state at built-time. Currently supported are CDI and Spring-based applications.
-Such a setup may look like:</p>
+the application to a running state at built-time. Currently supported are CDI and Spring-based applications.</p>
+</div>
+<div class="paragraph">
+<p>Such a setup may look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6404,6 +6477,21 @@ generator fork a new process to avoid resource leakage in Gradle daemons and
 have more stable builds.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_error_handling_2">11.1.2. Error Handling</h4>
+<div class="paragraph">
+<p>Since the Typescript generator internally launches the application to extract information about its resources, the
+generator is in need of a consistent application/Crnk setup. For example, every resource must have a match
+repository serving it. Otherwise
+inconsistencies can arise that will break the generation. This means if the generation fails, it is usually
+best to verify the the application itself is working properly.</p>
+</div>
+<div class="paragraph">
+<p>To track errors further down, a log file is written to <code>build/tmp/crnk.gen.typescript.log</code>. It runs with
+<code>io.crnk</code> on level <code>DEBUG</code> to output a large number of information.</p>
+</div>
 </div>
 </div>
 </div>
@@ -6589,8 +6677,8 @@ care of that. In this case usage looks like:</p>
 			},
 			relationships: {
 				type: {
-					data: { type: 'testType', id: 'testId' },
-					reference: { type: 'testType', id: 'testId', attributes: { name: 'testName' } },
+					data: {type: 'testType', id: 'testId'},
+					reference: {type: 'testType', id: 'testId', attributes: {name: 'testName'}},
 				}
 			}
 		};
@@ -6719,7 +6807,7 @@ from the presentation component.</p>
 <p>The <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> can take care of exactly this.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">12.4.1. Setup</h4>
+<h4 id="_setup_6">12.4.1. Setup</h4>
 <div class="paragraph">
 <p>An example setup looks like:</p>
 </div>
@@ -6925,7 +7013,7 @@ Intellij IDEA seems to have some issues when it comes to using the async pipe an
 taking care of interfacing a table component with JSON API.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_6">12.5.1. Setup</h4>
+<h4 id="_setup_7">12.5.1. Setup</h4>
 <div class="paragraph">
 <p>An example looks like:</p>
 </div>
@@ -7055,7 +7143,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-04-22 10:53:48 +02:00
+Last updated 2018-04-24 15:12:53 MESZ
 </div>
 </div>
 </body>
