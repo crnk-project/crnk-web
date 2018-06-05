@@ -574,12 +574,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_resourcelist">5.3. ResourceList</a></li>
 <li><a href="#_query_parameters_with_queryspec">5.4. Query parameters with QuerySpec</a>
 <ul class="sectlevel3">
-<li><a href="#_filtering">5.4.1. Filtering</a></li>
-<li><a href="#_sorting">5.4.2. Sorting</a></li>
-<li><a href="#_pagination">5.4.3. Pagination</a></li>
-<li><a href="#_sparse_fieldsets">5.4.4. Sparse Fieldsets</a></li>
-<li><a href="#_inclusion_of_related_resources">5.4.5. Inclusion of Related Resources</a></li>
-<li><a href="#_api">5.4.6. API</a></li>
+<li><a href="#_api">5.4.1. API</a></li>
+<li><a href="#_filtering">5.4.2. Filtering</a></li>
+<li><a href="#_sorting">5.4.3. Sorting</a></li>
+<li><a href="#_pagination">5.4.4. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.4.5. Sparse Fieldsets</a></li>
+<li><a href="#_inclusion_of_related_resources">5.4.6. Inclusion of Related Resources</a></li>
 <li><a href="#_url_mapping">5.4.7. URL Mapping</a></li>
 </ul>
 </li>
@@ -2680,11 +2680,72 @@ is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a>.
 <div class="paragraph">
 <p>For example showing its use URLs also have a look at the <a href="#resource_repository">ResourceRepositoryV2</a> section.</p>
 </div>
+<div class="sect3">
+<h4 id="_api">5.4.1. API</h4>
+<div class="paragraph">
+<p>The QuerySpec API looks like (further setters available as well):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	public class QuerySpec {
+		public &lt;T&gt; List&lt;T&gt; apply(Iterable&lt;T&gt; resources){...}
+
+		public Long getLimit() {...}
+
+		public long getOffset() {...}
+
+		public PagingSpec getPagingSpec() {...}
+
+		public List&lt;FilterSpec&gt; getFilters() {...}
+
+		public List&lt;SortSpec&gt; getSort() {...}
+
+		public List&lt;IncludeFieldSpec&gt; getIncludedFields() {...}
+
+		public List&lt;IncludeRelationSpec&gt; getIncludedRelations() {...}
+
+		public QuerySpec getQuerySpec(Class&lt;?&gt; resourceClass) {...}
+
+		...
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are <code>Spec</code> class for all major features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>FilterSpec</code></p>
+</li>
+<li>
+<p><code>SortSpec</code></p>
+</li>
+<li>
+<p><code>IncludeFieldSpec</code></p>
+</li>
+<li>
+<p><code>IncludeRelationSpec</code></p>
+</li>
+<li>
+<p><code>PagingSpec</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>More information is given in the subsequent sections.</p>
+</div>
+<div class="paragraph">
+<p>QuerySpec provides a method <code>apply</code> that allows in-memory sorting, filtering and paging
+on any <code>java.util.Collection</code>. It is useful for testing, mocking and on smaller datasets to keep
+the implementation of a repository as simple as possible.</p>
+</div>
 <div class="paragraph">
 <p><a id="filtering"></a></p>
 </div>
+</div>
 <div class="sect3">
-<h4 id="_filtering">5.4.1. Filtering</h4>
+<h4 id="_filtering">5.4.2. Filtering</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2701,7 +2762,7 @@ in use, application may choose to extend or replace that default implementation.
 </div>
 <div class="paragraph">
 <p>Resource filtering can be achieved by providing parameters which start with <code>filter</code>.
-The format for filters: <code>filter[ResourceType][property|operator]([property|operator])* = "value"</code></p>
+The format for filters: <code>filter[ResourceType]?[property|operator]([property|operator])* = "value"</code></p>
 </div>
 <div class="ulist">
 <ul>
@@ -2712,6 +2773,12 @@ The format for filters: <code>filter[ResourceType][property|operator]([property|
 <p><code>GET /tasks/?filter[name][EQ]=Super task</code></p>
 </li>
 <li>
+<p><code>GET /tasks/?filter[address.plz][EQ]=Super task</code></p>
+</li>
+<li>
+<p><code>GET /tasks/?filter[address.city][EQ]=Super task</code></p>
+</li>
+<li>
 <p><code>GET /tasks/?filter[tasks][name]=Super task</code></p>
 </li>
 <li>
@@ -2720,11 +2787,16 @@ The format for filters: <code>filter[ResourceType][property|operator]([property|
 </ul>
 </div>
 <div class="paragraph">
-<p>QuerySpec uses the <code>EQ</code> operator if no operator was provided.</p>
+<p>A filter parameter is represented by a <code>FilterSpec</code>. It holds the path to the attribute,
+the operator and the filter value. Internally Crnk will map filter parameters to
+properly typed <code>FilterSpec.value</code>. The type is determined based on the type of
+the filtered attribute. The process can be customized by the <code>QuerySpecUrlMapper</code>
+and <code>TypeParser</code> implementations that are accessible from <code>CrnkBoot</code>.</p>
 </div>
 <div class="paragraph">
-<p>Operators are represented by the <code>FilterOperator</code> class. Crnk comes with a set of
-default filters:</p>
+<p>Operators within <code>FilterSpec</code> are represented by the <code>FilterOperator</code> class.
+By default, QuerySpec uses the <code>EQ</code> operator if no operator was provided.
+Crnk comes with a set of default filters:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -2785,7 +2857,7 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sorting">5.4.2. Sorting</h4>
+<h4 id="_sorting">5.4.3. Sorting</h4>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
 </div>
@@ -2800,19 +2872,21 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 </ul>
 </div>
 <div class="paragraph">
+<p>Sorting parameters are reprsented by <code>SortSpec</code> within <code>QuerySpec</code> similar to <code>FilterSpec</code> above.</p>
+</div>
+<div class="paragraph">
 <p><a id="pagination"></a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination">5.4.3. Pagination</h4>
+<h4 id="_pagination">5.4.4. Pagination</h4>
 <div class="paragraph">
-<p>Resources pagination strategies defined by <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.
+<p>Resources can specify pagination with <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.
 By default, each resource has implicit pagination support defined by <code>OffsetLimitPagingBehavior</code>.
 It provides a simple strategy of a pair <code>offset/limit</code> parameters which can be used for filtering amount of results.</p>
 </div>
 <div class="paragraph">
-<p>Pagination executed automatically as soon as client provides a  <code>page</code> parameter.
-The format for pagination: <code>page[offset|limit] = "value", where value is an integer</code></p>
+<p>The format for pagination: <code>page[offset|limit] = "value", where value is an integer</code></p>
 </div>
 <div class="paragraph">
 <p>Example:</p>
@@ -2823,6 +2897,13 @@ The format for pagination: <code>page[offset|limit] = "value", where value is an
 <p><code>GET /tasks/?page[offset]=0&amp;page[limit]=10</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Paging parameters are represented by <code>PagingSpec</code> within <code>QuerySpec</code>.</p>
+</div>
+<div class="paragraph">
+<p>By default, repositories can access the parameter with <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.
+In case of custom strategies, <code>QuerySpec.getPagingSpec</code> must be used.</p>
 </div>
 <div class="paragraph">
 <p>The JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
@@ -2872,7 +2953,7 @@ This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sparse_fieldsets">5.4.4. Sparse Fieldsets</h4>
+<h4 id="_sparse_fieldsets">5.4.5. Sparse Fieldsets</h4>
 <div class="paragraph">
 <p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter.</p>
 </div>
@@ -2888,7 +2969,7 @@ This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.4.5. Inclusion of Related Resources</h4>
+<h4 id="_inclusion_of_related_resources">5.4.6. Inclusion of Related Resources</h4>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing <code>include</code> parameter.
 The format for fields: <code>include[ResourceType] = "property(.property)*"</code></p>
@@ -2918,59 +2999,12 @@ The format for fields: <code>include[ResourceType] = "property(.property)*"</cod
 </li>
 </ul>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_api">5.4.6. API</h4>
 <div class="paragraph">
-<p>The QuerySpec API looks like (further setters available as well):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>	public class QuerySpec {
-		public &lt;T&gt; List&lt;T&gt; apply(Iterable&lt;T&gt; resources){...}
-
-		public Long getLimit() {...}
-
-		public long getOffset() {...}
-
-		public PagingSpec getPagingSpec() {...}
-
-		public List&lt;FilterSpec&gt; getFilters() {...}
-
-		public List&lt;SortSpec&gt; getSort() {...}
-
-		public List&lt;IncludeFieldSpec&gt; getIncludedFields() {...}
-
-		public List&lt;IncludeRelationSpec&gt; getIncludedRelations() {...}
-
-		public QuerySpec getQuerySpec(Class&lt;?&gt; resourceClass) {...}
-
-		...
-	}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that single QuerySpec holds the parameters for a single resource type and,
-in more complex scenarios, request can lead to multiple QuerySpec instances
-(namely when related resources are also filtered, sorted, etc). A repository
-is invoked with the QuerySpec for the requested root type. If related resources are
-included in the request, their QuerySpecs can be obtained by calling <code>QuerySpec.getRelatedSpec(Class)</code> on the root QuerySpec.</p>
-</div>
-<div class="paragraph">
-<p><code>FilterSpec</code> holds a value of type object. Since URL parameters are passed as String,
-they get converted to the proper types by a <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a> implementation. The
-type is determined based on the type of the filtered attribute.</p>
-</div>
-<div class="paragraph">
-<p><code>PagingSpec</code> holds a value of defined pagination strategy.
-By default, the values can be accessed via <code>getLimit/getOffset</code> methods.
-In case of custom strategies, <code>getPagingSpec</code> should be used.</p>
-</div>
-<div class="paragraph">
-<p>QuerySpec provides a method <code>apply</code> that allows in-memory sorting, filtering and paging
-on any <code>java.util.Collection</code>. It is useful for testing and on smaller datasets to keep
-the implementation of a repository as simple as possible. It returns a ResourceList
-that carries a PagedMetaInformation that lets Crnk automatically compute pagination links.</p>
+<p>Note that a QuerySpec instance holds the parameters for a single resource type.
+In case of inclusions, the QuerySpec references further
+QuerySpecs, one for each inclusion holding the parameters of that inclusion.
+Repositories are then accessed with the QuerySpec matching the repository.
+The QuerySpec for a particular type can be obtained with <code>QuerySpec.getRelatedSpec(Class)</code> on the root QuerySpec.</p>
 </div>
 <div class="paragraph">
 <p><a id="urlmapper"></a></p>
@@ -3335,9 +3369,7 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 <p><code>getMatcher</code> attaches the repository to the historized resources.</p>
 </li>
 <li>
-<p><code>findManyTarget</code> implements the lookup of history elements.
-:basedir: ../../../..
-:clientdir: ../../../../crnk-client</p>
+<p><code>findManyTarget</code> implements the lookup of history elements.</p>
 </li>
 </ul>
 </div>
@@ -4616,13 +4648,20 @@ with tools like MapStruct. If two mapped entities are registered, there
 respective mapped relationships will be automatically registered as well.</p>
 </div>
 <div class="paragraph">
-<p>The mechanism is not limited to simple mappings, but can also introduce computed
-attributes like in the example depicted here:</p>
+<p>The mapping is performed by <code>JpaMapper</code> interface providing methods to
+map and unmap entities to and from DTOs. There is an additional
+<code>unmapQuerySpec</code> method that does the same task for query parameters,
+such as renaming attributes or translating types.
+<code>JpaMapper</code> may introduce and fill-up new attributes not available on one side.
+Such attributes can either be set in the mapper itself, or
+be derived from a value computed in the database as shown in this example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	JpaModule module = JpaModule.newServerModule(emFactory, em, transactionRunner);
-				module.setQueryFactory(QuerydslQueryFactory.newInstance());
+<pre class="CodeRay highlight"><code>    JpaModuleConfig config = new JpaModuleConfig();
+	config.setQueryFactory(QuerydslQueryFactory.newInstance());
+
+	// introduce new computed attribute
 	QuerydslExpressionFactory&lt;QTestEntity&gt; basicComputedValueFactory = new QuerydslExpressionFactory&lt;QTestEntity&gt;() {
 
 		@Override
@@ -4630,11 +4669,16 @@ attributes like in the example depicted here:</p>
 			return parent.stringValue.upper();
 		}
 	};
-
-	QuerydslQueryFactory queryFactory = (QuerydslQueryFactory) module.getQueryFactory();
+	QuerydslQueryFactory queryFactory = (QuerydslQueryFactory) config.getQueryFactory();
 	queryFactory.registerComputedAttribute(TestEntity.class, TestDTO.ATTR_COMPUTED_UPPER_STRING_VALUE,
 		 String.class, basicComputedValueFactory);
-	module.addRepository(JpaRepositoryConfig.builder(TestEntity.class, TestDTO.class, new TestDTOMapper(entityManager)).build())</code></pre>
+
+	// register repository with DTO mapping
+	config.addRepository(
+	  JpaRepositoryConfig.builder(TestEntity.class, TestDTO.class, new TestDTOMapper(entityManager)).build()
+	);
+
+    JpaModule module = JpaModule.createServerModule(config, em, transactionRunner);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4643,6 +4687,10 @@ attributes like in the example depicted here:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>	public class TestDTOMapper implements JpaMapper&lt;TestEntity, TestDTO&gt; {
+
+		private EntityManager em;
+
+		...
 
 		@Override
 		public TestDTO map(Tuple tuple) {
@@ -4655,16 +4703,33 @@ attributes like in the example depicted here:</p>
 			return dto;
 		}
 
-		...
+		@Override
+        public TestEntity unmap(TestDto dto) {
+        	TestEntity entity = em.find(TestEntity.class, dto.getId());
+        	if(entity == null){
+        	  entity = new TestEntity();
+        	}
+        	entity.setStringValue(dto.getStringValue());
 
+        	...
+        }
+
+        @Override
+        public QuerySpec unmapQuerySpec(QuerySpec querySpec) {
+           	...
+        }
 	}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Some of the regular entity attributes are mapped to the DTO. But there is also a
-<code>computedUpperStringValue</code> attribute that is computed with an expression.
-The expression can be written with the Criteria API or QueryDSL depending
-on which query backend is in use.</p>
+<p>The example shows:
+- Some of the regular entity attributes are mapped to the DTO.
+- There is a <code>computedUpperStringValue</code> attribute that is computed with an SQL expression.
+  The expression can be written with the Criteria API or QueryDSL depending
+  on which query backend is in use.
+- <code>unmap</code> looks up the entity with the <code>EntityManager</code>. This is necessary to obtain a JPA-managed
+  instance. Otherwise a JPA implementation may treat existing entities as new entities and fail
+  upon insertion.</p>
 </div>
 <div class="paragraph">
 <p>Computed attributes are indistinguishable from regular, persisted entity attributes.
@@ -4676,9 +4741,10 @@ to consumers, the mapper class has access to it trough the provided
 tuple class. Have a look at <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java" class="bare">https://github.com/crnk-project/crnk-framework/blob/master/crnk-jpa/src/test/java/io/crnk/jpa/mapping/DtoMappingTest.java</a> to see everything in use.</p>
 </div>
 <div class="paragraph">
-<p>There is currently not yet any support for renaming of attribute. If attributes
+<p>There is currently not yet any automated support for renaming of attribute. If attributes
 are renamed on DTOs, the incoming QuerySpec has to be modified accordingly to
-match again the entity attribute naming.</p>
+match again the entity attribute naming. The same holds for types like Enums or dates. The
+JPA implementation mostly likely will fail with an incorrect type is passed to it.</p>
 </div>
 <div class="paragraph">
 <p><a id="validation_module"></a></p>
@@ -6391,49 +6457,33 @@ typescriptGen{
 	}
 
 	npm {
-		packageVersion = '0.0.1'
-		packageName = '@crnk/example-api'
-		description = 'example API to access example backend'
-		gitRepository = 'https://.../bitbucket/scm/crnk/example.git'
-		license = 'MIT'
-		// packagingEnabled = false
-		// outputDir = ...
+		// map given Java package to a subdirectory of genDir
+		directoryMapping['io.myapp.types'] = '/types'
+
+		// map a given package to a third-party library
+		packageMapping['io.other.app'] = '@other/app'
 	}
 
+	// include/exclude elements from generation
 	includes = ['resources.task']
 	excludes = ['resources.project']
 
+	// fork generation into new process to have clean environment
 	forked = true
 
-	packageMapping['resources.something'] = '@crnk/some-other-library'
-	peerDependencies['ngrx-json-api'] = '&gt;=2.2.0'
+	// generate QueryDSL-like expression objects
 	generateExpressions = true
 
-	// genDir = ...
+	// specify location of generated sources
+	genDir = ...
 
 }
 typescriptGen.init()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The basic Gradle setup makes use of:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>the <code>moowork</code> plugin is used to to gain a <code>node</code> setup.</p>
-</li>
-<li>
-<p><code>crnk-meta</code> is used as dependency to gather a meta model of the underlying resources (or a any other type of object
-like JPA entities). Important to know is that every object is assigned a string-based meta id. By default the
-meta id matches <code>resources.&lt;resourceType&gt;</code>. For example a Task resource with resource type <code>task</code> has a
-<code>resources.task</code> meta id.</p>
-</li>
-<li>
-<p>applying <code>crnk-gen-typescript</code> results in a new <code>assembleTypescript</code> task. Consumers may want to add
-that task to <code>assemble</code> as dependency.</p>
-</li>
-</ul>
+<p>Applying <code>crnk-gen-typescript</code> results in a new <code>generateTypescript</code> task. Consumers may want to add
+that task to <code>assemble</code> as dependency. The sources are then generated to <code>genDir</code> as specified.</p>
 </div>
 <div class="paragraph">
 <p>The plugin is in need for a running application to extract the set of available resources. The <code>runtime</code> section provides
@@ -6459,40 +6509,33 @@ Spring application to perform further customization.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>The plugin strives for the generated sources to closely resemble the REST layer as possible.
+As a consequence it makes use of the resource types and json names rather than Java names for the generated sources.
+Important to know is that each type is assigned a meta id: for resources it is <code>resources.&lt;resourceType&gt;</code> and
+for all other objects the Java package name. Based on the meta id, there are a number of possibilities to influence
+the generation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>includes</code> and <code>excludes</code> allow to include and exclude resources from generation based on their meta id.</p>
+</li>
+<li>
+<p><code>directoryMapping</code> allows to specify into which (sub)directory types are generated into. By default
+will be generated into the root directory.</p>
+</li>
+<li>
+<p><code>packageMapping</code> allows to specify that a given type is obtained from a third-party library.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>The plugin allows various further customization options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>packageName</code>, <code>description</code>, <code>license</code>, <code>gitRepository</code> are added to the generated <code>package.json</code>.</p>
-</li>
-<li>
-<p>by default the package version matches the npm version.</p>
-</li>
-<li>
-<p><code>packagingEnabled</code>  triggers the generation of a <code>package.json</code> and <code>tsconfig.json</code> file (<code>true</code> as default).
-Useful to publish the stubs to an NPM repository for use by other projects.
-Setting it to false will result in the generation of the Typescript files only. This may be used to generate
- files directly into an existing frontend project. In this case only the <code>generateTypescript</code> task is available, there
- is no assembly taking place.</p>
-</li>
-<li>
-<p><code>genDir</code> specifies where source files are generated to.</p>
-</li>
-<li>
-<p><code>npm.outputDirectory</code> specifies where the compiled NPM package should be placed (<code>build/npm</code> as default).</p>
-</li>
-<li>
 <p><code>generateExpressions</code> specifies whether QueryDSL like classes should be generated (<code>false</code> as default).</p>
-</li>
-<li>
-<p><code>packageMapping</code> allows to specify into which libraries resources belong to. By default all resources have
-a <code>resources.</code> meta id prefix and go into the currently generated package. In the example above, all resources with a
-<code>something/*</code> resource type resp. <code>resources.something</code> meta id prefix are included from a <code>@crnk/some-demo-library</code>
-library and no longer get generated manually.</p>
-</li>
-<li>
-<p><code>includes</code> and <code>excludes</code> allow to include and exclude resources from generation based on their meta id.</p>
 </li>
 <li>
 <p>by default the generation takes place in a forked process. Since the generator typically
@@ -7167,7 +7210,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-05-28 09:58:30 UTC
+Last updated 2018-06-05 11:46:16 UTC
 </div>
 </div>
 </body>
