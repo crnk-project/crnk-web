@@ -1617,10 +1617,27 @@ see <a href="#customdiscovery">here</a>.</p>
 <h3 id="_crnkboot">3.15. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
-Crnk. Every integration will provide access to it, which in turn allows for virtually any kind of customization.</p>
+Crnk. Every integration will provide access to it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CrnkFeature.getBoot()</code> for JAX-RS.</p>
+</li>
+<li>
+<p><code>@Autowired CrnkBoot boot</code> for Spring.</p>
+</li>
+<li>
+<p><code>CrnkServlet.getBoot()</code> or <code>CrnkServlet.initBoot(&#8230;&#8203;)</code> in case of a subclass.</p>
+</li>
+<li>
+<p><code>CrnkVertxHandler.getBoot()</code> for Vert.x.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Some possibilities:</p>
+<p><code>CrnkBoot</code> allows for virtually any kind of customization not directly provided by the integration itself, such as Spring Boot
+auto configurations and properties. Some possibilities:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1628,7 +1645,7 @@ Crnk. Every integration will provide access to it, which in turn allows for virt
 <p><code>getObjectMapper</code> allows access to the used Jackson instance.</p>
 </li>
 <li>
-<p><code>addModule</code> allows to add a module.</p>
+<p><code>addModule</code> allows to add a module. See &lt;modules&gt; and &lt;moduledev,module development&gt; chapters for more information.</p>
 </li>
 <li>
 <p><code>setServiceDiscovery</code> sets a custom service discovery mechanism.</p>
@@ -1650,6 +1667,21 @@ by limiting pagination.</p>
 recommended</strong> to be used as people frequently browse repositories on there own with a web browser and
 fail to provide pagination. As a result, your entire database may get downloaded and may bring down
 your servers depending on the datasize.</p>
+</li>
+<li>
+<p><code>setWebPathPrefix</code> like <code>/api</code> to specify the path from where the JSON API endpoint is available.</p>
+</li>
+<li>
+<p><code>setUrlMapper</code> to provide a new url mapping implementation to customize how Crnk generates links.</p>
+</li>
+<li>
+<p><code>getResourceRegistry</code> to access the available JSON API resources and repositories.</p>
+</li>
+<li>
+<p><code>setAllowUnknownAttributes</code> to ignore unknown filter and sort attributes.</p>
+</li>
+<li>
+<p><code>setAllowUnknownParameters</code> to ignore query parameters not specified by JSON API (<code>filter</code>, <code>sort</code>, etc.).</p>
 </li>
 </ul>
 </div>
@@ -2181,6 +2213,24 @@ one of those two repository interfaces:</p>
 <p>RelationshipRepositoryV2 resp. BulkRelationshipRepositoryV2 for relationships.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The repositories are used to serve <code>POST</code>, <code>GET</code>, <code>PATCH</code> and <code>DELETE</code> requests as specified by
+JSON API specification. The repository contract closely resembles the JSON API specification. Subsequent
+sections and chapters outline various possibilities to speed-up and potentially reuse existing
+repository implementations.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+When accessing repositories, do not forget to use the <code>application/vnd.api+json</code> content type.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><a id="resource_repository"></a></p>
@@ -3699,7 +3749,7 @@ request headers (like security), as it has to be done in two places (unfortunate
 <div class="paragraph">
 <p>It is possible to hook into the HTTP implementation used by Crnk ( or Apache).
 Make use of <code>CrnkClient#getHttpAdapter()</code> and cast it to either
-<code>HttpClientAdapter</code> or <code>Adapter</code>. Both implementations provide a
+<code>HttpAdapter</code>. Both implementations provide a
 <code>addListener</code> method, which in turn gives access to the native builder used to construct
 the respective HTTP client implementation. This allows to cover various use cases:</p>
 </div>
@@ -3717,7 +3767,18 @@ the respective HTTP client implementation. This allows to cover various use case
 </ul>
 </div>
 <div class="paragraph">
-<p>You may have a look at <code>crnk-brave</code> for an advanced example.</p>
+<p>Some examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-monitor-brave4/src/main/java/io/crnk/monitor/brave/BraveClientModule.java">crnk-monitor-brave4</a> for an advanced example.</p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/32196424/how-to-add-headers-to-okhttp-request-interceptor?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa">How to add
+headers to OkHttp request interceptor</a>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><a id="reactive"></a></p>
@@ -5763,7 +5824,7 @@ import io.crnk.jpa.mapping.JpaMapper;
 import io.crnk.jpa.query.Tuple;
 import io.crnk.jpa.query.criteria.JpaCriteriaExpressionFactory;
 import io.crnk.jpa.query.criteria.JpaCriteriaQueryFactory;
-import io.crnk.spring.boot.JpaModuleConfigurer;
+import io.crnk.spring.setup.boot.jpa.JpaModuleConfigurer;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -7210,7 +7271,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-05 15:18:43 UTC
+Last updated 2018-06-14 05:23:16 UTC
 </div>
 </div>
 </body>
