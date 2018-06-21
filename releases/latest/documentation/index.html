@@ -563,26 +563,26 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_repositories">5. Repositories</a>
 <ul class="sectlevel2">
 <li><a href="#_resourcerepositoryv2">5.1. ResourceRepositoryV2</a></li>
-<li><a href="#_relationshiprepositoryv2">5.2. RelationshipRepositoryV2</a>
+<li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a>
 <ul class="sectlevel3">
-<li><a href="#_example">5.2.1. Example</a></li>
-<li><a href="#_relationshipmatcher">5.2.2. RelationshipMatcher</a></li>
-<li><a href="#_forwardingrelationshiprepository">5.2.3. ForwardingRelationshipRepository</a></li>
-<li><a href="#_bulkrelationshiprepositoryv2">5.2.4. BulkRelationshipRepositoryV2</a></li>
+<li><a href="#_api">5.2.1. API</a></li>
+<li><a href="#_filtering">5.2.2. Filtering</a></li>
+<li><a href="#_sorting">5.2.3. Sorting</a></li>
+<li><a href="#_pagination">5.2.4. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.2.5. Sparse Fieldsets</a></li>
+<li><a href="#_inclusion_of_related_resources">5.2.6. Inclusion of Related Resources</a></li>
+<li><a href="#_url_mapping">5.2.7. URL Mapping</a></li>
 </ul>
 </li>
-<li><a href="#_resourcelist">5.3. ResourceList</a></li>
-<li><a href="#_query_parameters_with_queryspec">5.4. Query parameters with QuerySpec</a>
+<li><a href="#_relationshiprepositoryv2">5.3. RelationshipRepositoryV2</a>
 <ul class="sectlevel3">
-<li><a href="#_api">5.4.1. API</a></li>
-<li><a href="#_filtering">5.4.2. Filtering</a></li>
-<li><a href="#_sorting">5.4.3. Sorting</a></li>
-<li><a href="#_pagination">5.4.4. Pagination</a></li>
-<li><a href="#_sparse_fieldsets">5.4.5. Sparse Fieldsets</a></li>
-<li><a href="#_inclusion_of_related_resources">5.4.6. Inclusion of Related Resources</a></li>
-<li><a href="#_url_mapping">5.4.7. URL Mapping</a></li>
+<li><a href="#_example">5.3.1. Example</a></li>
+<li><a href="#_relationshipmatcher">5.3.2. RelationshipMatcher</a></li>
+<li><a href="#_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</a></li>
+<li><a href="#_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</a></li>
 </ul>
 </li>
+<li><a href="#_resourcelist">5.4. ResourceList</a></li>
 <li><a href="#_error_handling">5.5. Error Handling</a>
 <ul class="sectlevel3">
 <li><a href="#_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</a></li>
@@ -2463,261 +2463,9 @@ classical REST libraries can be a substantial amount of work.</p>
 the create, delete and update methods. <code>crnk-meta</code> accordingly reports
 insertable, updateable, deltable for such repositories as false.</p>
 </div>
-<div class="paragraph">
-<p><a id="relationshipRepository"></a></p>
-</div>
 </div>
 <div class="sect2">
-<h3 id="_relationshiprepositoryv2">5.2. RelationshipRepositoryV2</h3>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Important</div>
-</td>
-<td class="content">
-Before getting started with the development of relationship repositories, familiarize yourself
-with <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a>. In various scenarios, a custom implementation is unnecessary!
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Each relationship defined in Crnk (annotation @JsonApiRelation) must have a relationship repository
-defined implementing <code>RelationshipRepositoryV2</code>. <code>RelationshipRepositoryV2</code> implements the methods
-necessary to work with a relationship. It provides methods for both single-valued and multi-valued
-relationships:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>getMatcher()</code>
-Provides a  <code>RelationshipMatcher</code> instance that specifies which relationships it is able provide.
-It can match against source and target types and fields in any combination. Note that this
-is a default method that access the legacy <code>getSourceResourceClass</code> and <code>getTargetResourceClass</code>
-by default. Implementation of those methods can be omitted if a matcher is available.</p>
-</li>
-<li>
-<p><code>setRelation(T source, D_ID targetId, String fieldName)</code>
-Sets a resource defined by targetId to a field fieldName in an instance source. If no value is to be set, null value is passed.</p>
-</li>
-<li>
-<p><code>setRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
-Sets resources defined by targetIds to a field fieldName in an instance source. This is a all-or-nothing operation, that is no partial relationship updates are passed. If no values are to be set, empty Iterable is passed.</p>
-</li>
-<li>
-<p><code>addRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
-Adds relationships to a list of relationships.</p>
-</li>
-<li>
-<p><code>removeRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
-Removes relationships from a list of relationships.</p>
-</li>
-<li>
-<p><code>findOneTarget(T_ID sourceId, String fieldName, QuerySpec querySpec)</code>
-Finds one field&#8217;s value defined by fieldName in a source defined by sourceId.</p>
-</li>
-<li>
-<p><code>findManyTargets(T_ID sourceId, String fieldName, QuerySpec querySpec)</code>
-Finds an Iterable of field&#8217;s values defined by fieldName in a source defined by sourceId .</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>All of the methods in this interface have fieldName field as their last parameter in case there
-are multiple relationships between two resources.</p>
-</div>
-<div class="sect3">
-<h4 id="_example">5.2.1. Example</h4>
-<div class="listingblock">
-<div class="title">HistoryRelationshipRepository</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>@Component
-public class HistoryRelationshipRepository extends ReadOnlyRelationshipRepositoryBase&lt;Object, Serializable, History, UUID&gt; {
-
-	@Override
-	public RelationshipMatcher getMatcher() {
-		return new RelationshipMatcher().rule().target(History.class).add();
-	}
-
-	@Override
-	public ResourceList&lt;History&gt; findManyTargets(Serializable sourceId, String fieldName, QuerySpec querySpec) {
-		DefaultResourceList list = new DefaultResourceList();
-		for (int i = 0; i &lt; 10; i++) {
-			History history = new History();
-			history.setId(UUID.nameUUIDFromBytes(("historyElement" + i).getBytes()));
-			history.setName("historyElement" + i);
-			list.add(history);
-		}
-		return list;
-	}
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_relationshipmatcher">5.2.2. RelationshipMatcher</h4>
-<div class="paragraph">
-<p>With <code>RelationshipRepositoryV2.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
-serving. Rules can look like:</p>
-</div>
-<div class="listingblock">
-<div class="title">RelationshipMatcherTest</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>new RelationshipMatcher().rule().source("projects").add().matches(field)
-new RelationshipMatcher().rule().target(Task.class).add().matches(field)
-new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
-new RelationshipMatcher().rule().field("tasks").add().matches(field)
-new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
-[source]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>One can implement, for example, a history relationship repository that introduces a history relationship for every other resource
-as done in the example from the previous section.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.2.3. ForwardingRelationshipRepository</h4>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-Also have a look at <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a> before getting started to use
-this base class.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>In many cases, relationship operations can be mapped back to resource repository operations. Making the need
-for a custom relationship repository implementation redundant. <code>@JsonApiRelationId</code> fields is one example
-where Crnk will take care of this automatically. But there are many other scenarios where application apply
-similar techniques. A findManyTargets request might can be
-served by filtering the target repository. Or a relationship can be set by invoking the save operation
-on either the source or target resource repository (usually you want to save on the single-valued side).
-The <code>ForwardingRelationshipRepository</code> is a base class that takes care of exactly such use cases.
-<code>ForwardingRelationshipRepository</code> knows to <code>ForwardingDirection</code>: <code>OWNER</code> and <code>OPPOSITE</code>. The former forwards requests
-to the resource repository of the owning side of a relationship, while the later forwards to the opposite side.
-<code>ForwardingDirection</code> is set separately for <code>GET</code> and modification operations (<code>POST</code>, <code>PATCH</code>, <code>DELETE</code>).</p>
-</div>
-<div class="paragraph">
-<p>An example to create such a repository looks like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>RelationshipMatcher taskProjectMatcher = new RelationshipMatcher();
-taskProjectMatcher.rule().source(Task.class).target(Project.class).add();
-
-new ForwardingRelationshipRepository(
-  Task.class, taskProjectMatcher, ForwardingDirection.OWNER, ForwardingDirection.OWNER
-);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that to access the opposite side for <code>GET</code> operations, relations must be set up bidirectionally with the
-<code>opposite</code> attribute (to allow filtering in that direction):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "tasks")
-	public class Task {
-
-		@JsonApiRelation(opposite = "tasks", lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL)
-		private Project project;
-
-	    ...
-	}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_bulkrelationshiprepositoryv2">5.2.4. BulkRelationshipRepositoryV2</h4>
-<div class="paragraph">
-<p>BulkRelationshipRepositoryV2 extends RelationshipRepositoryV2 and provides an additional
-<code>findTargets</code> method. It allows to fetch a relation for multiple resources at once.
-It is recommended to make use of this implementation if a relationship is loaded frequently
-(either by a eager declaration or trough the <code>include</code> parameter) and it is costly to
-fetch that relation. RelationshipRepositoryBase provides a default implementation where
-<code>findOneTarget</code> and <code>findManyTargets</code> forward calls to the bulk <code>findTargets</code>.</p>
-</div>
-<div class="paragraph">
-<p>Note that in contrast to <code>RelationshipRepositoryV2</code> and <code>RelationshipRepositoryV2</code> that are symmetric
-and applicable to Crnk servers and client, <code>BulkRelationshipRepositoryV2</code> is applicable on the server-side only.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_resourcelist">5.3. ResourceList</h3>
-<div class="paragraph">
-<p>ResourceRepositoryV2 and RelationshipRepositoryV2 return lists of type ResourceList. The ResourceList can carry, next
-to the actual resources, also meta and links information:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>getLinks()</code>
-Gets the links information attached to this lists.</p>
-</li>
-<li>
-<p><code>getMeta()</code>
-Gets the meta information attached to this lists.</p>
-</li>
-<li>
-<p><code>getLinks(Class&lt;L&gt; linksClass)</code>
-Gets the links information of the given type attached to this lists. If the given type is not found, null is returned.</p>
-</li>
-<li>
-<p><code>getMeta(Class&lt;M&gt; metaClass)</code>
-Gets the meta information of the given type attached to this lists. If the given type is not found, null is returned.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>There is a default implementation named DefaultResourceList. To gain type-safety, improved readability and crnk-client support,
-application may provide a custom implementation extending ResourceListBase:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>	class ScheduleList extends ResourceListBase&lt;Schedule, ScheduleListMeta, ScheduleListLinks&gt; {
-
-	}
-
-	class ScheduleListLinks implements LinksInformation {
-
-		public String name = "value";
-
-		...
-	}
-
-	class ScheduleListMeta implements MetaInformation {
-
-		public String name = "value";
-
-		...
-	}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This implementation can then be added to a repository interface declaration
-and used by both servers and clients:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>	public interface ScheduleRepository extends ResourceRepositoryV2&lt;Schedule, Long&gt; {
-
-		@Override
-		public ScheduleList findAll(QuerySpec querySpec);
-
-	}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_query_parameters_with_queryspec">5.4. Query parameters with QuerySpec</h3>
+<h3 id="_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</h3>
 <div class="paragraph">
 <p>Crnk passes JSON API query parameters to repositories trough a QuerySpec parameter. It holds
 request parameters like sorting and filtering specified by JSON API. The subsequent
@@ -2734,7 +2482,7 @@ Not everything is specified by JSON API. For some request parameters only recomm
 are provided as different applications are likely to be in need of different semantics and
 implementations. For this reason the engine part in <code>crnk-core</code> makes use of <code>QueryAdapter</code> and allows implementations other than
 QuerySpec (like the legacy <code>QueryParams</code>). The mapping of HTTP request parameters to QuerySpec and back
-is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a>.
+is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a> that may can also be extended, customized or replaced.
 </td>
 </tr>
 </table>
@@ -2743,7 +2491,7 @@ is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a>.
 <p>For example showing its use URLs also have a look at the <a href="#resource_repository">ResourceRepositoryV2</a> section.</p>
 </div>
 <div class="sect3">
-<h4 id="_api">5.4.1. API</h4>
+<h4 id="_api">5.2.1. API</h4>
 <div class="paragraph">
 <p>The QuerySpec API looks like (further setters available as well):</p>
 </div>
@@ -2807,7 +2555,7 @@ the implementation of a repository as simple as possible.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_filtering">5.4.2. Filtering</h4>
+<h4 id="_filtering">5.2.2. Filtering</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2817,34 +2565,41 @@ the implementation of a repository as simple as possible.</p>
 <td class="content">
 The JSON API specification does not a mandate a specific filtering semantic. Instead
 it provides a recommendation that comes by default with Crnk. Depending on the data store
-in use, application may choose to extend or replace that default implementation.
+in use, application may choose to extend or replace that default implementation by extending or
+replacing <code>DefaultQuerySpecUrlMapper</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Resource filtering can be achieved by providing parameters which start with <code>filter</code>.
-The format for filters: <code>filter[ResourceType]?[property|operator]([property|operator])* = "value"</code></p>
+<p>Resource filtering can be achieved by providing parameters which start with <code>filter</code>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>GET /tasks/?filter[name]=Super task</code></p>
+<p><code>GET /tasks?filter[name]=Super task</code> to filter by name with the default <code>EQ</code> operator.</p>
 </li>
 <li>
-<p><code>GET /tasks/?filter[name][EQ]=Super task</code></p>
+<p><code>GET /tasks?filter[name][EQ]=Super task</code> to filter by name with the <code>EQ</code> operator.</p>
 </li>
 <li>
-<p><code>GET /tasks/?filter[address.plz][EQ]=Super task</code></p>
+<p><code>GET /tasks?filter[name][LIKE]=Super</code> to filter by name with the <code>LIKE</code> operator.</p>
 </li>
 <li>
-<p><code>GET /tasks/?filter[address.city][EQ]=Super task</code></p>
+<p><code>GET /tasks?filter[address.plz][EQ]=Super task</code> to filter by attribute <code>name</code> within a structured or related attributes <code>address</code>.</p>
 </li>
 <li>
-<p><code>GET /tasks/?filter[tasks][name]=Super task</code></p>
+<p><code>GET /tasks?filter[address.city][EQ]=Super task</code> to filter by attribute <code>city</code> within a structured or related attributes <code>address</code>.</p>
 </li>
 <li>
-<p><code>GET /tasks/?filter[tasks][name]=Super task&amp;filter[tasks][dueDate]=2015-10-01</code></p>
+<p><code>GET /tasks?filter[name]=Super task&amp;filter[dueDate][GT]=2015-10-01</code></p>
+</li>
+<li>
+<p><code>GET /tasks?filter[name]=null</code> to filter by <code>name</code> being equals <code>null</code>.</p>
+</li>
+<li>
+<p><code>GET /tasks?filter[tasks][name]=Super task</code> is the longer version of <code>/tasks/?filter[name]=Super task</code> where the <code>tasks</code> type is explicitly stated.
+See the subsequent <a href="#inclusion">[inclusion]</a> section how to use this to perform filtering of related resources.</p>
 </li>
 </ul>
 </div>
@@ -2919,54 +2674,42 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sorting">5.4.3. Sorting</h4>
+<h4 id="_sorting">5.2.3. Sorting</h4>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
+</div>
+<div class="paragraph">
+<p><code>GET /tasks?sort=name,-shortName</code>
+<code>GET /tasks?sort=assignee.firstName,assignee.lastName</code></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>GET /tasks/?sort=name,-shortName</code></p>
+<p>Sorting parameters are represented by <code>SortSpec</code> within <code>QuerySpec</code> similar to <code>FilterSpec</code> above.</p>
 </li>
 <li>
-<p><code>GET /tasks/?sort[projects]=name,-shortName&amp;include=projects</code></p>
+<p><code>-</code> is used to denote to sort in descending order.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Sorting parameters are reprsented by <code>SortSpec</code> within <code>QuerySpec</code> similar to <code>FilterSpec</code> above.</p>
 </div>
 <div class="paragraph">
 <p><a id="pagination"></a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination">5.4.4. Pagination</h4>
+<h4 id="_pagination">5.2.4. Pagination</h4>
 <div class="paragraph">
-<p>Resources can specify pagination with <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.
-By default, each resource has implicit pagination support defined by <code>OffsetLimitPagingBehavior</code>.
-It provides a simple strategy of a pair <code>offset/limit</code> parameters which can be used for filtering amount of results.</p>
-</div>
-<div class="paragraph">
-<p>The format for pagination: <code>page[offset|limit] = "value", where value is an integer</code></p>
+<p>Crnk comes by default with offset/limit pagination support. The format for pagination is
+then <code>page[offset|limit]="value", where value is an integer</code>, for example:</p>
 </div>
 <div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>GET /tasks/?page[offset]=0&amp;page[limit]=10</code></p>
-</li>
-</ul>
+<p><code>GET /tasks?page[offset]=0&amp;page[limit]=10</code></p>
 </div>
 <div class="paragraph">
-<p>Paging parameters are represented by <code>PagingSpec</code> within <code>QuerySpec</code>.</p>
+<p>The parameters are then available with <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.</p>
 </div>
-<div class="paragraph">
-<p>By default, repositories can access the parameter with <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.
-In case of custom strategies, <code>QuerySpec.getPagingSpec</code> must be used.</p>
-</div>
+<div class="sect4">
+<h5 id="_pagination_links">Pagination Links</h5>
 <div class="paragraph">
 <p>The JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
 The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
@@ -2997,83 +2740,134 @@ lets Crnk compute all except the <code>last</code> link.</p>
 determine whether more resources are available rather than counting all resources.
 This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
+</div>
 <div class="sect4">
 <h5 id="_custom_strategies">Custom strategies</h5>
 <div class="paragraph">
-<p>Resources might have custom pagination strategies. In order to do so, you would have to perform the following actions:</p>
+<p>Internally offset/limit pagination is implemented with <code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code>.
+They implement the more generic <code>PagingBehavior</code> and <code>PagingSpec</code>. An instance of <code>PagingSpec</code>
+is hold by QuerySpec and is, for example, also accessed by <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.
+<code>PagingSpec</code> is directly accessible with <code>QuerySpec.getPagingSpec</code> and <code>QuerySpec.setPagingSpec</code>.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="paragraph">
+<p>Applications are free to implement other pagination behaviors implementing <code>PagingBehavior</code> and <code>PagingSpec</code>.
+JSON API does not mandate the use of a specific strategy and lets application choose the best suited mechanism.
+In order to do so, you would have to perform the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
 <p>Provide an instance of a custom <code>PagingBehavior</code> implementation.</p>
 </li>
 <li>
-<p>Set it up via <a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a> attribute.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_sparse_fieldsets">5.4.5. Sparse Fieldsets</h4>
-<div class="paragraph">
-<p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter.</p>
-</div>
+<p>Register the <code>PagingBehavior</code> to Spring. There are two possibilities:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>GET /tasks/?fields=name</code></p>
+<p>through the service discovery mechanism like CDI or Spring.</p>
 </li>
 <li>
-<p><code>GET /tasks/?fields[projects]=name,description&amp;include=projects</code></p>
+<p>through a new module with:</p>
+<div class="literalblock">
+<div class="content">
+<pre>SimpleModule module = new SimpleModule("myPaging");
+module.addPaginationBehavior(new MyPaginationBehavior());</pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.4.6. Inclusion of Related Resources</h4>
-<div class="paragraph">
-<p>Information about relationships to include in the response can be achieved by providing <code>include</code> parameter.
-The format for fields: <code>include[ResourceType] = "property(.property)*"</code></p>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
+</li>
+<li>
+<p>Make use of the new pagination strategy for your resources:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>GET /tasks/?include[tasks]=project</code></p>
+<p>by default the new pagination strategy will become the default strategy for all resources.</p>
 </li>
 <li>
-<p><code>GET /tasks/1/?include[tasks]=project</code></p>
+<p>multiple pagination strategies can be registered and then selected for each resource individually with
+<a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.</p>
 </li>
-<li>
-<p><code>GET /tasks/?include[tasks]=author</code></p>
-</li>
-<li>
-<p><code>GET /tasks/?include[tasks][]=author&amp;include[tasks][]=comments</code></p>
-</li>
-<li>
-<p><code>GET /tasks/?include[projects]=task&amp;include[tasks]=comments</code></p>
-</li>
-<li>
-<p><code>GET /tasks/?include[projects]=task&amp;include=comments</code> (QuerySpec example)</p>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Note that a QuerySpec instance holds the parameters for a single resource type.
-In case of inclusions, the QuerySpec references further
-QuerySpecs, one for each inclusion holding the parameters of that inclusion.
-Repositories are then accessed with the QuerySpec matching the repository.
-The QuerySpec for a particular type can be obtained with <code>QuerySpec.getRelatedSpec(Class)</code> on the root QuerySpec.</p>
+<p>For an example follow the <code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> implementation. New implementations may
+extend from those classes to offer compatibility in two different ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>maintain support for <code>offset</code>, <code>limit</code> parameters.</p>
+</li>
+<li>
+<p>translate the custom page parameters to <code>offset</code>, <code>limit</code> to make existing (potentially third-party) repositories compatible with the custom parameters.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sparse_fieldsets">5.2.5. Sparse Fieldsets</h4>
+<div class="paragraph">
+<p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter:</p>
+</div>
+<div class="paragraph">
+<p><code>GET /tasks?fields=name,description</code></p>
+</div>
+<div class="paragraph">
+<p><a id="inclusion"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_inclusion_of_related_resources">5.2.6. Inclusion of Related Resources</h4>
+<div class="paragraph">
+<p>Information about relationships to include in the response can be achieved by providing an <code>include</code> parameter. Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>GET /tasks?include=project</code> performs an inclusion of <code>project</code>.</p>
+</li>
+<li>
+<p><code>GET /tasks?include=assignee,project</code> performs an inclusion of <code>project</code> and <code>assignee</code>.</p>
+</li>
+<li>
+<p><code>GET /tasks?include=assignee.address</code> performs a nested inclusion of <code>assignee</code> within <code>owner</code>.</p>
+</li>
+<li>
+<p><code>GET /tasks/1?include=project</code> performs an inclusion of <code>project</code> for the task with id <code>1</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is not only possible to include related resources, but also to use all other query features like sorting and filtering. In this
+case the parameters must be prefixed with the resource type such as <code>[project]</code> to sort and filter the related project:</p>
+</div>
+<div class="paragraph">
+<p><code>GET /tasks?include=project&amp;sort[project]=name&amp;filter[project][name]=someProject</code></p>
+</div>
+<div class="paragraph">
+<p>It is important to note that the requested main resource is NOT affected by <code>[project]</code>. To rather sort all tasks by the related project
+make use of:</p>
+</div>
+<div class="paragraph">
+<p><code>GET /tasks?include=project&amp;sort=project.name&amp;filter[project.name]=someProject</code></p>
+</div>
+<div class="paragraph">
+<p>Internally QuerySpec holds the value for a given resource type. If parameters for other resource types, multiple
+QuerySpec instances are used. Repositories are then accessed with the QuerySpec matching the repository.
+The QuerySpec for a particular resource type can be obtained with <code>QuerySpec.getRelatedSpec(Class)</code> on the root QuerySpec.</p>
 </div>
 <div class="paragraph">
 <p><a id="urlmapper"></a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_url_mapping">5.4.7. URL Mapping</h4>
+<h4 id="_url_mapping">5.2.7. URL Mapping</h4>
 <div class="paragraph">
 <p>The mapping of request parameters to QuerySpec and back is implemented by <code>QuerySpecUrlMapper</code>.
 With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON API
@@ -3132,6 +2926,258 @@ Sets the default <code>FilterOperator</code>. See <a href="#filtering">[filterin
 </div>
 <div class="paragraph">
 <p>Some of those methods are also available from some of the integrations like <code>CrnkFeature</code> for convenience.</p>
+</div>
+<div class="paragraph">
+<p><a id="relationshipRepository"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_relationshiprepositoryv2">5.3. RelationshipRepositoryV2</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+Before getting started with the development of relationship repositories, familiarize yourself
+with <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a>. In various scenarios, a custom implementation is unnecessary!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Each relationship defined in Crnk (annotation @JsonApiRelation) must have a relationship repository
+defined implementing <code>RelationshipRepositoryV2</code>. <code>RelationshipRepositoryV2</code> implements the methods
+necessary to work with a relationship. It provides methods for both single-valued and multi-valued
+relationships:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getMatcher()</code>
+Provides a  <code>RelationshipMatcher</code> instance that specifies which relationships it is able provide.
+It can match against source and target types and fields in any combination. Note that this
+is a default method that access the legacy <code>getSourceResourceClass</code> and <code>getTargetResourceClass</code>
+by default. Implementation of those methods can be omitted if a matcher is available.</p>
+</li>
+<li>
+<p><code>setRelation(T source, D_ID targetId, String fieldName)</code>
+Sets a resource defined by targetId to a field fieldName in an instance source. If no value is to be set, null value is passed.</p>
+</li>
+<li>
+<p><code>setRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
+Sets resources defined by targetIds to a field fieldName in an instance source. This is a all-or-nothing operation, that is no partial relationship updates are passed. If no values are to be set, empty Iterable is passed.</p>
+</li>
+<li>
+<p><code>addRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
+Adds relationships to a list of relationships.</p>
+</li>
+<li>
+<p><code>removeRelations(T source, Iterable&lt;D_ID&gt; targetIds, String fieldName)</code>
+Removes relationships from a list of relationships.</p>
+</li>
+<li>
+<p><code>findOneTarget(T_ID sourceId, String fieldName, QuerySpec querySpec)</code>
+Finds one field&#8217;s value defined by fieldName in a source defined by sourceId.</p>
+</li>
+<li>
+<p><code>findManyTargets(T_ID sourceId, String fieldName, QuerySpec querySpec)</code>
+Finds an Iterable of field&#8217;s values defined by fieldName in a source defined by sourceId .</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All of the methods in this interface have fieldName field as their last parameter in case there
+are multiple relationships between two resources.</p>
+</div>
+<div class="sect3">
+<h4 id="_example">5.3.1. Example</h4>
+<div class="listingblock">
+<div class="title">HistoryRelationshipRepository</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@Component
+public class HistoryRelationshipRepository extends ReadOnlyRelationshipRepositoryBase&lt;Object, Serializable, History, UUID&gt; {
+
+	@Override
+	public RelationshipMatcher getMatcher() {
+		return new RelationshipMatcher().rule().target(History.class).add();
+	}
+
+	@Override
+	public ResourceList&lt;History&gt; findManyTargets(Serializable sourceId, String fieldName, QuerySpec querySpec) {
+		DefaultResourceList list = new DefaultResourceList();
+		for (int i = 0; i &lt; 10; i++) {
+			History history = new History();
+			history.setId(UUID.nameUUIDFromBytes(("historyElement" + i).getBytes()));
+			history.setName("historyElement" + i);
+			list.add(history);
+		}
+		return list;
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_relationshipmatcher">5.3.2. RelationshipMatcher</h4>
+<div class="paragraph">
+<p>With <code>RelationshipRepositoryV2.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
+serving. Rules can look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">RelationshipMatcherTest</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>new RelationshipMatcher().rule().source("projects").add().matches(field)
+new RelationshipMatcher().rule().target(Task.class).add().matches(field)
+new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
+new RelationshipMatcher().rule().field("tasks").add().matches(field)
+new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
+[source]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One can implement, for example, a history relationship repository that introduces a history relationship for every other resource
+as done in the example from the previous section.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Also have a look at <a href="#jsonApiRelation">@JsonApiRelation.repositoryBehavior</a> before getting started to use
+this base class.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In many cases, relationship operations can be mapped back to resource repository operations. Making the need
+for a custom relationship repository implementation redundant. <code>@JsonApiRelationId</code> fields is one example
+where Crnk will take care of this automatically. But there are many other scenarios where application apply
+similar techniques. A findManyTargets request might can be
+served by filtering the target repository. Or a relationship can be set by invoking the save operation
+on either the source or target resource repository (usually you want to save on the single-valued side).
+The <code>ForwardingRelationshipRepository</code> is a base class that takes care of exactly such use cases.
+<code>ForwardingRelationshipRepository</code> knows to <code>ForwardingDirection</code>: <code>OWNER</code> and <code>OPPOSITE</code>. The former forwards requests
+to the resource repository of the owning side of a relationship, while the later forwards to the opposite side.
+<code>ForwardingDirection</code> is set separately for <code>GET</code> and modification operations (<code>POST</code>, <code>PATCH</code>, <code>DELETE</code>).</p>
+</div>
+<div class="paragraph">
+<p>An example to create such a repository looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>RelationshipMatcher taskProjectMatcher = new RelationshipMatcher();
+taskProjectMatcher.rule().source(Task.class).target(Project.class).add();
+
+new ForwardingRelationshipRepository(
+  Task.class, taskProjectMatcher, ForwardingDirection.OWNER, ForwardingDirection.OWNER
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that to access the opposite side for <code>GET</code> operations, relations must be set up bidirectionally with the
+<code>opposite</code> attribute (to allow filtering in that direction):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "tasks")
+	public class Task {
+
+		@JsonApiRelation(opposite = "tasks", lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL)
+		private Project project;
+
+	    ...
+	}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</h4>
+<div class="paragraph">
+<p>BulkRelationshipRepositoryV2 extends RelationshipRepositoryV2 and provides an additional
+<code>findTargets</code> method. It allows to fetch a relation for multiple resources at once.
+It is recommended to make use of this implementation if a relationship is loaded frequently
+(either by a eager declaration or trough the <code>include</code> parameter) and it is costly to
+fetch that relation. RelationshipRepositoryBase provides a default implementation where
+<code>findOneTarget</code> and <code>findManyTargets</code> forward calls to the bulk <code>findTargets</code>.</p>
+</div>
+<div class="paragraph">
+<p>Note that in contrast to <code>RelationshipRepositoryV2</code> and <code>RelationshipRepositoryV2</code> that are symmetric
+and applicable to Crnk servers and client, <code>BulkRelationshipRepositoryV2</code> is applicable on the server-side only.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resourcelist">5.4. ResourceList</h3>
+<div class="paragraph">
+<p>ResourceRepositoryV2 and RelationshipRepositoryV2 return lists of type ResourceList. The ResourceList can carry, next
+to the actual resources, also meta and links information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getLinks()</code>
+Gets the links information attached to this lists.</p>
+</li>
+<li>
+<p><code>getMeta()</code>
+Gets the meta information attached to this lists.</p>
+</li>
+<li>
+<p><code>getLinks(Class&lt;L&gt; linksClass)</code>
+Gets the links information of the given type attached to this lists. If the given type is not found, null is returned.</p>
+</li>
+<li>
+<p><code>getMeta(Class&lt;M&gt; metaClass)</code>
+Gets the meta information of the given type attached to this lists. If the given type is not found, null is returned.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is a default implementation named DefaultResourceList. To gain type-safety, improved readability and crnk-client support,
+application may provide a custom implementation extending ResourceListBase:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	class ScheduleList extends ResourceListBase&lt;Schedule, ScheduleListMeta, ScheduleListLinks&gt; {
+
+	}
+
+	class ScheduleListLinks implements LinksInformation {
+
+		public String name = "value";
+
+		...
+	}
+
+	class ScheduleListMeta implements MetaInformation {
+
+		public String name = "value";
+
+		...
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This implementation can then be added to a repository interface declaration
+and used by both servers and clients:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	public interface ScheduleRepository extends ResourceRepositoryV2&lt;Schedule, Long&gt; {
+
+		@Override
+		public ScheduleList findAll(QuerySpec querySpec);
+
+	}</code></pre>
 </div>
 </div>
 </div>
@@ -7283,7 +7329,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-20 05:26:55 UTC
+Last updated 2018-06-21 14:01:44 UTC
 </div>
 </div>
 </body>
