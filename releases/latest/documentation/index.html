@@ -1750,6 +1750,10 @@ inadvertently enable pagination for included resources when doing paging on root
 are cyclic. See <code>CrnkProperties.INCLUDE_PAGING_ENABLED</code> fore mor information.</p>
 </li>
 <li>
+<p><code>crnk.config.lookup.behavior.default</code> specifies the default lookup behavior for relationships. For more information
+see <a href="#jsonApiRelation">@JsonApiRelation</a>.</p>
+</li>
+<li>
 <p><code>crnk.config.include.behavior</code> with possible values <code>BY_TYPE</code> (default) and <code>BY_ROOT_PATH</code>.
 <code>BY_ROOT_PATH</code> specifies that an inclusion can only requested as path from the root
 resource such as <code>include[tasks]=project.schedule</code>. While <code>BY_TYPE</code> can further request
@@ -7399,7 +7403,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-22 09:41:59 UTC
+Last updated 2018-06-22 09:47:19 UTC
 </div>
 </div>
 </body>
