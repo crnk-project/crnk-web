@@ -1834,22 +1834,73 @@ programmatically at runtime.</p>
 <p>where <code>type</code> parameter specifies the resource&#8217;s name.</p>
 </div>
 <div class="paragraph">
-<p><a id="jsonApiResourcePagingBehavior"></a></p>
-</div>
-<div class="paragraph">
-<p>The optional <code>pagingBehavior</code> parameter allows to set a pagination behavior of the resource.
-In order to do it you have to specify a type which is actually an implementation of a <code>PagingBehavior</code> interface.</p>
+<p>By default the type of a resource in a JSON API document and its name within URLs match, for example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "tasks", pagingBehavior = OffsetLimitPagingBehavior.class)
+<pre class="CodeRay highlight"><code>{
+  "links": {
+    "self": "http://localhost/api/tasks",
+  },
+  "data": [{
+    "type": "tasks",
+    "id": "1",
+    "attributes": {
+      "title": "Some task"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The optional <code>resourcePath</code> allows to define separate values, typically with <code>resourcePath</code> being plural and
+<code>type</code> being singular:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", resourcePath = "tasks")
   public class Task {
     // fields, getters and setters
   }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>More detailed information about pagination behaviors could be found at <a href="#pagination">Pagination</a> section.</p>
+<p>resulting in (notice the self link does not change, but type does):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "links": {
+    "self": "http://localhost/api/tasks",
+  },
+  "data": [{
+    "type": "task",
+    "id": "1",
+    "attributes": {
+      "title": "Some task"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="jsonApiResourcePagingBehavior"></a></p>
+</div>
+<div class="paragraph">
+<p>The optional <code>pagingSpec</code> parameter allows to set the desired paging specification:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "tasks", pagingSpec = OffsetLimitPagingSpec.class)
+  public class Task {
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is built-in support for <code>OffsetLimitPagingSpec</code> (default) or <code>NumberSizePagingSpec</code>. The paging spec must
+be backed by a matching <code>PagingBehavior</code> implementation.  More detailed information about pagination can be
+found at <a href="#pagination">Pagination</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2698,20 +2749,49 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 </div>
 <div class="sect3">
 <h4 id="_pagination">5.2.4. Pagination</h4>
+<div class="sect4">
+<h5 id="_offset_limit_paging">Offset/Limit Paging</h5>
 <div class="paragraph">
-<p>Crnk comes by default with offset/limit pagination support. The format for pagination is
-then <code>page[offset|limit]="value", where value is an integer</code>, for example:</p>
+<p>Crnk comes by default with support for offset/limit paging:</p>
 </div>
 <div class="paragraph">
 <p><code>GET /tasks?page[offset]=0&amp;page[limit]=10</code></p>
 </div>
 <div class="paragraph">
-<p>The parameters are then available with <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.</p>
+<p>The parameters are then available with <code>QuerySpec.getPaging(type)</code> or the shortcuts <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_number_size_paging">Number/Size Paging</h5>
+<div class="paragraph">
+<p>Support for number/size-based paging can be enabled by registering the <code>NumberSizePagingBehavior</code> in one of two ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>register <code>NumberSizePagingBehavior.createModule()</code></p>
+</li>
+<li>
+<p>register <code>NumberSizePagingBehavior</code> directly to service discovery.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Paging parameters can then look like:</p>
+</div>
+<div class="paragraph">
+<p><code>GET /tasks?page[number]=1&amp;page[size]=10</code></p>
+</div>
+<div class="paragraph">
+<p>Internally Crnk is able to translate between offset/limit and number/size-based paging. If
+a repository has been implemented with offset/limit paging, it works equally well when number/size paging is used.
+The conversion takes place automatically when invoking <code>QuerySpec.getPaging(desiredPagingType)</code>.</p>
+</div>
 </div>
 <div class="sect4">
 <h5 id="_pagination_links">Pagination Links</h5>
 <div class="paragraph">
-<p>The JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
+<p>JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
 The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
 by repositories along with the result data. There is a default implementation named <code>DefaultPagedLinksInformation</code>.</p>
 </div>
@@ -2744,15 +2824,9 @@ This is typically achieved by querying <code>limit + 1</code> resources.</p>
 <div class="sect4">
 <h5 id="_custom_strategies">Custom strategies</h5>
 <div class="paragraph">
-<p>Internally offset/limit pagination is implemented with <code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code>.
-They implement the more generic <code>PagingBehavior</code> and <code>PagingSpec</code>. An instance of <code>PagingSpec</code>
-is hold by QuerySpec and is, for example, also accessed by <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.
-<code>PagingSpec</code> is directly accessible with <code>QuerySpec.getPagingSpec</code> and <code>QuerySpec.setPagingSpec</code>.</p>
-</div>
-<div class="paragraph">
-<p>Applications are free to implement other pagination behaviors implementing <code>PagingBehavior</code> and <code>PagingSpec</code>.
-JSON API does not mandate the use of a specific strategy and lets application choose the best suited mechanism.
-In order to do so, you would have to perform the following actions:</p>
+<p><code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> and <code>NumberSizePagingBehavior</code> and <code>NumberSizePagingSpec</code>
+are two implementations of <code>PagingBehavior</code> and <code>PagingSpec</code>. Applications are free to add further implementations
+or replace the existing ones. In order to do so, you would have to perform the following actions:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2783,11 +2857,11 @@ module.addPaginationBehavior(new MyPaginationBehavior());</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>by default the new pagination strategy will become the default strategy for all resources.</p>
+<p>by default the first pagination behavior will become the default for all resources.</p>
 </li>
 <li>
-<p>multiple pagination strategies can be registered and then selected for each resource individually with
-<a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingBehavior</a>.</p>
+<p>by explicitly specify which resource makes use of which paging specification with
+<a href="#jsonApiResourcePagingBehavior">@JsonApiResource.pagingSpec</a>.</p>
 </li>
 </ul>
 </div>
@@ -2795,18 +2869,13 @@ module.addPaginationBehavior(new MyPaginationBehavior());</pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>For an example follow the <code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> implementation. New implementations may
-extend from those classes to offer compatibility in two different ways:</p>
+<p>For examples have a look at the <code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> or
+<code>NumberSizePagingBehavior</code> and <code>NumberSizePagingSpec</code> implementations.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>maintain support for <code>offset</code>, <code>limit</code> parameters.</p>
-</li>
-<li>
-<p>translate the custom page parameters to <code>offset</code>, <code>limit</code> to make existing (potentially third-party) repositories compatible with the custom parameters.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>There is the possibility for a <code>PagingBehavior</code> to serve multiple <code>PagingSpec</code>. This is used, for example,
+by <code>NumberSizePagingBehavior</code> to translate <code>number</code> and <code>size</code> to <code>offset</code> and <code>limit</code> for repositories
+that are based on <code>OffsetLimitPagingSpec</code>.</p>
 </div>
 </div>
 </div>
@@ -3679,7 +3748,7 @@ allow a fully automated setup.</p>
 		public String name = "value";
 	}
 
-	class ScheduleListMeta implements MetaInformation {
+	class ScheduleListMeta extends DefaultPagedMetaInformation {
 
 		public String name = "value";
 
@@ -6456,7 +6525,8 @@ like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>import {DefaultPagedLinksInformation} from './information/default.paged.links.information';
+<pre class="CodeRay highlight"><code>import {DefaultPagedMetaInformation} from './default.paged.meta.information';
+import {DefaultPagedLinksInformation} from './information/default.paged.links.information';
 import {Projects} from './projects';
 import {Tasks} from './tasks';
 import {CrnkStoreResource} from '@crnk/angular-ngrx';
@@ -6494,7 +6564,7 @@ export interface ScheduleResult extends OneQueryResult {
 export module ScheduleListResult {
 	export interface ScheduleListLinks extends DefaultPagedLinksInformation {
 	}
-	export interface ScheduleListMeta {
+	export interface ScheduleListMeta extends DefaultPagedMetaInformation {
 	}
 }
 export interface ScheduleListResult extends ManyQueryResult {
@@ -7329,7 +7399,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-21 14:01:44 UTC
+Last updated 2018-06-22 08:47:36 UTC
 </div>
 </div>
 </body>
