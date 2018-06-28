@@ -591,9 +591,15 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_meta_information">5.6. Meta Information</a></li>
 <li><a href="#_links_information">5.7. Links Information</a></li>
-<li><a href="#_payload_size_optimizations">5.8. Payload Size Optimizations</a></li>
-<li><a href="#_repository_decoration">5.9. Repository Decoration</a></li>
-<li><a href="#_resourcefieldcontributor">5.10. ResourceFieldContributor</a></li>
+<li><a href="#_inheritance">5.8. Inheritance</a>
+<ul class="sectlevel3">
+<li><a href="#_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</a></li>
+<li><a href="#_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</a></li>
+</ul>
+</li>
+<li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -1907,6 +1913,27 @@ programmatically at runtime.</p>
 <p>There is built-in support for <code>OffsetLimitPagingSpec</code> (default) or <code>NumberSizePagingSpec</code>. The paging spec must
 be backed by a matching <code>PagingBehavior</code> implementation.  More detailed information about pagination can be
 found at <a href="#pagination">Pagination</a> section.</p>
+</div>
+<div class="paragraph">
+<p>The optional <code>subTypes</code> parameter allows to specify an inheritance relationship to other resources:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", subTypes = SpecialTask.class)
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask", resourcePath = "task")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case the <code>SpecialTask</code> extends <code>Task</code> but shares the same <code>resourcePath</code>, meaning <code>SpecialTask</code> does not bring along
+a repository implementation (see next chapter), but is served by the task repository. For a more information have a look at the
+<a href="#inheritance">[inheritance]</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3421,9 +3448,65 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 <div class="paragraph">
 <p>When using annotated versions of repositories, a method that returns a <code>LinksInformation</code> object should be annotated with <code>JsonApiLinks</code> and the first parameter of the method has to be a list of resources.</p>
 </div>
+<div class="paragraph">
+<p><a id="inheritance"></a></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_payload_size_optimizations">5.8. Payload Size Optimizations</h3>
+<h3 id="_inheritance">5.8. Inheritance</h3>
+<div class="paragraph">
+<p>There are two different kinds of inheritance supported:</p>
+</div>
+<div class="sect3">
+<h4 id="_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</h4>
+<div class="paragraph">
+<p>Each subtype is served by its own resource repository and each repository has its own URL.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task")
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no special configuration necessary. But repositories of super types must
+also return resources of subtypes if they match the specified id or filter parameters.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</h4>
+<div class="paragraph">
+<p>In this case all resources share a repository implementation and URL (except for the identifier part). An example may look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", subTypes = SpecialTask.class)
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask", resourcePath = "task")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>SpecialTask</code> extends <code>Task</code> but is configured to use the same <code>resourcePath</code>, meaning <code>SpecialTask</code> does not have
+a repository implementation on its own, but is served by the repository of <code>Task</code>. For a more detailed example have
+a look at <code>InheritanceWithoutSubtypeRepositoryClientTest</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_payload_size_optimizations">5.9. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
@@ -3434,7 +3517,7 @@ of those links is omitted. Further relationships without data are completely omi
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repository_decoration">5.9. Repository Decoration</h3>
+<h3 id="_repository_decoration">5.10. Repository Decoration</h3>
 <div class="paragraph">
 <p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
 </div>
@@ -3493,7 +3576,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.10. ResourceFieldContributor</h3>
+<h3 id="_resourcefieldcontributor">5.11. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-jpa and
@@ -7405,7 +7488,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-28 12:39:59 UTC
+Last updated 2018-06-28 20:27:45 UTC
 </div>
 </div>
 </body>
