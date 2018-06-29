@@ -3004,12 +3004,13 @@ such values and provide them as <code>String</code> within <code>FilterSpec</cod
 </li>
 <li>
 <p><code>setEnforceDotPathSeparator(boolean)</code>
-DefaultQuerySpecUrlMapper by default supports by default two URL conventions:
- <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project][name]=myProject</code> and
- <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project.name]=myProject</code>. The later is recommended. The former
- still supported for historic reasons. By default the flag is still disabled, but it is recommended
- to be enabled and will become the default at some point in the future. Note that without the enforcement,
- there is danger of introducing ambiguity with resources and attributes are named equally.</p>
+DefaultQuerySpecUrlMapper makes use of a dotted URL convetion like
+ <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project.name]=myProject</code>. But for historic reasons it also
+ accepts <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project][name]=myProject</code>. The later is not recommended
+ to be used anymore because  there is danger of introducing ambiguity when resources and attributes
+ are named equally. By enabling this flag, support for the historic format gets removed and no
+ ambiguity can occur. While not being the default, it is recommended to do so. With the next
+ major version, the default will change.</p>
 </li>
 <li>
 <p><code>setMapJsonNames</code>
@@ -7488,7 +7489,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-28 20:27:45 UTC
+Last updated 2018-06-29 04:21:19 UTC
 </div>
 </div>
 </body>
