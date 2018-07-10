@@ -2712,7 +2712,10 @@ replacing <code>DefaultQuerySpecUrlMapper</code>.
 <p><code>GET /tasks?filter[name][EQ]=Super task</code> to filter by name with the <code>EQ</code> operator.</p>
 </li>
 <li>
-<p><code>GET /tasks?filter[name][LIKE]=Super</code> to filter by name with the <code>LIKE</code> operator.</p>
+<p><code>GET /tasks?filter[name][EQ]=SomeTask,OtherTask</code> to filter by multiple <code>OR</code>-ed values.</p>
+</li>
+<li>
+<p><code>GET /tasks?filter[name][LIKE]=Super%</code> to filter by name with the <code>LIKE</code> operator using <code>%</code> as wildcard.</p>
 </li>
 <li>
 <p><code>GET /tasks?filter[address.plz][EQ]=Super task</code> to filter by attribute <code>name</code> within a structured or related attributes <code>address</code>.</p>
@@ -7534,7 +7537,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-10 15:18:43 UTC
+Last updated 2018-07-10 16:59:22 UTC
 </div>
 </div>
 </body>
