@@ -539,14 +539,15 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_integration_with_spring_and_string_boot">3.7. Integration with Spring and String Boot</a></li>
 <li><a href="#_integration_with_vert_x">3.8. Integration with Vert.x</a></li>
-<li><a href="#_discovery_with_cdi">3.9. Discovery with CDI</a></li>
-<li><a href="#_discovery_with_guice">3.10. Discovery with Guice</a></li>
-<li><a href="#_discovery_with_spring">3.11. Discovery with Spring</a></li>
-<li><a href="#_discovery_without_a_dependency_injection_framework">3.12. Discovery without a dependency injection framework</a></li>
-<li><a href="#_no_discovery">3.13. No Discovery</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</a></li>
-<li><a href="#_crnkboot">3.15. CrnkBoot</a></li>
-<li><a href="#_properties">3.16. Properties</a></li>
+<li><a href="#_tomcat_setup">3.9. Tomcat Setup</a></li>
+<li><a href="#_discovery_with_cdi">3.10. Discovery with CDI</a></li>
+<li><a href="#_discovery_with_guice">3.11. Discovery with Guice</a></li>
+<li><a href="#_discovery_with_spring">3.12. Discovery with Spring</a></li>
+<li><a href="#_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</a></li>
+<li><a href="#_no_discovery">3.14. No Discovery</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</a></li>
+<li><a href="#_crnkboot">3.16. CrnkBoot</a></li>
+<li><a href="#_properties">3.17. Properties</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -1516,9 +1517,43 @@ the following dependencies specified:</p>
 of Crnk. The example makes use of it to register two modules. <code>CrnkVertxHandler.process</code> is the main method
 that allows to process <code>HttpServerRequest</code> objects of Vert.x.</p>
 </div>
+<div class="paragraph">
+<p><a id="tomcatSetup"></a></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_cdi">3.9. Discovery with CDI</h3>
+<h3 id="_tomcat_setup">3.9. Tomcat Setup</h3>
+<div class="paragraph">
+<p>There is a bit of a controversy about which characters to encode or not encode in URLs based on
+RFC 7230 and RFC 3986. JSON API is affected in that regard due to the use of [ and ].
+Browser vendors have yet to endorse those RFCs. But unfortunately, Tomcat already started
+to enforce the RFCs from their side. As such it is useful to
+relax the [ and ] characters to simplify development with JSON API, like entering
+URLs manually in the browser. For this purpose <code>relaxedPathChars</code> can be set to <code>[]</code>, for more information
+see:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://stackoverflow.com/questions/41053653/tomcat-8-is-not-able-to-handle-get-request-with-in-query-parameters" class="bare">https://stackoverflow.com/questions/41053653/tomcat-8-is-not-able-to-handle-get-request-with-in-query-parameters</a></p>
+</div>
+<div class="paragraph">
+<p>The Spring Boot auto configuration already does this out-of-the-box.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+There is no weakened security out of this as long as parameters are not used
+  in some obscure fashion.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discovery_with_cdi">3.10. Discovery with CDI</h3>
 <div class="paragraph">
 <p>To enable CDI support, add <code>io.crnk:crnk-cdi</code> to your classpath. Crnk will then pickup the
 <code>CdiServiceDiscovery</code> implementation and use it to discover its modules and repositories. Modules, repositories,
@@ -1544,7 +1579,7 @@ it is highly recommended to set the <code>BeanManager manually</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_guice">3.10. Discovery with Guice</h3>
+<h3 id="_discovery_with_guice">3.11. Discovery with Guice</h3>
 <div class="paragraph">
 <p>A <code>GuiceServiceDiscovery</code> implementation is provided. The various integrations like <code>CrnkFeature</code> provide
 a <code>setServiceDiscovery</code> method to set the instance. For an example have a look at the dropwizard example
@@ -1552,14 +1587,14 @@ application (<a href="https://github.com/crnk-project/crnk-framework/tree/master
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_spring">3.11. Discovery with Spring</h3>
+<h3 id="_discovery_with_spring">3.12. Discovery with Spring</h3>
 <div class="paragraph">
 <p>The Spring integration comes with a <code>SpringServiceDiscovery</code> that makes use of the Spring <code>ApplicationContext</code>
 to discover beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_without_a_dependency_injection_framework">3.12. Discovery without a dependency injection framework</h3>
+<h3 id="_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1608,7 +1643,7 @@ class that makes use of Crnk interfaces, like repositories, exception mappers an
 </div>
 </div>
 <div class="sect2">
-<h3 id="_no_discovery">3.13. No Discovery</h3>
+<h3 id="_no_discovery">3.14. No Discovery</h3>
 <div class="paragraph">
 <p>It is also possible to make use of no discovery mechanism at all. In this case it is still possible to add repositories
 and other features through modules. A simple example looks like:</p>
@@ -1630,7 +1665,7 @@ and other features through modules. A simple example looks like:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Application can bring along there own implementation of <code>ServiceDiscovery</code>. For more information
 see <a href="#customdiscovery">here</a>.</p>
@@ -1640,7 +1675,7 @@ see <a href="#customdiscovery">here</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crnkboot">3.15. CrnkBoot</h3>
+<h3 id="_crnkboot">3.16. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
 Crnk. Every integration will provide access to it:</p>
@@ -1730,7 +1765,7 @@ and just omitting to specify pagination parameters.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_properties">3.16. Properties</h3>
+<h3 id="_properties">3.17. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -7495,7 +7530,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-06 07:18:37 UTC
+Last updated 2018-07-10 07:30:17 UTC
 </div>
 </div>
 </body>
