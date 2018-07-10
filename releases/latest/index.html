@@ -42,7 +42,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.8.20180710072812</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
+      <h3>Latest</h3>      <p>Version: 2.8.20180710151658</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
 
 <h4>Support for inheritance with a single repository per type hierarchy</h4>
 
@@ -97,6 +97,17 @@ see <a href="https://stackoverflow.com/questions/41053653/tomcat-8-is-not-able-t
 
 The Spring Boot auto configuration already does this out-of-the-box with this release.
 
+<h4>Comma-separated filter parameters</h4>
+
+Multiple filter values can now be separated by comma:
+
+<pre class="prettyprint">
+  http://127.0.0.1:8080/api/tasks?filter[name][EQ]=SomeTask,OtherTask
+</pre>
+
+Repositories then will typically use an OR to return resources matching any of one the filter values.
+
+The behavior can be disabled in DefaultQuerySpecUrlMapper.setAllowCommaSeparatedValue(...) if desired.
 
   </div>
 </div>

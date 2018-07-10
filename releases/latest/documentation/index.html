@@ -2552,7 +2552,8 @@ http://127.0.0.1:8080/api/tasks?sort=-id,name
 http://127.0.0.1:8080/api/tasks?sort=id&amp;page[offset]=0&amp;page[limit]=2
 http://127.0.0.1:8080/api/tasks?filter[name]=Do things
 http://127.0.0.1:8080/api/tasks?filter[name][EQ]=Do things
-http://127.0.0.1:8080/api/tasks?filter[name][LIKE]=Do
+http://127.0.0.1:8080/api/tasks?filter[name][LIKE]=Do%
+http://127.0.0.1:8080/api/tasks?filter[name][EQ]=SomeTask,OtherTask
 http://127.0.0.1:8080/api/tasks?fields=name
 http://127.0.0.1:8080/api/projects
 http://127.0.0.1:8080/api/tasks?include=project
@@ -2576,6 +2577,9 @@ due to the use of <code>@JsonApiRelationId</code> (see below).</p>
 </li>
 <li>
 <p>the response gets automatically truncated with the <code>fields</code> parameter, ideally suited for bandwidth sensitive applications.</p>
+</li>
+<li>
+<p>multiple values can be separated by comma, typically repositories will then use an <code>OR</code> and accept and resource matching any of the values.</p>
 </li>
 </ul>
 </div>
@@ -7530,7 +7534,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-10 07:30:17 UTC
+Last updated 2018-07-10 15:18:43 UTC
 </div>
 </div>
 </body>
