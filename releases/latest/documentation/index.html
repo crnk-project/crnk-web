@@ -2737,10 +2737,15 @@ See the subsequent <a href="#inclusion">[inclusion]</a> section how to use this 
 </div>
 <div class="paragraph">
 <p>A filter parameter is represented by a <code>FilterSpec</code>. It holds the path to the attribute,
-the operator and the filter value. Internally Crnk will map filter parameters to
-properly typed <code>FilterSpec.value</code>. The type is determined based on the type of
-the filtered attribute. The process can be customized by the <code>QuerySpecUrlMapper</code>
-and <code>TypeParser</code> implementations that are accessible from <code>CrnkBoot</code>.</p>
+the operator and the filter value. The attribute specifies what gets filtered. The operator
+specifies how it is filtered. And the value specifies after what should be filtered.</p>
+</div>
+<div class="paragraph">
+<p>The filter value  <code>FilterSpec.value</code> is strongly typed. Typically (by default) it is assumed
+that the filter value matches the attribute type and Crnk will attempt to parse passed String-based
+filter value accordingly. There are exceptions, for example, the LIKE filter operator always requires
+the filter value to be a string to support wildcards for not just String types, but also Enums
+and other types (the underlying <code>FilterOperator</code> implementation can specify this with <code>getFilterType(&#8230;&#8203;)</code>).</p>
 </div>
 <div class="paragraph">
 <p>Operators within <code>FilterSpec</code> are represented by the <code>FilterOperator</code> class.
@@ -2792,7 +2797,31 @@ Crnk comes with a set of default filters:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The application is free to implements its own <code>FilterOperator</code>. Next to the name
+<p>By default the filtering process is quite opinionated and should fit many typical patterns.
+But there also many possibilities to customize its behavior to the use case at hand.
+For this purpose <a href="#CrnkBoot">[CrnkBoot]</a> offers access to the <code>DefaultQuerySpecUrlMapper</code> with <code>CrnkBoot.getUrlMapper()</code>
+and <code>TypeParser</code> with <code>CrnkBoot.getModuleRegistry().getTypeParser()</code> (or <code>ModuleContext</code>).
+For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TypeParser</code> allows to register and override the parsing of Strings to other classes.
+By default it has has built-in parsers for various JRE classes, it looks on the type
+itself for a String constructor or static <code>parse(String)</code> parse method and otherwise
+fallbacks to Jackson. Further <code>StringParser</code> can add support for arbitrary types.</p>
+</li>
+<li>
+<p><code>DefaultQuerySpecUrlMapper.setIgnoreParseExceptions(&#8230;&#8203;)</code> allows to ignore if parsing
+of a filter value fails. In this case the filter value is left as String and it is
+assumed the repository itself will take care of the parsing.</p>
+</li>
+<li>
+<p><code>CrnkBoot.setAllowUnknownAttributes</code> ignore unknown attributes and passes them as is to
+the repositories to handle them. More information in the <a href="#properties">[properties]</a> section.</p>
+</li>
+<li>
+<p>The application is free to implements custom <code>FilterOperator</code>. Next to the name
 a <code>matches</code> method can be implemented to support in-memory filtering
 with <code>QuerySpec.apply</code>. Otherwise, it is up to the repository implementation
 to handle the various filter operators; usually by translating them
@@ -2800,6 +2829,8 @@ to datastore-native query expressions. Custom operators can be registered
 with <code>DefaultQuerySpecUrlMapper.addSupportedOperator(..)</code>. The default operator can be
 overridden by setting <code>DefaultQuerySpecUrlMapper.setDefaultOperator(&#8230;&#8203;)</code>.
 For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><a id="sorting"></a></p>
@@ -7537,7 +7568,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-10 16:59:22 UTC
+Last updated 2018-07-11 06:50:33 UTC
 </div>
 </div>
 </body>

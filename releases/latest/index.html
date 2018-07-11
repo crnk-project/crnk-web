@@ -42,7 +42,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.8.20180710165829</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
+      <h3>Latest</h3>      <p>Version: 2.8.20180711064903</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
 
 <h4>Support for inheritance with a single repository per type hierarchy</h4>
 
@@ -108,6 +108,14 @@ Multiple filter values can now be separated by comma:
 Repositories then will typically use an OR to return resources matching any of one the filter values.
 
 The behavior can be disabled in DefaultQuerySpecUrlMapper.setAllowCommaSeparatedValue(...) if desired.
+
+
+<h4>More flexible typing for FilterOperator</h4>
+
+By default Crnk uses a simplistic model for filtering where the type of a filter value matches the type of the attribute to be filtered. This works
+well in many occasions, but there are also some exceptions. For example, the LIKE operator is always of type String to support wildcards, whereas
+the attribute it self may not. One such example is the LIKE-filtering of Enums. For this reason a FilterOperator.getFilterType() was introduced
+to allow the FilterOperator influence the typing of filter values.
 
   </div>
 </div>
