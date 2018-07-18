@@ -539,14 +539,15 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_integration_with_spring_and_string_boot">3.7. Integration with Spring and String Boot</a></li>
 <li><a href="#_integration_with_vert_x">3.8. Integration with Vert.x</a></li>
-<li><a href="#_discovery_with_cdi">3.9. Discovery with CDI</a></li>
-<li><a href="#_discovery_with_guice">3.10. Discovery with Guice</a></li>
-<li><a href="#_discovery_with_spring">3.11. Discovery with Spring</a></li>
-<li><a href="#_discovery_without_a_dependency_injection_framework">3.12. Discovery without a dependency injection framework</a></li>
-<li><a href="#_no_discovery">3.13. No Discovery</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</a></li>
-<li><a href="#_crnkboot">3.15. CrnkBoot</a></li>
-<li><a href="#_properties">3.16. Properties</a></li>
+<li><a href="#_tomcat_setup">3.9. Tomcat Setup</a></li>
+<li><a href="#_discovery_with_cdi">3.10. Discovery with CDI</a></li>
+<li><a href="#_discovery_with_guice">3.11. Discovery with Guice</a></li>
+<li><a href="#_discovery_with_spring">3.12. Discovery with Spring</a></li>
+<li><a href="#_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</a></li>
+<li><a href="#_no_discovery">3.14. No Discovery</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</a></li>
+<li><a href="#_crnkboot">3.16. CrnkBoot</a></li>
+<li><a href="#_properties">3.17. Properties</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -558,6 +559,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapimetainformation">4.5. JsonApiMetaInformation</a></li>
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jackson_annotations">4.7. Jackson annotations</a></li>
+<li><a href="#_nested_resources">4.8. Nested Resources</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -591,9 +593,16 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_meta_information">5.6. Meta Information</a></li>
 <li><a href="#_links_information">5.7. Links Information</a></li>
-<li><a href="#_payload_size_optimizations">5.8. Payload Size Optimizations</a></li>
-<li><a href="#_repository_decoration">5.9. Repository Decoration</a></li>
-<li><a href="#_resourcefieldcontributor">5.10. ResourceFieldContributor</a></li>
+<li><a href="#_inheritance">5.8. Inheritance</a>
+<ul class="sectlevel3">
+<li><a href="#_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</a></li>
+<li><a href="#_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</a></li>
+</ul>
+</li>
+<li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
+<li><a href="#__jsonapiexposed">5.12. @JsonApiExposed</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -851,6 +860,12 @@ with Crnk, Angular, Spring Boot and ngrx-json-api.</p>
 <ul>
 <li>
 <p><code>spring-boot-example</code></p>
+</li>
+<li>
+<p><code>spring-boot-minimal-example</code> showcasing a minimal setup of Crnk with Spring Boot.</p>
+</li>
+<li>
+<p><code>spring-boot-microservice-example</code> showcasing how to connect two separate JSON API endpoints through a relationship with crnk-client.</p>
 </li>
 <li>
 <p><code>wildfly-example</code></p>
@@ -1504,9 +1519,43 @@ the following dependencies specified:</p>
 of Crnk. The example makes use of it to register two modules. <code>CrnkVertxHandler.process</code> is the main method
 that allows to process <code>HttpServerRequest</code> objects of Vert.x.</p>
 </div>
+<div class="paragraph">
+<p><a id="tomcatSetup"></a></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_cdi">3.9. Discovery with CDI</h3>
+<h3 id="_tomcat_setup">3.9. Tomcat Setup</h3>
+<div class="paragraph">
+<p>There is a bit of a controversy about which characters to encode or not encode in URLs based on
+RFC 7230 and RFC 3986. JSON API is affected in that regard due to the use of [ and ].
+Browser vendors have yet to endorse those RFCs. But unfortunately, Tomcat already started
+to enforce the RFCs from their side. As such it is useful to
+relax the [ and ] characters to simplify development with JSON API, like entering
+URLs manually in the browser. For this purpose <code>relaxedPathChars</code> can be set to <code>[]</code>, for more information
+see:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://stackoverflow.com/questions/41053653/tomcat-8-is-not-able-to-handle-get-request-with-in-query-parameters" class="bare">https://stackoverflow.com/questions/41053653/tomcat-8-is-not-able-to-handle-get-request-with-in-query-parameters</a></p>
+</div>
+<div class="paragraph">
+<p>The Spring Boot auto configuration already does this out-of-the-box.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+There is no weakened security out of this as long as parameters are not used
+  in some obscure fashion.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discovery_with_cdi">3.10. Discovery with CDI</h3>
 <div class="paragraph">
 <p>To enable CDI support, add <code>io.crnk:crnk-cdi</code> to your classpath. Crnk will then pickup the
 <code>CdiServiceDiscovery</code> implementation and use it to discover its modules and repositories. Modules, repositories,
@@ -1532,7 +1581,7 @@ it is highly recommended to set the <code>BeanManager manually</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_guice">3.10. Discovery with Guice</h3>
+<h3 id="_discovery_with_guice">3.11. Discovery with Guice</h3>
 <div class="paragraph">
 <p>A <code>GuiceServiceDiscovery</code> implementation is provided. The various integrations like <code>CrnkFeature</code> provide
 a <code>setServiceDiscovery</code> method to set the instance. For an example have a look at the dropwizard example
@@ -1540,14 +1589,14 @@ application (<a href="https://github.com/crnk-project/crnk-framework/tree/master
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_with_spring">3.11. Discovery with Spring</h3>
+<h3 id="_discovery_with_spring">3.12. Discovery with Spring</h3>
 <div class="paragraph">
 <p>The Spring integration comes with a <code>SpringServiceDiscovery</code> that makes use of the Spring <code>ApplicationContext</code>
 to discover beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_without_a_dependency_injection_framework">3.12. Discovery without a dependency injection framework</h3>
+<h3 id="_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1596,7 +1645,7 @@ class that makes use of Crnk interfaces, like repositories, exception mappers an
 </div>
 </div>
 <div class="sect2">
-<h3 id="_no_discovery">3.13. No Discovery</h3>
+<h3 id="_no_discovery">3.14. No Discovery</h3>
 <div class="paragraph">
 <p>It is also possible to make use of no discovery mechanism at all. In this case it is still possible to add repositories
 and other features through modules. A simple example looks like:</p>
@@ -1618,7 +1667,7 @@ and other features through modules. A simple example looks like:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Application can bring along there own implementation of <code>ServiceDiscovery</code>. For more information
 see <a href="#customdiscovery">here</a>.</p>
@@ -1628,7 +1677,7 @@ see <a href="#customdiscovery">here</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crnkboot">3.15. CrnkBoot</h3>
+<h3 id="_crnkboot">3.16. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
 Crnk. Every integration will provide access to it:</p>
@@ -1718,7 +1767,7 @@ and just omitting to specify pagination parameters.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_properties">3.16. Properties</h3>
+<h3 id="_properties">3.17. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -1907,6 +1956,27 @@ programmatically at runtime.</p>
 <p>There is built-in support for <code>OffsetLimitPagingSpec</code> (default) or <code>NumberSizePagingSpec</code>. The paging spec must
 be backed by a matching <code>PagingBehavior</code> implementation.  More detailed information about pagination can be
 found at <a href="#pagination">Pagination</a> section.</p>
+</div>
+<div class="paragraph">
+<p>The optional <code>subTypes</code> parameter allows to specify an inheritance relationship to other resources:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", subTypes = SpecialTask.class)
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask", resourcePath = "task")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case the <code>SpecialTask</code> extends <code>Task</code> but shares the same <code>resourcePath</code>, meaning <code>SpecialTask</code> does not bring along
+a repository implementation (see next chapter), but is served by the task repository. For a more information have a look at the
+<a href="#inheritance">[inheritance]</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2262,6 +2332,136 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 <div class="paragraph">
 <p>Support for more annotations will be added in the future. PRs welcomed.</p>
 </div>
+<div class="paragraph">
+<p><a id="nested_resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nested_resources">4.8. Nested Resources</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is experimental and will be refined in subsequent releases.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A resource may be nested and belong to a parent resource. In this case the nested resource is access through its parent resource.
+An URL then looks like:</p>
+</div>
+<div class="paragraph">
+<p><code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code></p>
+</div>
+<div class="paragraph">
+<p>For a resource to become nested, it must make use of a structure identifier:</p>
+</div>
+<div class="listingblock">
+<div class="title">NestedId.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.test.mock.models.nested;
+
+import io.crnk.core.resource.annotations.JsonApiId;
+import io.crnk.core.resource.annotations.JsonApiRelationId;
+
+import java.io.Serializable;
+
+public class NestedId implements Serializable {
+
+	@JsonApiId
+	private String id;
+
+	@JsonApiRelationId
+	private String parentId;
+
+	public NestedId() {
+
+	}
+
+	public NestedId(String parentId, String id) {
+		this.parentId = parentId;
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public static NestedId parse(String idString) {
+		String[] elements = idString.split("\\-");
+		NestedId id = new NestedId();
+		id.parentId = elements[0];
+		id.id = elements[1];
+		return id;
+	}
+
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	public boolean equals(Object object) {
+		return object instanceof NestedId &amp;&amp; object.toString().equals(toString());
+	}
+
+	public String toString() {
+		return parentId + "-" + id;
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The id is setup of two parts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the local identifier of the child resource, annotated with <code>@JsonApiId</code>. It must be unique among all nested resources having the same parent.</p>
+</li>
+<li>
+<p>the identifier of the parent resource, annotated with a <code>@JsonApiRelationId</code>. The nested resource must have matching relationship field (in this case <code>parent</code>)`.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>NestedId</code> further implements <code>parse</code>, <code>toString</code>, <code>hashCode</code> and <code>equals</code> to deal with String serialization and equality.</p>
+</div>
+<div class="paragraph">
+<p>For an example have a look at <code>NestedRepositoryClientTest</code> and its parent class. Depending on the use of <a href="#JsonApiExposed">[JsonApiExposed]</a> it
+is or is not be possible to also directly access <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code> without going
+through the parents.</p>
+</div>
+<div class="paragraph">
+<p>Current Limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Nesting is currently limited to a single level (and the possibility to have further relationships on the nested resource).</p>
+</li>
+<li>
+<p>When creating new resources with CrnkClient, the nested identifier must be setup in order to let CrnkClient access the parentId.</p>
+</li>
+<li>
+<p>Being experimental.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -2484,7 +2684,8 @@ http://127.0.0.1:8080/api/tasks?sort=-id,name
 http://127.0.0.1:8080/api/tasks?sort=id&amp;page[offset]=0&amp;page[limit]=2
 http://127.0.0.1:8080/api/tasks?filter[name]=Do things
 http://127.0.0.1:8080/api/tasks?filter[name][EQ]=Do things
-http://127.0.0.1:8080/api/tasks?filter[name][LIKE]=Do
+http://127.0.0.1:8080/api/tasks?filter[name][LIKE]=Do%
+http://127.0.0.1:8080/api/tasks?filter[name][EQ]=SomeTask,OtherTask
 http://127.0.0.1:8080/api/tasks?fields=name
 http://127.0.0.1:8080/api/projects
 http://127.0.0.1:8080/api/tasks?include=project
@@ -2508,6 +2709,9 @@ due to the use of <code>@JsonApiRelationId</code> (see below).</p>
 </li>
 <li>
 <p>the response gets automatically truncated with the <code>fields</code> parameter, ideally suited for bandwidth sensitive applications.</p>
+</li>
+<li>
+<p>multiple values can be separated by comma, typically repositories will then use an <code>OR</code> and accept and resource matching any of the values.</p>
 </li>
 </ul>
 </div>
@@ -2640,7 +2844,10 @@ replacing <code>DefaultQuerySpecUrlMapper</code>.
 <p><code>GET /tasks?filter[name][EQ]=Super task</code> to filter by name with the <code>EQ</code> operator.</p>
 </li>
 <li>
-<p><code>GET /tasks?filter[name][LIKE]=Super</code> to filter by name with the <code>LIKE</code> operator.</p>
+<p><code>GET /tasks?filter[name][EQ]=SomeTask,OtherTask</code> to filter by multiple <code>OR</code>-ed values.</p>
+</li>
+<li>
+<p><code>GET /tasks?filter[name][LIKE]=Super%</code> to filter by name with the <code>LIKE</code> operator using <code>%</code> as wildcard.</p>
 </li>
 <li>
 <p><code>GET /tasks?filter[address.plz][EQ]=Super task</code> to filter by attribute <code>name</code> within a structured or related attributes <code>address</code>.</p>
@@ -2662,10 +2869,15 @@ See the subsequent <a href="#inclusion">[inclusion]</a> section how to use this 
 </div>
 <div class="paragraph">
 <p>A filter parameter is represented by a <code>FilterSpec</code>. It holds the path to the attribute,
-the operator and the filter value. Internally Crnk will map filter parameters to
-properly typed <code>FilterSpec.value</code>. The type is determined based on the type of
-the filtered attribute. The process can be customized by the <code>QuerySpecUrlMapper</code>
-and <code>TypeParser</code> implementations that are accessible from <code>CrnkBoot</code>.</p>
+the operator and the filter value. The attribute specifies what gets filtered. The operator
+specifies how it is filtered. And the value specifies after what should be filtered.</p>
+</div>
+<div class="paragraph">
+<p>The filter value  <code>FilterSpec.value</code> is strongly typed. Typically (by default) it is assumed
+that the filter value matches the attribute type and Crnk will attempt to parse passed String-based
+filter value accordingly. There are exceptions, for example, the LIKE filter operator always requires
+the filter value to be a string to support wildcards for not just String types, but also Enums
+and other types (the underlying <code>FilterOperator</code> implementation can specify this with <code>getFilterType(&#8230;&#8203;)</code>).</p>
 </div>
 <div class="paragraph">
 <p>Operators within <code>FilterSpec</code> are represented by the <code>FilterOperator</code> class.
@@ -2717,7 +2929,31 @@ Crnk comes with a set of default filters:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The application is free to implements its own <code>FilterOperator</code>. Next to the name
+<p>By default the filtering process is quite opinionated and should fit many typical patterns.
+But there also many possibilities to customize its behavior to the use case at hand.
+For this purpose <a href="#CrnkBoot">[CrnkBoot]</a> offers access to the <code>DefaultQuerySpecUrlMapper</code> with <code>CrnkBoot.getUrlMapper()</code>
+and <code>TypeParser</code> with <code>CrnkBoot.getModuleRegistry().getTypeParser()</code> (or <code>ModuleContext</code>).
+For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TypeParser</code> allows to register and override the parsing of Strings to other classes.
+By default it has has built-in parsers for various JRE classes, it looks on the type
+itself for a String constructor or static <code>parse(String)</code> parse method and otherwise
+fallbacks to Jackson. Further <code>StringParser</code> can add support for arbitrary types.</p>
+</li>
+<li>
+<p><code>DefaultQuerySpecUrlMapper.setIgnoreParseExceptions(&#8230;&#8203;)</code> allows to ignore if parsing
+of a filter value fails. In this case the filter value is left as String and it is
+assumed the repository itself will take care of the parsing.</p>
+</li>
+<li>
+<p><code>CrnkBoot.setAllowUnknownAttributes</code> ignore unknown attributes and passes them as is to
+the repositories to handle them. More information in the <a href="#properties">[properties]</a> section.</p>
+</li>
+<li>
+<p>The application is free to implements custom <code>FilterOperator</code>. Next to the name
 a <code>matches</code> method can be implemented to support in-memory filtering
 with <code>QuerySpec.apply</code>. Otherwise, it is up to the repository implementation
 to handle the various filter operators; usually by translating them
@@ -2725,6 +2961,8 @@ to datastore-native query expressions. Custom operators can be registered
 with <code>DefaultQuerySpecUrlMapper.addSupportedOperator(..)</code>. The default operator can be
 overridden by setting <code>DefaultQuerySpecUrlMapper.setDefaultOperator(&#8230;&#8203;)</code>.
 For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a>.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><a id="sorting"></a></p>
@@ -2977,12 +3215,13 @@ such values and provide them as <code>String</code> within <code>FilterSpec</cod
 </li>
 <li>
 <p><code>setEnforceDotPathSeparator(boolean)</code>
-DefaultQuerySpecUrlMapper by default supports by default two URL conventions:
- <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project][name]=myProject</code> and
- <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project.name]=myProject</code>. The later is recommended. The former
- still supported for historic reasons. By default the flag is still disabled, but it is recommended
- to be enabled and will become the default at some point in the future. Note that without the enforcement,
- there is danger of introducing ambiguity with resources and attributes are named equally.</p>
+DefaultQuerySpecUrlMapper makes use of a dotted URL convetion like
+ <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project.name]=myProject</code>. But for historic reasons it also
+ accepts <code><a href="http://&#8230;&#8203;/resource?filter">task</a>[project][name]=myProject</code>. The later is not recommended
+ to be used anymore because  there is danger of introducing ambiguity when resources and attributes
+ are named equally. By enabling this flag, support for the historic format gets removed and no
+ ambiguity can occur. While not being the default, it is recommended to do so. With the next
+ major version, the default will change.</p>
 </li>
 <li>
 <p><code>setMapJsonNames</code>
@@ -3421,9 +3660,65 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 <div class="paragraph">
 <p>When using annotated versions of repositories, a method that returns a <code>LinksInformation</code> object should be annotated with <code>JsonApiLinks</code> and the first parameter of the method has to be a list of resources.</p>
 </div>
+<div class="paragraph">
+<p><a id="inheritance"></a></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_payload_size_optimizations">5.8. Payload Size Optimizations</h3>
+<h3 id="_inheritance">5.8. Inheritance</h3>
+<div class="paragraph">
+<p>There are two different kinds of inheritance supported:</p>
+</div>
+<div class="sect3">
+<h4 id="_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</h4>
+<div class="paragraph">
+<p>Each subtype is served by its own resource repository and each repository has its own URL.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task")
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no special configuration necessary. But repositories of super types must
+also return resources of subtypes if they match the specified id or filter parameters.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</h4>
+<div class="paragraph">
+<p>In this case all resources share a repository implementation and URL (except for the identifier part). An example may look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", subTypes = SpecialTask.class)
+  public class Task {
+    // fields, getters and setters
+  }
+
+  @JsonApiResource(type = "specialTask", resourcePath = "task")
+  public class SpecialTask extends Task{
+    // fields, getters and setters
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>SpecialTask</code> extends <code>Task</code> but is configured to use the same <code>resourcePath</code>, meaning <code>SpecialTask</code> does not have
+a repository implementation on its own, but is served by the repository of <code>Task</code>. For a more detailed example have
+a look at <code>InheritanceWithoutSubtypeRepositoryClientTest</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_payload_size_optimizations">5.9. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
@@ -3434,7 +3729,7 @@ of those links is omitted. Further relationships without data are completely omi
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repository_decoration">5.9. Repository Decoration</h3>
+<h3 id="_repository_decoration">5.10. Repository Decoration</h3>
 <div class="paragraph">
 <p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
 </div>
@@ -3493,7 +3788,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.10. ResourceFieldContributor</h3>
+<h3 id="_resourcefieldcontributor">5.11. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-jpa and
@@ -3553,6 +3848,26 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 </li>
 <li>
 <p><code>findManyTarget</code> implements the lookup of history elements.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="JsonApiExposed"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__jsonapiexposed">5.12. @JsonApiExposed</h3>
+<div class="paragraph">
+<p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
+externally on the JSON API endpoint. There are different use cases for this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Have a look at the <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-microservice-example">micro-service example application</a> to see how remote repositories can be linked to local ones.</p>
+</li>
+<li>
+<p><a href="#nested_resources">nested resources</a> can be made accessible only through their parent, such as <code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code> and no longer <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code></p>
 </li>
 </ul>
 </div>
@@ -7405,7 +7720,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-22 12:33:54 UTC
+Last updated 2018-07-18 04:27:07 UTC
 </div>
 </div>
 </body>
