@@ -559,6 +559,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapimetainformation">4.5. JsonApiMetaInformation</a></li>
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jackson_annotations">4.7. Jackson annotations</a></li>
+<li><a href="#_nested_resources">4.8. Nested Resources</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -601,6 +602,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
 <li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
 <li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
+<li><a href="#__jsonapiexposed">5.12. @JsonApiExposed</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -2330,6 +2332,136 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 <div class="paragraph">
 <p>Support for more annotations will be added in the future. PRs welcomed.</p>
 </div>
+<div class="paragraph">
+<p><a id="nested_resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nested_resources">4.8. Nested Resources</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is experimental and will be refined in subsequent releases.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A resource may be nested and belong to a parent resource. In this case the nested resource is access through its parent resource.
+An URL then looks like:</p>
+</div>
+<div class="paragraph">
+<p><code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code></p>
+</div>
+<div class="paragraph">
+<p>For a resource to become nested, it must make use of a structure identifier:</p>
+</div>
+<div class="listingblock">
+<div class="title">NestedId.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.test.mock.models.nested;
+
+import io.crnk.core.resource.annotations.JsonApiId;
+import io.crnk.core.resource.annotations.JsonApiRelationId;
+
+import java.io.Serializable;
+
+public class NestedId implements Serializable {
+
+	@JsonApiId
+	private String id;
+
+	@JsonApiRelationId
+	private String parentId;
+
+	public NestedId() {
+
+	}
+
+	public NestedId(String parentId, String id) {
+		this.parentId = parentId;
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public static NestedId parse(String idString) {
+		String[] elements = idString.split("\\-");
+		NestedId id = new NestedId();
+		id.parentId = elements[0];
+		id.id = elements[1];
+		return id;
+	}
+
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	public boolean equals(Object object) {
+		return object instanceof NestedId &amp;&amp; object.toString().equals(toString());
+	}
+
+	public String toString() {
+		return parentId + "-" + id;
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The id is setup of two parts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the local identifier of the child resource, annotated with <code>@JsonApiId</code>. It must be unique among all nested resources having the same parent.</p>
+</li>
+<li>
+<p>the identifier of the parent resource, annotated with a <code>@JsonApiRelationId</code>. The nested resource must have matching relationship field (in this case <code>parent</code>)`.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>NestedId</code> further implements <code>parse</code>, <code>toString</code>, <code>hashCode</code> and <code>equals</code> to deal with String serialization and equality.</p>
+</div>
+<div class="paragraph">
+<p>For an example have a look at <code>NestedRepositoryClientTest</code> and its parent class. Depending on the use of <a href="#JsonApiExposed">[JsonApiExposed]</a> it
+is or is not be possible to also directly access <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code> without going
+through the parents.</p>
+</div>
+<div class="paragraph">
+<p>Current Limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Nesting is currently limited to a single level (and the possibility to have further relationships on the nested resource).</p>
+</li>
+<li>
+<p>When creating new resources with CrnkClient, the nested identifier must be setup in order to let CrnkClient access the parentId.</p>
+</li>
+<li>
+<p>Being experimental.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -3716,6 +3848,26 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 </li>
 <li>
 <p><code>findManyTarget</code> implements the lookup of history elements.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="JsonApiExposed"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__jsonapiexposed">5.12. @JsonApiExposed</h3>
+<div class="paragraph">
+<p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
+externally on the JSON API endpoint. There are different use cases for this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Have a look at the <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-microservice-example">micro-service example application</a> to see how remote repositories can be linked to local ones.</p>
+</li>
+<li>
+<p><a href="#nested_resources">nested resources</a> can be made accessible only through their parent, such as <code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code> and no longer <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code></p>
 </li>
 </ul>
 </div>
@@ -7568,7 +7720,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-12 12:07:46 UTC
+Last updated 2018-07-18 03:50:45 UTC
 </div>
 </div>
 </body>
