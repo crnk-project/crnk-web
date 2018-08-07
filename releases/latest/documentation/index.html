@@ -6004,11 +6004,13 @@ tasks, you may introduce multiple such relationships.</p>
 <pre class="CodeRay highlight"><code>	public static ActivitiModule createActivitiModule(ProcessEngine processEngine) {
 		ActivitiModuleConfig config = new ActivitiModuleConfig();
 		ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
+		processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
 		processConfig.filterByProcessDefinitionKey("scheduleChange");
 		processConfig.addTaskRelationship(
 				"approveTask", ApproveTask.class, "approveScheduleTask"
 		);
 		TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
+		taskConfig.historic(HistoricApproveTask.class);
 		taskConfig.filterByTaskDefinitionKey("approveScheduleTask");
 		taskConfig.setForm(ApproveForm.class);
 		return ActivitiModule.create(processEngine, config);
@@ -6166,6 +6168,9 @@ the relationship field, meaning that the original application resource does not 
 relationship. This may or may not be useful depending on how much control there is over the original resource
 (for example there is no control over JPA entities).</p>
 </li>
+<li>
+<p><code>historic(&#8230;&#8203;)</code> method specify the historic resource counterparts to query the history.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -6182,8 +6187,11 @@ starting the approval process, submitting a form and then verifying the changes 
 <div class="ulist">
 <ul>
 <li>
-<p>Currently the main entities of Activiti have been exposed. History and configuration-related repositories
+<p>Currently the main entities of Activiti have been exposed. Configuration-related repositories
 could be exposed as well in the future.</p>
+</li>
+<li>
+<p>Historic repositories are still considered being experimental.</p>
 </li>
 <li>
 <p>Activiti has a limited query API that is inherited by the application. Potentially <code>crnk-jpa</code> could help
@@ -6191,6 +6199,10 @@ out a bit in this area.</p>
 </li>
 <li>
 <p>Multi-tenancy is not yet done out-of-the-box.</p>
+</li>
+<li>
+<p>Activiti has been forked to Flowable. As of yet it is unclear whether one or both project
+will survive in the long-term.</p>
 </li>
 </ul>
 </div>
@@ -7706,7 +7718,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-08-06 14:03:01 UTC
+Last updated 2018-08-07 07:33:51 UTC
 </div>
 </div>
 </body>
