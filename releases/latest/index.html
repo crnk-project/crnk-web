@@ -42,7 +42,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.9.20180821151726</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
+      <h3>Latest</h3>      <p>Version: 2.9.20180822140204</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
 
 <h4>Classpath scanning for Typescript generator</h4>
 
@@ -86,6 +86,13 @@ taskConfig.historic(HistoricApproveTask.class);
 taskConfig.filterBy("description", ENFORCED_DESCRIPTION);
 return ActivitiModule.create(processEngine, config);
 </pre>
+
+
+<h4>Simplified customizations of Criteria-based crnk-jpa repositories</h4>
+
+There is a new interface JpaCriteriaRepositoryFilter and base class JpaCriteriaRepositoryFilterBase that allow
+easy customization of CriteriaQuery objects. The interfaces are a specialization of JpaRepositoryFilter
+and can be used in the same manner by registering it to the JpaModuleConfig.
   </div>
 </div>
 
