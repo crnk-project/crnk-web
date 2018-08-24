@@ -42,7 +42,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.9.20180823185702</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
+      <h3>Latest</h3>      <p>Version: 2.9.20180824064650</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      
 
 <h4>Classpath scanning for Typescript generator</h4>
 
@@ -105,6 +105,13 @@ All the previous API remains unchanged and supported (no deprecations).
 The new QuerySpecVisitor and QuerySpecVisitorBase classes allow to visit
 a QuerySpec by calling QuerySpec.accept(QuerySpecVisitor). Visitors can be used, for example,
 to easily modify attribute paths within a QuerySpc.
+
+<h4>InMemoryEvaluator</h4>
+
+InMemoryEvaluator gained a new constructor that takes a ResourceRegistry. This allows the use of resource information
+when accessing resources. This allows its use with more customized resources and relationships, like the use of
+@JsonApiRelationId and custom ResourceFieldAccessors instead of just basic plain Java beans. Note that QuerySpec.apply(...)
+does not have access to a ResourceRegistry and, consequently, continues to use the traditional behavior.
 
   </div>
 </div>
