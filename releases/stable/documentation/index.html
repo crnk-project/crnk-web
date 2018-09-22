@@ -885,7 +885,7 @@ with Crnk, Angular, Spring Boot and ngrx-json-api.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>available from <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/">crnk-examples</a>.</p>
+<p>available from <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/">crnk-examples</a>.</p>
 </div>
 <div class="paragraph">
 <p>The impatient may also directly want to jump to <a href="#resource_repository">ResourceRepositoryV2</a>, but it is highly recommended to
@@ -1585,7 +1585,7 @@ it is highly recommended to set the <code>BeanManager manually</code>.
 <div class="paragraph">
 <p>A <code>GuiceServiceDiscovery</code> implementation is provided. The various integrations like <code>CrnkFeature</code> provide
 a <code>setServiceDiscovery</code> method to set the instance. For an example have a look at the dropwizard example
-application (<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/dropwizard-simple-example" class="bare">https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/dropwizard-simple-example</a>).</p>
+application (<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/dropwizard-simple-example" class="bare">https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/dropwizard-simple-example</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2665,7 +2665,7 @@ public class TaskRepositoryImpl extends ResourceRepositoryBase&lt;Task, Long&gt;
 </div>
 <div class="paragraph">
 <p>The example is taken from
-<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository">crnk-examples/spring-boot-example</a>.
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository">crnk-examples/spring-boot-example</a>.
 (the basic Spring boot example from crnk-framework, not the dedicated full-blown one from crnk-example).</p>
 </div>
 <div class="paragraph">
@@ -3801,7 +3801,7 @@ be implemented by a repository or obtained from the regular service discovery me
 an application may make use of <code>RelationshipMatcher</code> to provide repository serving those fields.
 Notice the <code>accessor</code> property that is used to obtain the value of that field
 (make sure this method is efficient to execute). An example is given by the <code>HistoryRelationshipRepository</code> in
-<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-example">crnk-examples/spring-boot-example</a>:</p>
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example">crnk-examples/spring-boot-example</a>:</p>
 </div>
 <div class="listingblock">
 <div class="title">HistoryFieldContributor</div>
@@ -3864,7 +3864,7 @@ externally on the JSON API endpoint. There are different use cases for this:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Have a look at the <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-examples/spring-boot-microservice-example">micro-service example application</a> to see how remote repositories can be linked to local ones.</p>
+<p>Have a look at the <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-microservice-example">micro-service example application</a> to see how remote repositories can be linked to local ones.</p>
 </li>
 <li>
 <p><a href="#nested_resources">nested resources</a> can be made accessible only through their parent, such as <code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code> and no longer <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code></p>
