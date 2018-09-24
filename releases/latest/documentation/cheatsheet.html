@@ -719,9 +719,10 @@ ResourceList&lt;Task&gt; list = taskRepo.findAll(querySpec);</code></pre>
 <p>More information available <a href="http://www.crnk.io/releases/stable/documentation/#_jsonapirelation">here</a></p>
 </div>
 <div class="paragraph">
-<p>A relationship backed by a primitive relationship identifier <code>projectId</code> and matching relationship <code>project</code>
-where the identifier is always written in the response with <code>SerializeType.ONLY_ID</code> and the relationship
-is looked up in the project repository when necessary with <code>LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL</code>:</p>
+<p>The subsequent example establishes a relationship to <code>Project</code> with the <code>project</code> field. It is backed by a primitive
+relationship identifier <code>projectId</code>. <code>projectId</code> is always written to the response (<code>SerializeType.ONLY_ID</code>). The <code>project</code> relationship
+is looked up in the project repository with <code>projectId</code> if an inclusion has been requested and the task repository did not initialize <code>project</code>
+(<code>LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -729,7 +730,7 @@ is looked up in the project repository when necessary with <code>LookupIncludeBe
 <span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
 
 <span class="annotation">@JsonApiRelation</span>(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
-<span class="directive">private</span> Task project;</code></pre>
+<span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -738,7 +739,7 @@ is looked up in the project repository when necessary with <code>LookupIncludeBe
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelation</span>(serialize = SerializeType.EAGER)
-<span class="directive">private</span> Task project;</code></pre>
+<span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -756,7 +757,7 @@ is looked up in the project repository when necessary with <code>LookupIncludeBe
 </div>
 <div class="paragraph">
 <p>If neither a <code>RelationshipRepositoryBehavior</code> nor <code>@JsonApiRelationId</code> is applicable, <code>RelationshipRepositoryV2</code> or rather  <code>BulkRelationshipRepositoryV2</code>
-can be implemented with custom logic to lookup relationships.</p>
+can implement arbitrary custom logic to lookup relationships.</p>
 </div>
 </div>
 </div>
@@ -953,15 +954,50 @@ can be implemented with custom logic to lookup relationships.</p>
 <div class="sect1">
 <h2 id="_security">9. Security</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Setup authentication by providing a <code>SecurityProvider</code>. JAX-RS, Spring and Servlet integration already come with an implementation out-of-the-box.</p>
+</li>
+<li>
+<p>Setup access control by using the <code>SecurityModule</code> from <code>crnk-security</code> or implement custom logic with a <code>ResourceFilter</code>. Spring Boot sets up the module automatically
+if found on the classpath and <code>SecurityConfigurer</code> allows its customization.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>See <a href="http://www.crnk.io/releases/latest/documentation/#_security">here</a>, a longer topic, no shortcuts here&#8230;&#8203;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_access">10. Data Access</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are a number of ready-to-use repository implementation that can greatly speed up development.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use crnk-jpa to access JPA entities.</p>
+</li>
+<li>
+<p>Use crnk-activity to access Activiti workflow and tasks.</p>
+</li>
+<li>
+<p>Use crnk-meta to get information about resources and repositories themselves.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information see <a href="http://www.crnk.io/releases/latest/documentation/#_data_access">here</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-24 15:52:10 UTC
+Last updated 2018-09-24 19:15:23 UTC
 </div>
 </div>
 </body>

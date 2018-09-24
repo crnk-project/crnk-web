@@ -649,9 +649,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_jpa_module_setup">9.1.1. JPA Module Setup</a></li>
 <li><a href="#_jpa_entity_setup">9.1.2. JPA Entity Setup</a></li>
-<li><a href="#_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</a></li>
-<li><a href="#_pagination_2">9.1.4. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</a></li>
+<li><a href="#_pagination_2">9.1.3. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</a></li>
+<li><a href="#_lazy_and_eager_loading">9.1.5. Lazy and Eager Loading</a></li>
 <li><a href="#_access_with_crnk_client">9.1.6. Access with Crnk client</a></li>
 <li><a href="#_intercepting_and_modifying_requests_to_jpa_repositories">9.1.7. Intercepting and modifying requests to JPA repositories</a></li>
 <li><a href="#_customizing_the_exposed_resources_over_the_underlying_entity_model">9.1.8. Customizing the exposed resources over the underlying entity model</a></li>
@@ -5261,10 +5261,8 @@ to Crnk. For example in the case of JAX-RS:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The JPA modules by default looks up the entityManagerFactory and obtains a list
-of registered JPA entities. For each entity a instance of <code>JpaEntityRepository</code>
-is registered to Crnk using the module API. Accordingly, every relation
-is registered as <code>JpaRelationshipRepository</code>.</p>
+<p>Note that in Spring Boot the setup is simplified by an AutoConfiguration. The
+application just has to implement <code>JpaModuleConfigurer</code> to configure <code>JpaModuleConfig</code>.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5278,27 +5276,25 @@ JSON API repository.</p>
 <li>
 <p>To manually select the entities exposed to Crnk use <code>JpaModuleConfig.addRepository(&#8230;&#8203;)</code>.
 <code>JpaRepositoryConfig</code> provides a number of customization options for the exposed entity.
- <code>setListClass</code>, <code>setListMetaClass</code> and <code>setListLinksClass</code> allow to set the type information and will
- then return resources having lists, links and meta data of the given type.  <code>setInterfaceClass</code>
- is a shortcut that allows to extract those three types from a repository interface definition
+ <code>setListClass</code>, <code>setListMetaClass</code> and <code>setListLinksClass</code> allow to set the type information of links and meta data.
+ <code>setInterfaceClass</code> is a shortcut that allows to extract those three types from a repository interface definition
  (see <code>TaskRepository</code> below for an example).</p>
 </li>
 <li>
-<p><code>JpaRepositoryConfig.Builder.setRepositoryDecorator</code> allows to setup a repository decorator that allows to intercept
-the request and responses and perform changes, like setting up additional links and meta information.</p>
+<p><code>JpaRepositoryConfig.Builder.setRepositoryDecorator</code> allows to setup a repository decorator that can intercept and change any request,
+like setting up additional links and meta information.</p>
 </li>
 <li>
 <p><code>JpaRepositoryConfig</code> allows to specify DTO mapping, have a look at the later section to this topic.</p>
 </li>
 <li>
-<p>Internally the JpaModule will create instances of <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code>
-to register them</p>
+<p>Internally the JpaModule will setup a <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code> for each exposed entity.</p>
 </li>
 <li>
 <p>The transactionRunner needs to be implemented by the application to hook into the transaction processing of the used
-environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
-<code>@Transactional</code> annotation. The JPA module makes sure that every call to a repository happens within such a transaction
-boundary. Crnk comes with two default implementations: <code>SpringTransactionRunner</code> and
+environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and carring a
+<code>@Transactional</code> annotation. The JPA module then ensures that every requests happens within such a transaction. Crnk
+ comes with two default implementations: <code>SpringTransactionRunner</code> and
 <code>CdiTransactionRunner</code> that come are included in <code>crnk-setup-spring</code> and <code>crnk-cdi</code>.</p>
 </li>
 </ul>
@@ -5315,6 +5311,9 @@ boundary. Crnk comes with two default implementations: <code>SpringTransactionRu
 <p>Entities are mapped to resources.</p>
 </li>
 <li>
+<p>Crnk understands all JPA-related annotations and in many cases, not Crnk-specific annotations are necessary.</p>
+</li>
+<li>
 <p>Embeddables are mapped to nested json structures.</p>
 </li>
 <li>
@@ -5327,7 +5326,7 @@ of the values in the string.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>It is possible to add additional JSON API related fields to entities by making use of the <code>@Transient</code> annotation of <code>javax.persistence</code> (or the other way around by marking
+<p>It is possible to add additional JSON API related fields to entities by annotating them with <code>@javax.persistence.Transient</code> (or the other way around by marking
 it with <code>@JsonIgnore</code>):</p>
 </div>
 <div class="listingblock">
@@ -5362,18 +5361,28 @@ public class JpaTransientTestEntity extends TestMappedSuperclass {
 </div>
 </div>
 <div class="paragraph">
-<p>However, for more complex scenarios application may rather make use of <a href="#dto_mapping">DTO mapping</a>.</p>
+<p><code>@JsonApiRelationId</code> is also supported for JPA entities:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	@Column(name="project_id")
+	@JsonApiRelationId
+	private Long projectId;
+
+    @JsonApiRelation(serialize=SerializeType.ID_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_id", insertable = false, updatable = false)
+	private Project project;</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</h4>
 <div class="paragraph">
-<p>Have a look at <a href="#jpa_spring">JPA Module Auto Configuration</a>. For Spring Boot an auto configuration is
-available that already takes care of some defaults.</p>
+<p>Notice that both fields are mapped to the same column. The <code>project</code> field must be made read-only with <code>insertable</code> and <code>updateable</code> to let JPA know that
+<code>projectId</code> is supposed to be used for write operations. In the example, <code>SerializeType.ID_ONLY</code> will trigger for <code>projectId</code> to always be written to the
+response in the relationship data section without having to fully load the related <code>project</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">9.1.4. Pagination</h4>
+<h4 id="_pagination_2">9.1.3. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -5383,13 +5392,23 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
 to choose between those two implementation. There is the <code>JpaCriteriaQueryFactory</code>
 and the <code>QuerydslQueryFactory</code>. By default the Criteria API is used.
 QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_lazy_and_eager_loading">9.1.5. Lazy and Eager Loading</h4>
+<div class="paragraph">
+<p>JPA relationships can either be <code>EAGER</code> or <code>LAZY</code>. The former is mapped to Crnk serialization type <code>ID_ONLY</code> and the later to <code>LAZY</code>.
+If a relationship is supposed to be truly eager, <code>@JsonApiRelation(serializeType=SerializeType.EAGER)</code> can be used next to the JPA annotations.</p>
+</div>
+<div class="paragraph">
+<p>Be careful with JPA since its default is <code>EAGER</code> loading. It is a typical source of performance issues.</p>
 </div>
 </div>
 <div class="sect3">
@@ -7826,7 +7845,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-24 15:52:10 UTC
+Last updated 2018-09-24 19:15:23 UTC
 </div>
 </div>
 </body>
