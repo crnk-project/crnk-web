@@ -2023,6 +2023,11 @@ objects (with a <code>self</code> attribute holding the url).</p>
  This *does not affect the payload <code>Content-Type</code>. <code>POST</code> and <code>PATCH</code> requests must still use
 <code>Content-Type: application/vnd.api+json</code> to describe their request body</p>
 </li>
+<li>
+<p>If <code>crnk.enforceIdName</code> is set to <code>true</code> all <code>@JsonApiId</code> annotated fields will be named <code>id</code> on the rest layer (for sorting, filtering, etc.) regardless of its Java name.
+By default this is not enabled for historic reasons. But enabling it more closely reflects the JSON API specification and is recommended to do so.
+It likely will be enabled in Crnk 3 by default.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -7845,7 +7850,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-21 17:07:15 UTC
+Last updated 2018-10-22 07:28:44 UTC
 </div>
 </div>
 </body>
