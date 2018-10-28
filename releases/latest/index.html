@@ -44,7 +44,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.9.20181028140645</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      This release brings many incremental improvements and some long overdue architecture cleanups.
+      <h3>Latest</h3>      <p>Version: 2.9.20181028142956</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      This release brings many incremental improvements and some long overdue architecture cleanups.
 Make sure to familiarize yourself with the updated UrlMapper behavior and QueryParams implementation.
 Any application following the convention recommended the past year should not have any issues with this.
 
@@ -221,6 +221,13 @@ taskConfig.historic(HistoricApproveTask.class);
 taskConfig.filterBy("description", ENFORCED_DESCRIPTION);
 return ActivitiModule.create(processEngine, config);
 </pre>
+
+<h4>Bidirectional Object to String mapping with TypeParser</h4>
+
+The TypeParser class of Crnk has been extended to not only parse Strings, but also map objects back to Strings.
+Most notably, the DefaultQuerySpecUrlMapper makes use of this functionality to represent filter values
+as Strings in urls. Thereby, the extensibility of the TypeParser allows to customize that mapping.
+
 
 
 <h4>Simplified customizations of Criteria-based crnk-jpa repositories</h4>
