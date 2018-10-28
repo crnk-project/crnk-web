@@ -583,8 +583,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_example">5.3.1. Example</a></li>
 <li><a href="#_relationshipmatcher">5.3.2. RelationshipMatcher</a></li>
-<li><a href="#_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</a></li>
-<li><a href="#_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</a></li>
+<li><a href="#_self_and_related_links">5.3.3. Self and Related Links</a></li>
+<li><a href="#_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</a></li>
+<li><a href="#_bulkrelationshiprepositoryv2">5.3.5. BulkRelationshipRepositoryV2</a></li>
 </ul>
 </li>
 <li><a href="#_resourcelist">5.4. ResourceList</a></li>
@@ -3693,8 +3694,7 @@ serving. Rules can look like:</p>
 new RelationshipMatcher().rule().target(Task.class).add().matches(field)
 new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
 new RelationshipMatcher().rule().field("tasks").add().matches(field)
-new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
-[source]</code></pre>
+new RelationshipMatcher().rule().oppositeField("project").add().matches(field)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3703,7 +3703,47 @@ as done in the example from the previous section.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</h4>
+<h4 id="_self_and_related_links">5.3.3. Self and Related Links</h4>
+<div class="paragraph">
+<p>The JSON API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
+mandates two relationship links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>"self": "http://example.com/articles/1/relationships/author"</code></p>
+</li>
+<li>
+<p><code>"related": "http://example.com/articles/1/author"</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>While the <code>related</code> link returns full resources, the <code>self</code> link only returns the <code>type</code> and <code>id</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+
+{
+  "links": {
+    "self": "/articles/1/relationships/author",
+    "related": "/articles/1/author"
+  },
+  "data": {
+    "type": "people",
+    "id": "12"
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behind the scenes, Crnk invokes the same relationship repository implementation , but the QuerySpec will specify whether only the identifier is required through
+the <code>includedFields</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3760,7 +3800,7 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 <div class="sect3">
-<h4 id="_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</h4>
+<h4 id="_bulkrelationshiprepositoryv2">5.3.5. BulkRelationshipRepositoryV2</h4>
 <div class="paragraph">
 <p>BulkRelationshipRepositoryV2 extends RelationshipRepositoryV2 and provides an additional
 <code>findTargets</code> method. It allows to fetch a relation for multiple resources at once.
@@ -8023,7 +8063,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-28 13:21:48 UTC
+Last updated 2018-10-28 14:07:56 UTC
 </div>
 </div>
 </body>
