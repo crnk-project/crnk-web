@@ -6352,21 +6352,16 @@ This feature is new and considered experimental. Also have a look at the roadmap
 <div class="paragraph">
 <p>Faceted search is used by many UIs to allow users to quickly navigate data sets. For example, virtually
 every online shop makes use of the feature to show product categories and the number of products in that
-category. Those categories, denoted as facets, have a label, a set of values, a count for each value. Facets
-may also depend on each other, whereas later facets are filtered by former ones.</p>
-</div>
-<div class="paragraph">
-<p>With <code>FacetModule</code> Crnk provides an out-of-the-box solution to implemented faceted search.
-There is an inefficient in-memory implementation that works well with every repository as long as the
-data set is small. And later more efficient implementations tailored towards the various repository
-implementations.</p>
+category. Those categories, denoted as facets, have a label, a set of values and a count for each value. Facets
+may also depend on each other, whereas later facets are filtered by preceding ones. With <code>FacetModule</code> Crnk
+provides an out-of-the-box solution to implement faceted search.</p>
 </div>
 <div class="sect3">
 <h4 id="_setup_5">9.5.1. Setup</h4>
 <div class="paragraph">
-<p>The <code>FacetModule</code> can
-be added to the application. For Spring there is a <code>CrnkFacetAutoConfiguration</code> in place.
-All that is needed is to annotate the desired attributes to be faceted:</p>
+<p>To setup faceted search, the <code>FacetModule</code> must be added to  application. For Spring Boot there is
+a <code>CrnkFacetAutoConfiguration</code> in place. To then enable faceted search for an attribute, it can be
+annotated with <code>@Facet</code>:</p>
 </div>
 <div class="listingblock">
 <div class="title">FacetedProject.java</div>
@@ -6387,7 +6382,7 @@ public class FacetedProject {
 </div>
 </div>
 <div class="paragraph">
-<p>Behind the scenes are currently two implementations available that are automatically chosen for the repository at hand:</p>
+<p>Behind the scenes there are currently two implementations available that are automatically chosen based on the repository at hand:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6455,8 +6450,8 @@ any other resource:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>A facet value is selected through its label and the special <code>SELECT</code> operator. In the given example, the priority
-is restricted to <code>1</code> and <code>2</code>. This in turn can limit the counts other facets, if those facets follow
+<p>A facet value is selected through its label and the <code>SELECT</code> operator. In the given example, the priority
+gets restricted to <code>1</code> and <code>2</code>. This in turn restricts the counts of facets that follow
 the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 <div class="listingblock">
@@ -8063,7 +8058,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-28 15:31:51 UTC
+Last updated 2018-10-28 17:30:23 UTC
 </div>
 </div>
 </body>
