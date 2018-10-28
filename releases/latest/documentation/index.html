@@ -673,6 +673,14 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_limitations">9.4.3. Limitations</a></li>
 </ul>
 </li>
+<li><a href="#_faceted_search">9.5. Faceted Search</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_5">9.5.1. Setup</a></li>
+<li><a href="#_examples_3">9.5.2. Examples</a></li>
+<li><a href="#_nesting">9.5.3. Nesting</a></li>
+<li><a href="#_roadmap">9.5.4. Roadmap</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_bulk_updates_with_operations_module">10. Bulk Updates with Operations Module</a></li>
@@ -706,7 +714,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_typescript">13.1. Typescript</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_5">13.1.1. Setup</a></li>
+<li><a href="#_setup_6">13.1.1. Setup</a></li>
 <li><a href="#_error_handling_2">13.1.2. Error Handling</a></li>
 </ul>
 </li>
@@ -719,7 +727,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_expressions">14.3. Expressions</a></li>
 <li><a href="#_form_binding">14.4. Form Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_6">14.4.1. Setup</a></li>
+<li><a href="#_setup_7">14.4.1. Setup</a></li>
 <li><a href="#_updating_data">14.4.2. Updating Data</a></li>
 <li><a href="#_validation_and_error_handling">14.4.3. Validation and Error handling</a></li>
 <li><a href="#_roadmap_and_open_issues">14.4.4. Roadmap and Open Issues</a></li>
@@ -727,7 +735,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_table_binding">14.5. Table Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_7">14.5.1. Setup</a></li>
+<li><a href="#_setup_8">14.5.1. Setup</a></li>
 <li><a href="#_usage_2">14.5.2. Usage</a></li>
 </ul>
 </li>
@@ -6282,6 +6290,171 @@ will survive in the long-term.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><a id="facet_module"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_faceted_search">9.5. Faceted Search</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is new and considered experimental. Also have a look at the roadmap.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Faceted search is used by many UIs to allow users to quickly navigate data sets. For example, virtually
+every online shop makes use of the feature to show product categories and the number of products in that
+category. Those categories, denoted as facets, have a label, a set of values, a count for each value. Facets
+may also depend on each other, whereas later facets are filtered by former ones.</p>
+</div>
+<div class="paragraph">
+<p>With <code>FacetModule</code> Crnk provides an out-of-the-box solution to implemented faceted search.
+There is an inefficient in-memory implementation that works well with every repository as long as the
+data set is small. And later more efficient implementations tailored towards the various repository
+implementations.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_5">9.5.1. Setup</h4>
+<div class="paragraph">
+<p>The <code>FacetModule</code> can
+be added to the application. For Spring there is a <code>CrnkFacetAutoConfiguration</code> in place.
+All that is needed is to annotate the desired attributes to be faceted:</p>
+</div>
+<div class="listingblock">
+<div class="title">FacetedProject.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@JsonApiResource(type = "projects")
+public class FacetedProject {
+
+	@JsonApiId
+	private Long id;
+
+	@Facet
+	private String name;
+
+	@Facet
+	private int priority;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behind the scenes are currently two implementations available that are automatically chosen for the repository at hand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>InMemoryFacetProvider</code> that queries all resources and computes the facets in-memory. Only <strong>suitable for small data sets</strong>!</p>
+</li>
+<li>
+<p><code>JpaFacetProvider</code> that makes use of SQL <code>GROUP BY</code> queries to efficiently compute facets. Used for any JPA-backed repository.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For very large data sets, the use of ElasticSearch is recommended (not yet implemented). Applications are also free to
+implement their own <code>FacetProvider</code> implementation and register it through <code>FacetModuleExtension</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples_3">9.5.2. Examples</h4>
+<div class="paragraph">
+<p>All the facets are then available as regular, new JSON API resource that can filtered, paged, sorted, etc. like
+any other resource:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="http://127.0.0.1:8080/api/facet" class="bare">http://127.0.0.1:8080/api/facet</a></div>
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+
+  "data" : [ {
+    "id" : "projects_name",
+    "type" : "facet",
+    "attributes" : {
+      "values" : {
+        "Some Project" : {
+          "label" : "Some Project",
+          "value" : "Some Project",
+          "filterSpec" : {
+            "path" : "name",
+            "operator" : "EQ",
+            "value" : "Some Project",
+          },
+          "count" : 1
+        },
+        ...
+      },
+      "name" : "name",
+      "type" : "projects",
+      "labels" : [ "Great Project", "Crnk Project", "Some Project", "JSON API Project" ]
+    },
+  }]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the values are ordered by their count in the <code>labels</code> attribute.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nesting">9.5.3. Nesting</h4>
+<div class="paragraph">
+<p>To select values of facets and update the counts of subsequent facets use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[values.priority][SELECT]=1,2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A facet value is selected through its label and the special <code>SELECT</code> operator. In the given example, the priority
+is restricted to <code>1</code> and <code>2</code>. This in turn can limit the counts other facets, if those facets follow
+the <code>priority</code> facet. To choose and order facets use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[name]=priority,name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Facets are then ordered as specified by <code>filter[name]</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more examples, see <code>InMemoryFacetProviderTest</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_roadmap">9.5.4. Roadmap</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Limit number of facet values and introduce a "other" category.</p>
+</li>
+<li>
+<p>Configurable null handling.</p>
+</li>
+<li>
+<p>Data/time support.</p>
+</li>
+<li>
+<p>Range-based facets.</p>
+</li>
+<li>
+<p>Native Elastic Search implementation</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Feedback and PRs welcomed!</p>
+</div>
 </div>
 </div>
 </div>
@@ -7059,7 +7232,7 @@ export let createEmptySchedule = function(id: string): Schedule {
 <p>For an example have a look at the Crnk example application, see <a href="https://github.com/crnk-project/crnk-example">crnk-project/crnk-example</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">13.1.1. Setup</h4>
+<h4 id="_setup_6">13.1.1. Setup</h4>
 <div class="paragraph">
 <p>Internally the generator supports multiple ways of looking up the set of available resources and repositories
 to generate.
@@ -7514,7 +7687,7 @@ from the presentation component.</p>
 <p>The <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> can take care of exactly this.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_6">14.4.1. Setup</h4>
+<h4 id="_setup_7">14.4.1. Setup</h4>
 <div class="paragraph">
 <p>An example setup looks like:</p>
 </div>
@@ -7720,7 +7893,7 @@ Intellij IDEA seems to have some issues when it comes to using the async pipe an
 taking care of interfacing a table component with JSON API.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_7">14.5.1. Setup</h4>
+<h4 id="_setup_8">14.5.1. Setup</h4>
 <div class="paragraph">
 <p>An example looks like:</p>
 </div>
@@ -7850,7 +8023,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-26 12:31:07 UTC
+Last updated 2018-10-28 13:21:48 UTC
 </div>
 </div>
 </body>
