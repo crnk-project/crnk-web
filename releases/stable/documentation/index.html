@@ -548,6 +548,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</a></li>
 <li><a href="#_crnkboot">3.16. CrnkBoot</a></li>
 <li><a href="#_properties">3.17. Properties</a></li>
+<li><a href="#_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</a></li>
+<li><a href="#_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -558,8 +560,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapirelationid">4.4. JsonApiRelationId</a></li>
 <li><a href="#_jsonapimetainformation">4.5. JsonApiMetaInformation</a></li>
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
-<li><a href="#_jackson_annotations">4.7. Jackson annotations</a></li>
-<li><a href="#_nested_resources">4.8. Nested Resources</a></li>
+<li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
+<li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
+<li><a href="#_nested_resources">4.9. Nested Resources</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -580,8 +583,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_example">5.3.1. Example</a></li>
 <li><a href="#_relationshipmatcher">5.3.2. RelationshipMatcher</a></li>
-<li><a href="#_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</a></li>
-<li><a href="#_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</a></li>
+<li><a href="#_self_and_related_links">5.3.3. Self and Related Links</a></li>
+<li><a href="#_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</a></li>
+<li><a href="#_bulkrelationshiprepositoryv2">5.3.5. BulkRelationshipRepositoryV2</a></li>
 </ul>
 </li>
 <li><a href="#_resourcelist">5.4. ResourceList</a></li>
@@ -640,107 +644,106 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#__potential_future_work">8.8. (Potential) Future Work</a></li>
 </ul>
 </li>
-<li><a href="#_modules_2">9. Modules</a>
+<li><a href="#_data_access">9. Data Access</a>
 <ul class="sectlevel2">
-<li><a href="#_jpa_module">9.1. JPA Module</a>
+<li><a href="#_jpa">9.1. JPA</a>
 <ul class="sectlevel3">
 <li><a href="#_jpa_module_setup">9.1.1. JPA Module Setup</a></li>
 <li><a href="#_jpa_entity_setup">9.1.2. JPA Entity Setup</a></li>
-<li><a href="#_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</a></li>
-<li><a href="#_pagination_2">9.1.4. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</a></li>
-<li><a href="#_customizing_the_jpa_repository">9.1.6. Customizing the JPA repository</a></li>
-<li><a href="#_dto_mapping">9.1.7. DTO Mapping</a></li>
+<li><a href="#_pagination_2">9.1.3. Pagination</a></li>
+<li><a href="#_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</a></li>
+<li><a href="#_lazy_and_eager_loading">9.1.5. Lazy and Eager Loading</a></li>
+<li><a href="#_access_with_crnk_client">9.1.6. Access with Crnk client</a></li>
+<li><a href="#_intercepting_and_modifying_requests_to_jpa_repositories">9.1.7. Intercepting and modifying requests to JPA repositories</a></li>
+<li><a href="#_customizing_the_exposed_resources_over_the_underlying_entity_model">9.1.8. Customizing the exposed resources over the underlying entity model</a></li>
 </ul>
 </li>
 <li><a href="#_jsr_303_validation_module">9.2. JSR 303 Validation Module</a></li>
-<li><a href="#_tracing_with_zipkin_brave">9.3. Tracing with Zipkin/Brave</a></li>
-<li><a href="#_meta_module">9.4. Meta Module</a>
+<li><a href="#_meta_module">9.3. Meta Module</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_3">9.4.1. Setup</a></li>
-<li><a href="#_examples_2">9.4.2. Examples</a></li>
-<li><a href="#_identifiers_for_meta_elements">9.4.3. Identifiers for Meta Elements</a></li>
-<li><a href="#_extending_the_meta_module">9.4.4. Extending the Meta Module</a></li>
+<li><a href="#_setup_3">9.3.1. Setup</a></li>
+<li><a href="#_examples_2">9.3.2. Examples</a></li>
+<li><a href="#_identifiers_for_meta_elements">9.3.3. Identifiers for Meta Elements</a></li>
+<li><a href="#_extending_the_meta_module">9.3.4. Extending the Meta Module</a></li>
 </ul>
 </li>
-<li><a href="#_home_module">9.5. Home Module</a></li>
-<li><a href="#_operations_module">9.6. Operations Module</a></li>
-<li><a href="#_ui_module">9.7. UI Module</a></li>
-<li><a href="#_activiti_module">9.8. Activiti Module</a>
+<li><a href="#_activiti_module">9.4. Activiti Module</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_4">9.8.1. Setup</a></li>
-<li><a href="#_example_application">9.8.2. Example application</a></li>
-<li><a href="#_limitations">9.8.3. Limitations</a></li>
+<li><a href="#_setup_4">9.4.1. Setup</a></li>
+<li><a href="#_example_application">9.4.2. Example application</a></li>
+<li><a href="#_limitations">9.4.3. Limitations</a></li>
 </ul>
 </li>
-<li><a href="#_spring_modules_and_auto_configuration">9.9. Spring Modules and Auto Configuration</a>
+<li><a href="#_faceted_search">9.5. Faceted Search</a>
 <ul class="sectlevel3">
-<li><a href="#_spring_mvc_module">9.9.1. Spring MVC Module</a></li>
-<li><a href="#_spring_cloud_sleuth_module">9.9.2. Spring Cloud Sleuth Module</a></li>
-<li><a href="#_spring_security_module">9.9.3. Spring Security Module</a></li>
-<li><a href="#_jpa_module_auto_configuration">9.9.4. JPA Module Auto Configuration</a></li>
-<li><a href="#_validation_module_auto_configuration">9.9.5. Validation Module Auto Configuration</a></li>
-<li><a href="#_ui_module_auto_configuration">9.9.6. UI Module Auto Configuration</a></li>
-<li><a href="#_operations_module_auto_configuration">9.9.7. Operations Module Auto Configuration</a></li>
-<li><a href="#_meta_module_auto_configuration">9.9.8. Meta Module Auto Configuration</a></li>
+<li><a href="#_setup_5">9.5.1. Setup</a></li>
+<li><a href="#_examples_3">9.5.2. Examples</a></li>
+<li><a href="#_nesting">9.5.3. Nesting</a></li>
+<li><a href="#_roadmap">9.5.4. Roadmap</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_module_development">10. Module Development</a>
+<li><a href="#_bulk_updates_with_operations_module">10. Bulk Updates with Operations Module</a></li>
+<li><a href="#_monitoring">11. Monitoring</a>
 <ul class="sectlevel2">
-<li><a href="#_request_filtering">10.1. Request Filtering</a></li>
-<li><a href="#_resource_filtering">10.2. Resource Filtering</a></li>
-<li><a href="#_filter_modifications">10.3. Filter Modifications</a></li>
-<li><a href="#_filter_priority">10.4. Filter Priority</a></li>
-<li><a href="#_access_to_http_layer">10.5. Access to HTTP layer</a></li>
-<li><a href="#_module_extensions_and_dependencies">10.6. Module Extensions and dependencies</a></li>
-<li><a href="#_integrate_third_party_data_stores">10.7. Integrate third-party data stores</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism_2">10.8. Implement a custom discovery mechanism</a></li>
-<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">10.9. Let a module hook into the Crnk HTTP client implementation</a></li>
-<li><a href="#_implement_a_custom_integration">10.10. Implement a custom integration</a></li>
-<li><a href="#_create_repositories_at_runtime">10.11. Create repositories at runtime</a>
-<ul class="sectlevel3">
-<li><a href="#_implementing_repositories_dynamically_at_runtime">10.11.1. Implementing repositories dynamically at runtime</a></li>
-<li><a href="#_registering_repositories_at_runtime">10.11.2. Registering repositories at runtime</a></li>
+<li><a href="#_tracing_with_zipkin_brave">11.1. Tracing with Zipkin/Brave</a></li>
 </ul>
 </li>
-<li><a href="#_discovery_of_modules_by_crnkclient">10.12. Discovery of Modules by CrnkClient</a></li>
-</ul>
-</li>
-<li><a href="#_generation">11. Generation</a>
+<li><a href="#_advanced_customizations_through_modules">12. Advanced Customizations through Modules</a>
 <ul class="sectlevel2">
-<li><a href="#_typescript">11.1. Typescript</a>
+<li><a href="#_request_filtering">12.1. Request Filtering</a></li>
+<li><a href="#_resource_filtering">12.2. Resource Filtering</a></li>
+<li><a href="#_filter_modifications">12.3. Filter Modifications</a></li>
+<li><a href="#_filter_priority">12.4. Filter Priority</a></li>
+<li><a href="#_access_to_http_layer">12.5. Access to HTTP layer</a></li>
+<li><a href="#_module_extensions_and_dependencies">12.6. Module Extensions and dependencies</a></li>
+<li><a href="#_integrate_third_party_data_stores">12.7. Integrate third-party data stores</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism_2">12.8. Implement a custom discovery mechanism</a></li>
+<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">12.9. Let a module hook into the Crnk HTTP client implementation</a></li>
+<li><a href="#_implement_a_custom_integration">12.10. Implement a custom integration</a></li>
+<li><a href="#_create_repositories_at_runtime">12.11. Create repositories at runtime</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_5">11.1.1. Setup</a></li>
-<li><a href="#_error_handling_2">11.1.2. Error Handling</a></li>
+<li><a href="#_implementing_repositories_dynamically_at_runtime">12.11.1. Implementing repositories dynamically at runtime</a></li>
+<li><a href="#_registering_repositories_at_runtime">12.11.2. Registering repositories at runtime</a></li>
 </ul>
 </li>
+<li><a href="#_discovery_of_modules_by_crnkclient">12.12. Discovery of Modules by CrnkClient</a></li>
 </ul>
 </li>
-<li><a href="#_angular_development_with_ngrx">12. Angular Development with ngrx</a>
+<li><a href="#_generation">13. Generation</a>
 <ul class="sectlevel2">
-<li><a href="#_feature_overview">12.1. Feature overview</a></li>
-<li><a href="#_bulk_support_with_json_patch">12.2. Bulk support with JSON Patch</a></li>
-<li><a href="#_expressions">12.3. Expressions</a></li>
-<li><a href="#_form_binding">12.4. Form Binding</a>
+<li><a href="#_typescript">13.1. Typescript</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_6">12.4.1. Setup</a></li>
-<li><a href="#_updating_data">12.4.2. Updating Data</a></li>
-<li><a href="#_validation_and_error_handling">12.4.3. Validation and Error handling</a></li>
-<li><a href="#_roadmap_and_open_issues">12.4.4. Roadmap and Open Issues</a></li>
+<li><a href="#_setup_6">13.1.1. Setup</a></li>
+<li><a href="#_error_handling_2">13.1.2. Error Handling</a></li>
 </ul>
 </li>
-<li><a href="#_table_binding">12.5. Table Binding</a>
+</ul>
+</li>
+<li><a href="#_angular_development_with_ngrx">14. Angular Development with ngrx</a>
+<ul class="sectlevel2">
+<li><a href="#_feature_overview">14.1. Feature overview</a></li>
+<li><a href="#_bulk_support_with_json_patch">14.2. Bulk support with JSON Patch</a></li>
+<li><a href="#_expressions">14.3. Expressions</a></li>
+<li><a href="#_form_binding">14.4. Form Binding</a>
 <ul class="sectlevel3">
-<li><a href="#_setup_7">12.5.1. Setup</a></li>
-<li><a href="#_usage_2">12.5.2. Usage</a></li>
+<li><a href="#_setup_7">14.4.1. Setup</a></li>
+<li><a href="#_updating_data">14.4.2. Updating Data</a></li>
+<li><a href="#_validation_and_error_handling">14.4.3. Validation and Error handling</a></li>
+<li><a href="#_roadmap_and_open_issues">14.4.4. Roadmap and Open Issues</a></li>
 </ul>
 </li>
-<li><a href="#_meta_model">12.6. Meta Model</a></li>
+<li><a href="#_table_binding">14.5. Table Binding</a>
+<ul class="sectlevel3">
+<li><a href="#_setup_8">14.5.1. Setup</a></li>
+<li><a href="#_usage_2">14.5.2. Usage</a></li>
 </ul>
 </li>
-<li><a href="#_faq">13. FAQ</a></li>
+<li><a href="#_meta_model">14.6. Meta Model</a></li>
+</ul>
+</li>
+<li><a href="#_faq">15. FAQ</a></li>
 </ul>
 </div>
 </div>
@@ -885,7 +888,7 @@ with Crnk, Angular, Spring Boot and ngrx-json-api.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>available from <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/">crnk-examples</a>.</p>
+<p>available from <a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/">crnk-integration-examples</a>.</p>
 </div>
 <div class="paragraph">
 <p>The impatient may also directly want to jump to <a href="#resource_repository">ResourceRepositoryV2</a>, but it is highly recommended to
@@ -1422,7 +1425,7 @@ the basic setup that can easily be applied to a Spring-only setup without Spring
 <div class="ulist">
 <ul>
 <li>
-<p>It uses the <code>CrnkFilter</code> servlet filter to fetch the requests.</p>
+<p>It uses the <code>CrnkFilter</code> servlet filter to process requests.</p>
 </li>
 <li>
 <p>Service discovery is performed with <code>SpringServiceDiscovery</code> using the Spring <code>ApplicationContext</code>.</p>
@@ -1430,11 +1433,49 @@ the basic setup that can easily be applied to a Spring-only setup without Spring
 </ul>
 </div>
 <div class="paragraph">
-<p>There are further auto configurations that automatically setup various Crnk modules. And there are also further integrations into Spring (like for <code>RestTemplate</code>
-and Spring Security). More information is available in <a href="#spring_modules">Spring modules</a>.</p>
+<p><code>io-crnk:crnk-setup-spring-boot1</code> and  <code>io-crnk:crnk-setup-spring-boot2</code> host Spring Boot auto configurations
+that are enabled if the presence of the particular Crnk module and/or Spring component. Each auto configuration
+can be enabled and disabled and may host further properties to reconfigure it. The following auto configurations are available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CrnkHomeAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkCoreAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkValidationAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkJpaAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkMetaAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkOperationsAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkUIAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkSecurityAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkSpringMvcAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkErrorControllerAutoConfiguration</code></p>
+</li>
+<li>
+<p><code>CrnkTomcatAutoConfiguration</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The web integration can be customized for Spring Boot setups with the subsequent properties:</p>
+<p>The most important one is <code>CrnkCoreAutoConfiguration</code> to setup the core of Crnk. Its main properties are:</p>
 </div>
 <div class="listingblock">
 <div class="title">application.properties</div>
@@ -1449,8 +1490,147 @@ crnk.return404-on-null=true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>See <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-setup/crnk-setup-spring-boot2/src/main/java/io/crnk/setup/spring/boot/core/CrnkCoreProperties.java">CrnkCoreProperties</a> for more information.
-The <a href="#spring_modules">Spring modules</a> and their auto configurations make further configuration properties available.</p>
+<p>See <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-setup/crnk-setup-spring-boot2/src/main/java/io/crnk/setup/spring/boot/core/CrnkCoreProperties.java">CrnkCoreProperties</a>
+and the various auto configurations for more information. Next to configuration properties there is also the possibility to provide a <code>Configurer</code> implementation
+to gain programmatic access to module configurations. The following <code>Configurer</code> are available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CrnkBootConfigurer</code></p>
+</li>
+<li>
+<p><code>JpaModuleConfigurer</code></p>
+</li>
+<li>
+<p><code>SecurityModuleConfigurer</code></p>
+</li>
+<li>
+<p><code>MetaModuleConfigurer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="title">ExampleJpaModuleConfigurer.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.example.springboot;
+
+
+import io.crnk.example.springboot.domain.model.ScheduleDto;
+import io.crnk.example.springboot.domain.model.ScheduleEntity;
+import io.crnk.jpa.JpaModuleConfig;
+import io.crnk.jpa.JpaRepositoryConfig;
+import io.crnk.jpa.mapping.JpaMapper;
+import io.crnk.jpa.query.Tuple;
+import io.crnk.jpa.query.criteria.JpaCriteriaExpressionFactory;
+import io.crnk.jpa.query.criteria.JpaCriteriaQueryFactory;
+import io.crnk.spring.setup.boot.jpa.JpaModuleConfigurer;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
+
+@Component
+public class ExampleJpaModuleConfigurer implements JpaModuleConfigurer {
+
+	@PersistenceContext
+	private EntityManager em;
+
+	/**
+	 * Expose JPA entities as repositories.
+	 *
+	 * @return module
+	 */
+
+	@Override
+	public void configure(JpaModuleConfig config) {
+		// directly expose entity
+		config.addRepository(JpaRepositoryConfig.builder(ScheduleEntity.class).build());
+
+		// additionally expose entity as a mapped dto
+		config.addRepository(
+				JpaRepositoryConfig.builder(ScheduleEntity.class, ScheduleDto.class, new ScheduleMapper()).build());
+
+		JpaCriteriaQueryFactory queryFactory = (JpaCriteriaQueryFactory) config.getQueryFactory();
+
+		// register a computed a attribute
+		// you may consider QueryDSL or generating the Criteria query objects.
+		queryFactory.registerComputedAttribute(ScheduleEntity.class, "upperName", String.class,
+				new JpaCriteriaExpressionFactory&lt;From&lt;?, ScheduleEntity&gt;&gt;() {
+
+					@SuppressWarnings({"rawtypes", "unchecked"})
+					@Override
+					public Expression&lt;String&gt; getExpression(From&lt;?, ScheduleEntity&gt; entity, CriteriaQuery&lt;?&gt; query) {
+						CriteriaBuilder builder = em.getCriteriaBuilder();
+						return builder.upper((Expression) entity.get("name"));
+					}
+				});
+	}
+
+
+	class ScheduleMapper implements JpaMapper&lt;ScheduleEntity, ScheduleDto&gt; {
+
+		@Override
+		public ScheduleDto map(Tuple tuple) {
+			ScheduleDto dto = new ScheduleDto();
+
+			// first entry in tuple is the queried entity (if not configured otherwise)
+			ScheduleEntity entity = tuple.get(0, ScheduleEntity.class);
+			dto.setId(entity.getId());
+			dto.setName(entity.getName());
+
+			// computed attribute available as additional tuple entry
+			dto.setUpperName(tuple.get(1, String.class));
+			return dto;
+		}
+
+		@Override
+		public ScheduleEntity unmap(ScheduleDto dto) {
+			// get entity from database if already there
+			ScheduleEntity entity = em.find(ScheduleEntity.class, dto.getId());
+			if (entity == null) {
+				entity = new ScheduleEntity();
+				entity.setId(dto.getId());
+			}
+			entity.setName(dto.getName());
+			return entity;
+		}
+
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next to all the auto configurations there are also a number of further Spring-specific modules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON API errors that complements
+the Spring-independent <code>SecurityModule</code>. Auto configuration is provided by <code>CrnkSecurityAutoConfiguration</code>. It sets up <code>SecurityModule</code> and
+<code>SpringSecurityModule</code>. By default access to all repositories is blocked. A bean of type <code>SecurityModuleConfigurer</code>
+can be added to grant access to repositories.</p>
+</li>
+<li>
+<p><code>SpringTransactionRunner</code> lets all requests run in a transaction. If the request completes, the transaction is committed.
+In case of an error, the transaction is rolled back.</p>
+</li>
+<li>
+<p>Spring MVC Module makes Spring MVC services available in the Crnk Home Module next to the json api repositories to have a list of all offered
+services. Auto configuration is provided by <code>CrnkSpringMvcAutoConfiguration</code>.</p>
+</li>
+<li>
+<p>With <code>CrnkErrorController</code> configured by <code>CrnkErrorControllerAutoConfiguration</code> additionally a new error controller is
+provided that returns errors in JSON API format. <code>crnk.spring.mvc.errorController=false</code> allows to disable the controller.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1852,7 +2032,107 @@ objects (with a <code>self</code> attribute holding the url).</p>
  This *does not affect the payload <code>Content-Type</code>. <code>POST</code> and <code>PATCH</code> requests must still use
 <code>Content-Type: application/vnd.api+json</code> to describe their request body</p>
 </li>
+<li>
+<p>If <code>crnk.enforceIdName</code> is set to <code>true</code> all <code>@JsonApiId</code> annotated fields will be named <code>id</code> on the rest layer (for sorting, filtering, etc.) regardless of its Java name.
+By default this is not enabled for historic reasons. But enabling it more closely reflects the JSON API specification and is recommended to do so.
+It likely will be enabled in Crnk 3 by default.</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
+<p><a id="home_module"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</h3>
+<div class="paragraph">
+<p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
+directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
+relationship repository serving that particular path.</p>
+</div>
+<div class="paragraph">
+<p>The <code>HomeModule</code> supports two kinds of formats that can be choosen upon creation. A JSON API-style format where a
+links node holds all links to child directories and repositories. And a JSON HOME format as specified by
+<a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>		HomeModule metaModule = HomeModule.create();
+		...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the Spring Boot example applications it looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "links" : {
+    "meta" : "http://localhost:8080/api/meta/",
+    "projects" : "http://localhost:8080/api/projects",
+    "resourcesInfo" : "http://localhost:8080/api/resourcesInfo",
+    "schedule" : "http://localhost:8080/api/schedule",
+    "scheduleDto" : "http://localhost:8080/api/scheduleDto",
+    "tasks" : "http://localhost:8080/api/tasks"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the <code>meta</code> entry with a trailing '/' that allows to move to subdirectory <code><a href="http://localhost:8080/api/meta/" class="bare">http://localhost:8080/api/meta/</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "links" : {
+    "arrayType" : "http://localhost:8080/api/meta/arrayType",
+    "attribute" : "http://localhost:8080/api/meta/attribute",
+    "dataObject" : "http://localhost:8080/api/meta/dataObject",
+    "element" : "http://localhost:8080/api/meta/element",
+    "resource" : "http://localhost:8080/api/meta/resource",
+    "type" : "http://localhost:8080/api/meta/type"
+    ...
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+The UI is currently in an early stage. Feature requests and PRs welcomed!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The UI module makes <code>crnk-ui</code> accessible trough the module system. It allows to browse and edit all the repositories
+and resources. The setup looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>		UIModule operationsModule = UIModule.create(new UIModuleConfig());
+		...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the user interface is accessible from the <code>/browse/</code> directory next to all the repositories.
+Have a look at the Spring Boot example application to see a working example.</p>
+</div>
+<div class="paragraph">
+<p>This module is currently in incubation. Please provide feedback.</p>
+</div>
+<div class="paragraph">
+<p>An example from the Spring Boot example application looks like:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/crnk_ui.png" alt="crnk ui"></span></p>
 </div>
 <div class="paragraph">
 <p><a id="resource"></a></p>
@@ -2291,11 +2571,59 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
+<p><a id="jsonApiField"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsonapifield">4.7. JsonApiField</h3>
+<div class="paragraph">
+<p>Field or getter annotated with <code>JsonApiField</code> allows to define  the behavior of an individual attribute. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "projects")
+	public class Project {
+
+		...
+
+		@JsonApiField(postable = true, patchable = false)
+		private Long projectId;
+
+		...
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Following options are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sortable</code> defines whether an attribute can be sorted.</p>
+</li>
+<li>
+<p><code>filterable</code> defines whether an attribute can be filtered.</p>
+</li>
+<li>
+<p><code>postable</code> defines whether an attribute can be set with a POST request.</p>
+</li>
+<li>
+<p><code>patchable</code> defines whether an attribute can be changed with a PATCH request.</p>
+</li>
+<li>
+<p><code>readable</code> defines whether an attribute can be read with a GET request.</p>
+</li>
+<li>
+<p><code>patchStrategy</code> defines the behavior of value with PATCH request. It can be either <code>MERGE</code> if you want the value be merged with an original one or <code>SET</code> if you want the value be totaly replaced with a new one.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p><a id="jackson_annotations"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jackson_annotations">4.7. Jackson annotations</h3>
+<h3 id="_jackson_annotations">4.8. Jackson annotations</h3>
 <div class="paragraph">
 <p>Crnk comes with (partial) support for Jackson annotations. Currently supported are:</p>
 </div>
@@ -2337,7 +2665,7 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="sect2">
-<h3 id="_nested_resources">4.8. Nested Resources</h3>
+<h3 id="_nested_resources">4.9. Nested Resources</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2358,7 +2686,7 @@ An URL then looks like:</p>
 <p><code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code></p>
 </div>
 <div class="paragraph">
-<p>For a resource to become nested, it must make use of a structure identifier:</p>
+<p>For a resource to become nested, it must make use of a structured identifier:</p>
 </div>
 <div class="listingblock">
 <div class="title">NestedId.java</div>
@@ -2562,7 +2890,8 @@ Saves a resource upon a <code>PATCH</code> request. The general semantics is ide
 notable exceptions. First, resources are updated but are not allowed to be inserted.
 A <code>ResourceNotFoundException</code> must be thrown if the resource does not exist. Second, the <code>PATCH</code> request
 allows for partial updates. Internally Crnk will get the current state of a resource, patch it and pass it to this <code>save</code>
-method. API to distinguish patched from un-patched fields is not yet (directly) available, feel free to open a ticket.</p>
+method. A <code>ResourceModificationFilter</code> can be registered to collect information about modified fields and relationships and this way,
+for example, distinguish patched from un-patched fields.</p>
 </li>
 <li>
 <p><code>delete(ID id)</code>
@@ -2665,7 +2994,7 @@ public class TaskRepositoryImpl extends ResourceRepositoryBase&lt;Task, Long&gt;
 </div>
 <div class="paragraph">
 <p>The example is taken from
-<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository">crnk-examples/spring-boot-example</a>.
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example/src/main/java/io/crnk/example/springboot/domain/repository">crnk-integration-examples/spring-boot-example</a>.
 (the basic Spring boot example from crnk-framework, not the dedicated full-blown one from crnk-example).</p>
 </div>
 <div class="paragraph">
@@ -2873,6 +3202,15 @@ the operator and the filter value. The attribute specifies what gets filtered. T
 specifies how it is filtered. And the value specifies after what should be filtered.</p>
 </div>
 <div class="paragraph">
+<p>An example looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>FilterSpec filterSpec = PathSpec.of("person", "address", "city").filter(FilterOperator.EQ, "Zurich");
+Filterspec filterSpec = new FilterSpec(PathSpec.of("person.address.city"), FilterOperator.NEQ, "Zurich");</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The filter value  <code>FilterSpec.value</code> is strongly typed. Typically (by default) it is assumed
 that the filter value matches the attribute type and Crnk will attempt to parse passed String-based
 filter value accordingly. There are exceptions, for example, the LIKE filter operator always requires
@@ -2986,6 +3324,15 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 <p><code>-</code> is used to denote to sort in descending order.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>An example in Java looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>SortSpec sortSpec = PathSpec.of("person", "address", "city").sort(Direction.ASC);
+SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.DESC);</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p><a id="pagination"></a></p>
@@ -3347,8 +3694,7 @@ serving. Rules can look like:</p>
 new RelationshipMatcher().rule().target(Task.class).add().matches(field)
 new RelationshipMatcher().rule().target(Tasks.class).add().matches(field)
 new RelationshipMatcher().rule().field("tasks").add().matches(field)
-new RelationshipMatcher().rule().oppositeField("project").add().matches(field)
-[source]</code></pre>
+new RelationshipMatcher().rule().oppositeField("project").add().matches(field)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3357,7 +3703,47 @@ as done in the example from the previous section.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.3.3. ForwardingRelationshipRepository</h4>
+<h4 id="_self_and_related_links">5.3.3. Self and Related Links</h4>
+<div class="paragraph">
+<p>The JSON API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
+mandates two relationship links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>"self": "http://example.com/articles/1/relationships/author"</code></p>
+</li>
+<li>
+<p><code>"related": "http://example.com/articles/1/author"</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>While the <code>related</code> link returns full resources, the <code>self</code> link only returns the <code>type</code> and <code>id</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+
+{
+  "links": {
+    "self": "/articles/1/relationships/author",
+    "related": "/articles/1/author"
+  },
+  "data": {
+    "type": "people",
+    "id": "12"
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behind the scenes, Crnk invokes the same relationship repository implementation , but the QuerySpec will specify whether only the identifier is required through
+the <code>includedFields</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3414,7 +3800,7 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 <div class="sect3">
-<h4 id="_bulkrelationshiprepositoryv2">5.3.4. BulkRelationshipRepositoryV2</h4>
+<h4 id="_bulkrelationshiprepositoryv2">5.3.5. BulkRelationshipRepositoryV2</h4>
 <div class="paragraph">
 <p>BulkRelationshipRepositoryV2 extends RelationshipRepositoryV2 and provides an additional
 <code>findTargets</code> method. It allows to fetch a relation for multiple resources at once.
@@ -3424,7 +3810,7 @@ fetch that relation. RelationshipRepositoryBase provides a default implementatio
 <code>findOneTarget</code> and <code>findManyTargets</code> forward calls to the bulk <code>findTargets</code>.</p>
 </div>
 <div class="paragraph">
-<p>Note that in contrast to <code>RelationshipRepositoryV2</code> and <code>RelationshipRepositoryV2</code> that are symmetric
+<p>Note that in contrast to <code>ResourceRepositoryV2</code> and <code>RelationshipRepositoryV2</code> that are symmetric
 and applicable to Crnk servers and client, <code>BulkRelationshipRepositoryV2</code> is applicable on the server-side only.</p>
 </div>
 </div>
@@ -3562,12 +3948,12 @@ a corresponding exception mapper which defines mapping to a proper JSON API erro
 <div class="content">
 <pre class="CodeRay highlight"><code>package io.crnk.test.mock;
 
-import java.util.List;
-
 import io.crnk.core.engine.document.ErrorData;
 import io.crnk.core.engine.error.ErrorResponse;
 import io.crnk.core.engine.error.ExceptionMapper;
 import io.crnk.core.repository.response.JsonApiResponse;
+
+import java.util.List;
 
 public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt; {
 
@@ -3779,8 +4165,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 	public &lt;S extends T&gt; S save(S entity) {
 		if (approvalManager.needsApproval(entity, HttpMethod.PATCH)) {
 			return approvalManager.requestApproval(entity, HttpMethod.PATCH);
-		}
-		else {
+		} else {
 			return super.save(entity);
 		}
 	}</code></pre>
@@ -3801,7 +4186,7 @@ be implemented by a repository or obtained from the regular service discovery me
 an application may make use of <code>RelationshipMatcher</code> to provide repository serving those fields.
 Notice the <code>accessor</code> property that is used to obtain the value of that field
 (make sure this method is efficient to execute). An example is given by the <code>HistoryRelationshipRepository</code> in
-<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example">crnk-examples/spring-boot-example</a>:</p>
+<a href="https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples/spring-boot-example">crnk-integration-examples/spring-boot-example</a>:</p>
 </div>
 <div class="listingblock">
 <div class="title">HistoryFieldContributor</div>
@@ -4083,7 +4468,7 @@ allow a fully automated setup.</p>
 <div class="listingblock">
 <div class="title">QuerySpecClientTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		ScheduleRepository scheduleRepository = ((ClientTestContainer) testContainer).getClient().getResourceRepository(ScheduleRepository.class);
+<pre class="CodeRay highlight"><code>		ScheduleRepository scheduleRepository = ((ClientTestContainer) testContainer).getClient().getRepositoryForInterface(ScheduleRepository.class);
 
 		Schedule schedule = new Schedule();
 		schedule.setId(13L);
@@ -4813,7 +5198,7 @@ indistinguishable from non-existing ones.</p>
 </li>
 <li>
 <p>DAC support for <code>SecurityModule</code>.
-<a id="modules"></a></p>
+<a id="dataaccess"></a></p>
 </li>
 </ul>
 </div>
@@ -4821,13 +5206,13 @@ indistinguishable from non-existing ones.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_modules_2">9. Modules</h2>
+<h2 id="_data_access">9. Data Access</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a id="jpa_module"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_jpa_module">9.1. JPA Module</h3>
+<h3 id="_jpa">9.1. JPA</h3>
 <div class="paragraph">
 <p>The JPA module allows to automatically expose JPA entities as JSON API repositories. No implementation
 or Crnk-specific annotations are necessary.</p>
@@ -4929,10 +5314,8 @@ to Crnk. For example in the case of JAX-RS:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The JPA modules by default looks up the entityManagerFactory and obtains a list
-of registered JPA entities. For each entity a instance of <code>JpaEntityRepository</code>
-is registered to Crnk using the module API. Accordingly, every relation
-is registered as <code>JpaRelationshipRepository</code>.</p>
+<p>Note that in Spring Boot the setup is simplified by an AutoConfiguration. The
+application just has to implement <code>JpaModuleConfigurer</code> to configure <code>JpaModuleConfig</code>.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4946,81 +5329,28 @@ JSON API repository.</p>
 <li>
 <p>To manually select the entities exposed to Crnk use <code>JpaModuleConfig.addRepository(&#8230;&#8203;)</code>.
 <code>JpaRepositoryConfig</code> provides a number of customization options for the exposed entity.
- <code>setListClass</code>, <code>setListMetaClass</code> and <code>setListLinksClass</code> allow to set the type information and will
- then return resources having lists, links and meta data of the given type.  <code>setInterfaceClass</code>
- is a shortcut that allows to extract those three types from a repository interface definition
+ <code>setListClass</code>, <code>setListMetaClass</code> and <code>setListLinksClass</code> allow to set the type information of links and meta data.
+ <code>setInterfaceClass</code> is a shortcut that allows to extract those three types from a repository interface definition
  (see <code>TaskRepository</code> below for an example).</p>
 </li>
 <li>
-<p><code>JpaRepositoryConfig.Builder.setRepositoryDecorator</code> allows to setup a repository decorator that allows to intercept
-the request and responses and perform changes, like setting up additional links and meta information.</p>
+<p><code>JpaRepositoryConfig.Builder.setRepositoryDecorator</code> allows to setup a repository decorator that can intercept and change any request,
+like setting up additional links and meta information.</p>
 </li>
 <li>
 <p><code>JpaRepositoryConfig</code> allows to specify DTO mapping, have a look at the later section to this topic.</p>
 </li>
 <li>
-<p>Internally the JpaModule will create instances of <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code>
-to register them</p>
+<p>Internally the JpaModule will setup a <code>JpaResourceRepository</code> and  <code>JpaRelationshipRepository</code> for each exposed entity.</p>
 </li>
 <li>
 <p>The transactionRunner needs to be implemented by the application to hook into the transaction processing of the used
-environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and adding a
-<code>@Transactional</code> annotation. The JPA module makes sure that every call to a repository happens within such a transaction
-boundary. Crnk comes with two default implementations: <code>SpringTransactionRunner</code> and
+environment (Spring, JEE, etc.). This might be as simple as a Spring bean implementing <code>TransactionRunner</code> and carring a
+<code>@Transactional</code> annotation. The JPA module then ensures that every requests happens within such a transaction. Crnk
+ comes with two default implementations: <code>SpringTransactionRunner</code> and
 <code>CdiTransactionRunner</code> that come are included in <code>crnk-setup-spring</code> and <code>crnk-cdi</code>.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>For crnk-client it might be worthwhile to have an interface definition of the otherwise fully generic
-JSON API entity repositories. The interface has the benefit of providing proper typing of meta information,
-link information and list return type. An example can look like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>public interface TaskRepository extends ResourceRepositoryV2&lt;TaskEntity, UUID&gt; {
-
-    static class TaskListLinks implements LinksInformation, SelfLinksInformation {
-
-		public String someLink = "test";
-
-	}
-
-	public static class TaskListMeta implements MetaInformation {
-
-		public String someMeta = "test";
-
-	}
-
-	public class TaskList extends ResourceListBase&lt;TaskEntity, TaskListMeta, TaskListLinks&gt; {
-
-	}
-
-	@Override
-	public TaskList findAll(QuerySpec querySpec);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To setup a Crnk client with the JPA module use:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>	client = new CrnkClient(getBaseUri().toString());
-
-	JpaModule module = JpaModule.newClientModule();
-	setupModule(module, false);
-	client.addModule(module);
-
-	ResourceRepositoryV2&lt;TaskEntity, UUID&gt; genericRepo = client.getRepositoryForType(TypeEntity.class)
-	TaskRepository typedRepo = client.getRepositoryForInterface(TaskRepository.class)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Have a look at <a href="https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/JpaQuerySpecEndToEndTest.java" class="bare">https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/JpaQuerySpecEndToEndTest.java</a> within the <code>crnk-jpa</code>
-test cases to see how everything is used together with <code>crnk-client</code>.
-The JPA modules further has a number of more advanced customization options that
-are discussed in the subsequent sections.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5032,6 +5362,9 @@ are discussed in the subsequent sections.</p>
 <ul>
 <li>
 <p>Entities are mapped to resources.</p>
+</li>
+<li>
+<p>Crnk understands all JPA-related annotations and in many cases, not Crnk-specific annotations are necessary.</p>
 </li>
 <li>
 <p>Embeddables are mapped to nested json structures.</p>
@@ -5046,7 +5379,7 @@ of the values in the string.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>It is possible to add additional JSON API related fields to entities by making use of the <code>@Transient</code> annotation of <code>javax.persistence</code> (or the other way around by marking
+<p>It is possible to add additional JSON API related fields to entities by annotating them with <code>@javax.persistence.Transient</code> (or the other way around by marking
 it with <code>@JsonIgnore</code>):</p>
 </div>
 <div class="listingblock">
@@ -5081,18 +5414,28 @@ public class JpaTransientTestEntity extends TestMappedSuperclass {
 </div>
 </div>
 <div class="paragraph">
-<p>However, for more complex scenarios application may rather make use of <a href="#dto_mapping">DTO mapping</a>.</p>
+<p><code>@JsonApiRelationId</code> is also supported for JPA entities:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	@Column(name="project_id")
+	@JsonApiRelationId
+	private Long projectId;
+
+    @JsonApiRelation(serialize=SerializeType.ID_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_id", insertable = false, updatable = false)
+	private Project project;</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_jpa_setup_with_spring">9.1.3. JPA Setup with Spring</h4>
 <div class="paragraph">
-<p>Have a look at <a href="#jpa_spring">JPA Module Auto Configuration</a>. For Spring Boot an auto configuration is
-available that already takes care of some defaults.</p>
+<p>Notice that both fields are mapped to the same column. The <code>project</code> field must be made read-only with <code>insertable</code> and <code>updateable</code> to let JPA know that
+<code>projectId</code> is supposed to be used for write operations. In the example, <code>SerializeType.ID_ONLY</code> will trigger for <code>projectId</code> to always be written to the
+response in the relationship data section without having to fully load the related <code>project</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">9.1.4. Pagination</h4>
+<h4 id="_pagination_2">9.1.3. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -5102,7 +5445,7 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">9.1.5. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">9.1.4. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -5112,16 +5455,86 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_jpa_repository">9.1.6. Customizing the JPA repository</h4>
+<h4 id="_lazy_and_eager_loading">9.1.5. Lazy and Eager Loading</h4>
 <div class="paragraph">
-<p>In general JPA repositories support the same set of <a href="#repository_decoration">decoration</a> and <a href="#requestfilter">filtering</a> mechanisms as any other repository.
-They allow to intercept and customize request before or after hitting the JPA repositories. Next to that, there are further
-mechanisms to customize the JPA repositories themselves. The setup page outlined the <code>JpaRepositoryFactory</code> that can be used to hook a custom JPA repository
-implementations into the JPA module. The JPA module further provides a more
-lightweight filter API to perform various changes to JPA repository requests:</p>
+<p>JPA relationships can either be <code>EAGER</code> or <code>LAZY</code>. The former is mapped to Crnk serialization type <code>ID_ONLY</code> and the later to <code>LAZY</code>.
+If a relationship is supposed to be truly eager, <code>@JsonApiRelation(serializeType=SerializeType.EAGER)</code> can be used next to the JPA annotations.</p>
 </div>
 <div class="paragraph">
-<p><code>JpaModule.addFilter(new MyRepositoryFilter())</code></p>
+<p>Be careful with JPA since its default is <code>EAGER</code> loading. It is a typical source of performance issues.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_access_with_crnk_client">9.1.6. Access with Crnk client</h4>
+<div class="paragraph">
+<p>To setup a Crnk client with the JPA module use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>	client = new CrnkClient(getBaseUri().toString());
+
+	JpaModule module = JpaModule.newClientModule();
+	setupModule(module, false);
+	client.addModule(module);
+
+	ResourceRepositoryV2&lt;TaskEntity, UUID&gt; genericRepo = client.getRepositoryForType(TypeEntity.class)
+	TaskRepository typedRepo = client.getRepositoryForInterface(TaskRepository.class)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Have a look at <a href="https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/JpaQuerySpecEndToEndTest.java" class="bare">https://github.com/crnk-project/crnk-framework/blob/develop/crnk-jpa/src/test/java/io/crnk/jpa/JpaQuerySpecEndToEndTest.java</a> within the <code>crnk-jpa</code>
+test cases to see how everything is used together with <code>crnk-client</code>.</p>
+</div>
+<div class="paragraph">
+<p>There is also the possibility to specify a repository interface. The interface has the benefit of providing proper typing of meta information,
+link information and list return type. An example can look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>public interface TaskRepository extends ResourceRepositoryV2&lt;TaskEntity, UUID&gt; {
+
+	static class TaskListLinks implements LinksInformation, SelfLinksInformation {
+
+		public String someLink = "test";
+
+	}
+
+	public static class TaskListMeta implements MetaInformation {
+
+		public String someMeta = "test";
+
+	}
+
+	public class TaskList extends ResourceListBase&lt;TaskEntity, TaskListMeta, TaskListLinks&gt; {
+
+	}
+
+	@Override
+	public TaskList findAll(QuerySpec querySpec);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the server-side, the interface can be registered with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  JpaRepositoryConfig.builder(PersonEntity.class)
+           .setInterfaceClass(PersonRepository.class).build()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_intercepting_and_modifying_requests_to_jpa_repositories">9.1.7. Intercepting and modifying requests to JPA repositories</h4>
+<div class="paragraph">
+<p>JPA repositories support the same set of <a href="#repository_decoration">decoration</a> and <a href="#requestfilter">filtering</a> mechanisms as any other repository.
+They allow to intercept and customize request before or after hitting the JPA repositories.</p>
+</div>
+<div class="paragraph">
+<p>Next to that, there are further JPA-specific filters that allow to apply changes to JPA repository requests:</p>
+</div>
+<div class="paragraph">
+<p><code>JpaModuleConfig.addFilter(new MyRepositoryFilter())</code></p>
 </div>
 <div class="paragraph">
 <p>A filter looks like:</p>
@@ -5141,14 +5554,33 @@ lightweight filter API to perform various changes to JPA repository requests:</p
 </div>
 </div>
 <div class="paragraph">
-<p>The various filter methods allow a wide variety of customizations or also to replace the passed object in question.</p>
-</div>
-<div class="paragraph">
-<p><a id="dto_mapping"></a></p>
+<p>The filter methods can perform any kind of customizations. With <code>JpaCriteriaRepositoryFilter</code> and <code>QuerydslRepositoryFilter</code> there are two specialization of
+<code>JpaRepositoryFilter</code> that allow further customizations specific to respective query mechanism.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dto_mapping">9.1.7. DTO Mapping</h4>
+<h4 id="_customizing_the_exposed_resources_over_the_underlying_entity_model">9.1.8. Customizing the exposed resources over the underlying entity model</h4>
+<div class="paragraph">
+<p>Not always it is desired to have a 1:1 mapping between resources and entities. There are various techniques to customize the resource model:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Make use of the Crnk and Jackson annotations like <code>@JsonApiResource</code>, <code>JsonApiRelationId</code>, <code>JsonApiRelation</code> and <code>@JsonIgnore</code> to modify the entities on the resource layer.</p>
+</li>
+<li>
+<p>Setup a DB view matching the desired resource and declare it as entity. This typically is the most efficient way to implement complex entity/resource mappings.</p>
+</li>
+<li>
+<p>Setup a DTO mapping to map entities to resource objects (see the subsequent section for more information)</p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="_dtp_mapping">DTP Mapping</h5>
+<div class="paragraph">
+<p><a id="dto_mapping"></a></p>
+</div>
 <div class="paragraph">
 <p>Mapping to DTO objects is supported with <code>JpaModule.registerMappedEntityClass(&#8230;&#8203;)</code>.
 A mapper then can be provided that translates the Entity to a DTO class.
@@ -5260,6 +5692,7 @@ JPA implementation mostly likely will fail with an incorrect type is passed to i
 </div>
 </div>
 </div>
+</div>
 <div class="sect2">
 <h3 id="_jsr_303_validation_module">9.2. JSR 303 Validation Module</h3>
 <div class="paragraph">
@@ -5313,62 +5746,11 @@ module should be defined in the following way:</p>
 </div>
 </div>
 <div class="paragraph">
-<p><a id="brave_module"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_tracing_with_zipkin_brave">9.3. Tracing with Zipkin/Brave</h3>
-<div class="paragraph">
-<p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-monitor-brave4</code> provides
-integration into Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
-both a Crnk client or server.</p>
-</div>
-<div class="paragraph">
-<p>The Crnk client can make use of either HttpClient or OkHttp to issue HTTP requests.
-Accordingly, a matching brave integration must be added to the classpath:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>io.zipkin.brave:brave-instrumentation-okhttp3</code></p>
-</li>
-<li>
-<p><code>io.zipkin.brave:brave-instrumentation-httpclient</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The <code>BraveClientModule</code> then takes care of the integration and will create a client span
-for each request.</p>
-</div>
-<div class="paragraph">
-<p>On the server-side, <code>BraveServletModule</code> creates a local span for each accessed repository.
-Every request triggers one or more repository accesses (depending on whether
-relations are included). Note however that <code>BraveServletModule</code> does not setup tracing
-for incoming requests. That is the purpose of the JAX-RS/servlet integration of Brave.</p>
-</div>
-<div class="paragraph">
-<p>Have a look at the Spring boot example application to see the <code>BraveServletModule</code> in use
-together with a log reporter writing the output to console.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<code>io.crnk:crnk-brave</code> is deprecated and makes use of the Brave 3.x API.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
 <p><a id="meta_module"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_module">9.4. Meta Module</h3>
+<h3 id="_meta_module">9.3. Meta Module</h3>
 <div class="paragraph">
 <p>This is a module that exposes the internal workings of Crnk as JSON API repositories.
 It lets you browse the set of available resources, their types, their attributes, etc. For example,
@@ -5394,7 +5776,7 @@ any future standard implementation will built up on the information from the
 </table>
 </div>
 <div class="sect3">
-<h4 id="_setup_3">9.4.1. Setup</h4>
+<h4 id="_setup_3">9.3.1. Setup</h4>
 <div class="paragraph">
 <p>A setup can look as follows:</p>
 </div>
@@ -5410,7 +5792,7 @@ expose more meta data, such as the <code>JpaMetaProvider</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_2">9.4.2. Examples</h4>
+<h4 id="_examples_2">9.3.2. Examples</h4>
 <div class="paragraph">
 <p>To learn more about the set of available resources, have a look at the <code>MetaElement</code> class and all its subclasses. Some of the
 most important classes are:</p>
@@ -5576,7 +5958,7 @@ most important classes are:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_identifiers_for_meta_elements">9.4.3. Identifiers for Meta Elements</h4>
+<h4 id="_identifiers_for_meta_elements">9.3.3. Identifiers for Meta Elements</h4>
 <div class="paragraph">
 <p>Of importance is the assignment of IDs to meta elements. For resources the resource type is used to compute the meta
 id and a <code>resources</code> prefix is added. In the example above, person gets a <code>resources.person</code> meta id.
@@ -5604,7 +5986,7 @@ source files.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_extending_the_meta_module">9.4.4. Extending the Meta Module</h4>
+<h4 id="_extending_the_meta_module">9.3.4. Extending the Meta Module</h4>
 <div class="paragraph">
 <p>There is a <code>MetaModuleExtension</code> extension that allows other Crnk modules contribute <code>MetaProvider</code>
 implementation. This allows to:</p>
@@ -5623,70 +6005,503 @@ meta model next to the JSON API one (like for documentation purposes).</p>
 <div class="paragraph">
 <p>For more detailed information have a look at the current <code>ResourceMetaProvider</code>.</p>
 </div>
-<div class="paragraph">
-<p><a id="home_module"></a></p>
-</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_home_module">9.5. Home Module</h3>
-<div class="paragraph">
-<p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
-directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
-relationship repository serving that particular path.</p>
+<h3 id="_activiti_module">9.4. Activiti Module</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This module is in new and in incubation. Feedback and improvements welcomed.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>The <code>HomeModule</code> supports two kinds of formats that can be choosen upon creation. A JSON API-style format where a
-links node holds all links to child directories and repositories. And a JSON HOME format as specified by
-<a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>.</p>
+<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST API.
+The motivation of <code>ActivitiModule</code> is to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>have a JSON API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
+and client-side tooling of JSON API.</p>
+</li>
+<li>
+<p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
+and task definition, there is a dedicated repository and resource type for it. The resource is comprised of
+both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic fields
+stored by the application as process/task/form variables. Mapping to static resp. dynamic fields is done
+automatically by the <code>ActivitiModule</code> and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
+the application is enabled, for example, to introduce custom security policies for each resource with
+the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This setup differs substantially from the API provided by Activiti that is implemented
+in generic fashion.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_4">9.4.1. Setup</h4>
+<div class="paragraph">
+<p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
+It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ActivitiModule</code> implements four resource base classes that match the equivalent Activiti classes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ExecutionResource</code></p>
+</li>
+<li>
+<p><code>FormResource</code></p>
+</li>
+<li>
+<p><code>ProcessInstanceResource</code></p>
+</li>
+<li>
+<p><code>TaskResource</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To setup a JSON API repository for a process or task, the corresponding resource class can be subclassed and extended with
+the application specific fields. For example:</p>
 </div>
 <div class="listingblock">
+<div class="title">ApprovalProcessInstance.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		HomeModule metaModule = HomeModule.create();
-		...</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In the Spring Boot example applications it looks like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>{
-  "links" : {
-    "meta" : "http://localhost:8080/api/meta/",
-    "projects" : "http://localhost:8080/api/projects",
-    "resourcesInfo" : "http://localhost:8080/api/resourcesInfo",
-    "schedule" : "http://localhost:8080/api/schedule",
-    "scheduleDto" : "http://localhost:8080/api/scheduleDto",
-    "tasks" : "http://localhost:8080/api/tasks"
-  }
+<pre class="CodeRay highlight"><code>public abstract class ApprovalProcessInstance extends ProcessInstanceResource {
+
+	private String resourceId;
+
+	private String resourceType;
+
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	...
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Notice the <code>meta</code> entry with a trailing '/' that allows to move to subdirectory <code><a href="http://localhost:8080/api/meta/" class="bare">http://localhost:8080/api/meta/</a></code>:</p>
+<p>and</p>
 </div>
 <div class="listingblock">
+<div class="title">ScheduleApprovalProcessInstance.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>{
-  "links" : {
-    "arrayType" : "http://localhost:8080/api/meta/arrayType",
-    "attribute" : "http://localhost:8080/api/meta/attribute",
-    "dataObject" : "http://localhost:8080/api/meta/dataObject",
-    "element" : "http://localhost:8080/api/meta/element",
-    "resource" : "http://localhost:8080/api/meta/resource",
-    "type" : "http://localhost:8080/api/meta/type"
-    ...
-  }
+<pre class="CodeRay highlight"><code>@JsonApiResource(type = "approval/schedule")
+public class ScheduleApprovalProcessInstance extends ApprovalProcessInstance {
+
+	private ScheduleApprovalValues newValues;
+
+	private ScheduleApprovalValues previousValues;
+
+	...
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><a id="operations_module"></a></p>
+<p>The example application makes use of an intermediate <code>ApprovalProcessInstance</code> base class to potentially share the approval
+logic among multiple entities in the future (if it would be real-world use case). <code>ScheduleApprovalProcessInstance</code> has
+the static fields of Activiti and a number of custom, dynamic fields like <code>resourceType</code>, <code>resourceId</code> and <code>newValues</code>.
+The dynamic fields will be mapped to to process, task resp. form variables.</p>
+</div>
+<div class="paragraph">
+<p>Notice the relation to <code>ApproveTask</code>, which is a task counter part extending from <code>TaskResource</code>. If a process has multiple
+tasks, you may introduce multiple such relationships.</p>
+</div>
+<div class="paragraph">
+<p>Finally, the setup of the <code>ActiviModule</code> looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">ApprovalTestApplication.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	public static ActivitiModule createActivitiModule(ProcessEngine processEngine) {
+		ActivitiModuleConfig config = new ActivitiModuleConfig();
+		ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
+		processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
+		processConfig.filterByProcessDefinitionKey("scheduleChange");
+		processConfig.addTaskRelationship(
+				"approveTask", ApproveTask.class, "approveScheduleTask"
+		);
+		TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
+		taskConfig.historic(HistoricApproveTask.class);
+		taskConfig.filterByTaskDefinitionKey("approveScheduleTask");
+		taskConfig.setForm(ApproveForm.class);
+		return ActivitiModule.create(processEngine, config);
+	}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ActivitiModuleConfig</code> allows to register processes and tasks that then will be exposed as repositories.</p>
+</li>
+<li>
+<p><code>ScheduleApprovalProcessInstance</code>, <code>ApproveTask</code> and the <code>approveTask</code> relationship are registered.</p>
+</li>
+<li>
+<p><code>ApproveTask</code> is user task that is handled by submitting an <code>ApproveForm</code>.</p>
+</li>
+<li>
+<p><code>filterByProcessDefinitionKey</code> and <code>filterByTaskDefinitionKey</code> ensure that the two repositories
+are isolated from other repositories for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One could imagine to make this configuration also available through an annotation-based API in the future as it is
+closely related to the resource classes and fields.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_application">9.4.2. Example application</h4>
+<div class="paragraph">
+<p>The example application goes a few steps further in the setup. The patterns of those steps might be of
+interest of consumers of the <code>ActivitiModule</code> as well.</p>
+</div>
+<div class="paragraph">
+<p>The workflow looks as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">approval.bpmn20.xml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;definitions id="approvalDefinitions"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 targetNamespace="http://activiti.org/bpmn20"
+			 xmlns:activiti="http://activiti.org/bpmn"
+			 xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"&gt;
+
+
+	&lt;process id="scheduleChange" name="Approve schedule change" isExecutable="true"&gt;
+		&lt;documentation&gt;
+			This process is initiated when a user modifies a scheduleEntity trough the JSON API endpoint.
+		&lt;/documentation&gt;
+
+		&lt;startEvent id="startScheduleChange" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
+
+		&lt;userTask id="approveScheduleTask" name="Approve new Schedule"&gt;
+			&lt;extensionElements&gt;
+				&lt;activiti:formProperty id="approved" name="Do you approve this change" type="boolean" required="true" /&gt;
+			&lt;/extensionElements&gt;
+		&lt;/userTask&gt;
+
+		&lt;sequenceFlow id="startFlow" sourceRef="startScheduleChange" targetRef="approveScheduleTask"&gt;&lt;/sequenceFlow&gt;
+
+		&lt;sequenceFlow id="decideFlow" sourceRef="approveScheduleTask" targetRef="approvalExclusiveGateway"&gt;&lt;/sequenceFlow&gt;
+
+		&lt;serviceTask id="scheduleChangeApproved" name="Create schedule Account, send Alerts"
+					 activiti:expression="${approvalManager.approved(execution)}"&gt;&lt;/serviceTask&gt;
+		&lt;serviceTask id="scheduleChangeDenied" name="send alert"
+					 activiti:expression="${approvalManager.denied(execution)}"&gt;&lt;/serviceTask&gt;
+
+		&lt;endEvent id="endEvent" name="End"&gt;&lt;/endEvent&gt;
+
+		&lt;exclusiveGateway id="approvalExclusiveGateway" name="Exclusive Gateway"&gt;&lt;/exclusiveGateway&gt;
+
+		&lt;sequenceFlow id="approveFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeApproved"&gt;
+			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
+				&lt;![CDATA[
+                ${approved == true}
+            ]]&gt;
+			&lt;/conditionExpression&gt;
+		&lt;/sequenceFlow&gt;
+
+		&lt;sequenceFlow id="denyFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeDenied"&gt;
+			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
+				&lt;![CDATA[
+                ${approved == false}
+            ]]&gt;
+			&lt;/conditionExpression&gt;
+		&lt;/sequenceFlow&gt;
+		&lt;sequenceFlow id="flow5" sourceRef="scheduleChangeDenied" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
+		&lt;sequenceFlow id="flow6" sourceRef="scheduleChangeApproved" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
+	&lt;/process&gt;
+&lt;/definitions&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is a:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>approveScheduleTask</code> task requires a form submission by a user.</p>
+</li>
+<li>
+<p><code>approvalExclusiveGateway</code> checks whether the change was accepted.</p>
+</li>
+<li>
+<p><code>scheduleChangeApproved</code> invokes <code>${approvalManager.approved(execution)}</code> whereas <code>approvalManager</code> is a Java object
+taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.</p>
+</li>
+<li>
+<p><code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
+changes. This means the regular <code>ScheduleRepository</code> implementation will be called in the same fashion as for
+ a typical request. Real world use cases may also need to save and reconstruct the security context.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For the approval-related functionality a second module is registered:</p>
+</div>
+<div class="listingblock">
+<div class="title">ApprovalTestApplication.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>	public static SimpleModule createApprovalModule(ApprovalManager approvalManager) {
+		FilterSpec approvalFilter = new FilterSpec(
+				Arrays.asList("definitionKey"), FilterOperator.EQ, "scheduleChange"
+		);
+		List&lt;FilterSpec&gt; approvalFilters = Arrays.asList(approvalFilter);
+
+		SimpleModule module = new SimpleModule("approval");
+		module.addRepositoryDecoratorFactory(
+				ApprovalRepositoryDecorator.createFactory(approvalManager)
+		);
+		module.addRepository(new ApprovalRelationshipRepository(Schedule.class,
+				ScheduleApprovalProcessInstance.class, "approval",
+				"approval/schedule", approvalFilters)
+		);
+		return module;
+	}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ApprovalRepositoryDecorator</code> hooks into the request processing of the Crnk engine and intercepts
+all <code>PATCH</code> and <code>POST</code> requests for the <code>Schedule</code> resource. The decorator then may chooses to
+abort the request and start an approval flow instead with the help of <code>ApprovalManager</code>.</p>
+</li>
+<li>
+<p><code>ApprovalRelationshipRepository</code> introduces an additional relationship between the actual resources
+and approval resources. It can be used, for example, by user interfaces to show the current status
+of an open approval workflow. <code>ApprovalRelationshipRepository.getResourceFields</code> declares
+the relationship field, meaning that the original application resource does not have to declare the
+relationship. This may or may not be useful depending on how much control there is over the original resource
+(for example there is no control over JPA entities).</p>
+</li>
+<li>
+<p><code>historic(&#8230;&#8203;)</code> method specify the historic resource counterparts to query the history.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The chosen setup leads to an approval system that is <strong>fully transparent</strong> to the actual repository implementations
+and can be added to any kind of repository.</p>
+</div>
+<div class="paragraph">
+<p><code>ApprovalIntTest</code> showcases the example workflow by doing a change,
+starting the approval process, submitting a form and then verifying the changes have been saved.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_limitations">9.4.3. Limitations</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Currently the main entities of Activiti have been exposed. Configuration-related repositories
+could be exposed as well in the future.</p>
+</li>
+<li>
+<p>Historic repositories are still considered being experimental.</p>
+</li>
+<li>
+<p>Activiti has a limited query API that is inherited by the application. Potentially <code>crnk-jpa</code> could help
+out a bit in this area.</p>
+</li>
+<li>
+<p>Multi-tenancy is not yet done out-of-the-box.</p>
+</li>
+<li>
+<p>Activiti has been forked to Flowable. As of yet it is unclear whether one or both project
+will survive in the long-term.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="facet_module"></a></p>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_operations_module">9.6. Operations Module</h3>
+<h3 id="_faceted_search">9.5. Faceted Search</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is new and considered experimental. Also have a look at the roadmap.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Faceted search is used by many UIs to allow users to quickly navigate data sets. For example, virtually
+every online shop makes use of the feature to show product categories and the number of products in that
+category. Those categories, denoted as facets, have a label, a set of values, a count for each value. Facets
+may also depend on each other, whereas later facets are filtered by former ones.</p>
+</div>
+<div class="paragraph">
+<p>With <code>FacetModule</code> Crnk provides an out-of-the-box solution to implemented faceted search.
+There is an inefficient in-memory implementation that works well with every repository as long as the
+data set is small. And later more efficient implementations tailored towards the various repository
+implementations.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_5">9.5.1. Setup</h4>
+<div class="paragraph">
+<p>The <code>FacetModule</code> can
+be added to the application. For Spring there is a <code>CrnkFacetAutoConfiguration</code> in place.
+All that is needed is to annotate the desired attributes to be faceted:</p>
+</div>
+<div class="listingblock">
+<div class="title">FacetedProject.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>@JsonApiResource(type = "projects")
+public class FacetedProject {
+
+	@JsonApiId
+	private Long id;
+
+	@Facet
+	private String name;
+
+	@Facet
+	private int priority;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behind the scenes are currently two implementations available that are automatically chosen for the repository at hand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>InMemoryFacetProvider</code> that queries all resources and computes the facets in-memory. Only <strong>suitable for small data sets</strong>!</p>
+</li>
+<li>
+<p><code>JpaFacetProvider</code> that makes use of SQL <code>GROUP BY</code> queries to efficiently compute facets. Used for any JPA-backed repository.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For very large data sets, the use of ElasticSearch is recommended (not yet implemented). Applications are also free to
+implement their own <code>FacetProvider</code> implementation and register it through <code>FacetModuleExtension</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examples_3">9.5.2. Examples</h4>
+<div class="paragraph">
+<p>All the facets are then available as regular, new JSON API resource that can filtered, paged, sorted, etc. like
+any other resource:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="http://127.0.0.1:8080/api/facet" class="bare">http://127.0.0.1:8080/api/facet</a></div>
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+
+  "data" : [ {
+    "id" : "projects_name",
+    "type" : "facet",
+    "attributes" : {
+      "values" : {
+        "Some Project" : {
+          "label" : "Some Project",
+          "value" : "Some Project",
+          "filterSpec" : {
+            "path" : "name",
+            "operator" : "EQ",
+            "value" : "Some Project",
+          },
+          "count" : 1
+        },
+        ...
+      },
+      "name" : "name",
+      "type" : "projects",
+      "labels" : [ "Great Project", "Crnk Project", "Some Project", "JSON API Project" ]
+    },
+  }]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the values are ordered by their count in the <code>labels</code> attribute.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nesting">9.5.3. Nesting</h4>
+<div class="paragraph">
+<p>To select values of facets and update the counts of subsequent facets use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[values.priority][SELECT]=1,2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A facet value is selected through its label and the special <code>SELECT</code> operator. In the given example, the priority
+is restricted to <code>1</code> and <code>2</code>. This in turn can limit the counts other facets, if those facets follow
+the <code>priority</code> facet. To choose and order facets use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[name]=priority,name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Facets are then ordered as specified by <code>filter[name]</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more examples, see <code>InMemoryFacetProviderTest</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_roadmap">9.5.4. Roadmap</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Limit number of facet values and introduce a "other" category.</p>
+</li>
+<li>
+<p>Configurable null handling.</p>
+</li>
+<li>
+<p>Data/time support.</p>
+</li>
+<li>
+<p>Range-based facets.</p>
+</li>
+<li>
+<p>Native Elastic Search implementation</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Feedback and PRs welcomed!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bulk_updates_with_operations_module">10. Bulk Updates with Operations Module</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>By its nature RESTful applications are limited to the insertion, update and deletion of single resources. As such, developers
 have to design resources accordingly while having to consider aspects like transaction handling and atomicity. It is not
@@ -5856,35 +6671,52 @@ to have <code>application/json-patch+json</code>, otherwise the <code>Operations
 <p>With support for <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations the most important building blocks should be in place.
 The limitations are expected to be addressed at some point as well, contributions welcomed.</p>
 </div>
+<div class="paragraph">
+<p><a id="monitoring"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monitoring">11. Monitoring</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="brave_module"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_ui_module">9.7. UI Module</h3>
+<h3 id="_tracing_with_zipkin_brave">11.1. Tracing with Zipkin/Brave</h3>
 <div class="paragraph">
-<p>The UI module makes <code>crnk-ui</code> accessible trough the module system. It allows to browse and edit all the repositories
-and resources. The setup looks like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>		UIModule operationsModule = UIModule.create(new UIModuleConfig());
-		...</code></pre>
-</div>
+<p>A <code>BraveClientModule</code> and <code>BraveServletModule</code> provided by <code>io.crnk:crnk-monitor-brave4</code> provides
+integration into Zipkin/Brave to implement tracing for your repositories.  The module is applicable to
+both a Crnk client or server.</p>
 </div>
 <div class="paragraph">
-<p>By default the user interface is accessible from the <code>/browse/</code> directory next to all the repositories.
-Have a look at the Spring Boot example application to see a working example.</p>
+<p>The Crnk client can make use of either HttpClient or OkHttp to issue HTTP requests.
+Accordingly, a matching brave integration must be added to the classpath:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.zipkin.brave:brave-instrumentation-okhttp3</code></p>
+</li>
+<li>
+<p><code>io.zipkin.brave:brave-instrumentation-httpclient</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>This module is currently in incubation. Please provide feedback.</p>
+<p>The <code>BraveClientModule</code> then takes care of the integration and will create a client span
+for each request.</p>
 </div>
 <div class="paragraph">
-<p>An example from the Spring Boot example application looks like:</p>
+<p>On the server-side, <code>BraveServletModule</code> creates a local span for each accessed repository.
+Every request triggers one or more repository accesses (depending on whether
+relations are included). Note however that <code>BraveServletModule</code> does not setup tracing
+for incoming requests. That is the purpose of the JAX-RS/servlet integration of Brave.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="images/crnk_ui.png" alt="crnk ui"></span></p>
+<p>Have a look at the Spring boot example application to see the <code>BraveServletModule</code> in use
+together with a log reporter writing the output to console.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_activiti_module">9.8. Activiti Module</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -5892,485 +6724,10 @@ Have a look at the Spring Boot example application to see a working example.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-This module is in new and in incubation. Feedback and improvements welcomed.
+<code>io.crnk:crnk-brave</code> is deprecated and makes use of the Brave 3.x API.
 </td>
 </tr>
 </table>
-</div>
-<div class="paragraph">
-<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST API.
-The motivation of <code>ActivitiModule</code> is to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>have a JSON API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
-and client-side tooling of JSON API.</p>
-</li>
-<li>
-<p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
-and task definition, there is a dedicated repository and resource type for it. The resource is comprised of
-both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic fields
-stored by the application as process/task/form variables. Mapping to static resp. dynamic fields is done
-automatically by the <code>ActivitiModule</code> and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
-the application is enabled, for example, to introduce custom security policies for each resource with
-the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>This setup differs substantially from the API provided by Activiti that is implemented
-in generic fashion.</p>
-</div>
-<div class="sect3">
-<h4 id="_setup_4">9.8.1. Setup</h4>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
-It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
-</div>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> implements four resource base classes that match the equivalent Activiti classes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ExecutionResource</code></p>
-</li>
-<li>
-<p><code>FormResource</code></p>
-</li>
-<li>
-<p><code>ProcessInstanceResource</code></p>
-</li>
-<li>
-<p><code>TaskResource</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>To setup a JSON API repository for a process or task, the corresponding resource class can be subclassed and extended with
-the application specific fields. For example:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>public abstract class ApprovalProcessInstance extends ProcessInstanceResource {
-
-	private String resourceId;
-
-	private String resourceType;
-
-	public String getResourceId() {
-		return resourceId;
-	}
-
-	...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and</p>
-</div>
-<div class="listingblock">
-<div class="title">ScheduleApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "approval/schedule")
-public class ScheduleApprovalProcessInstance extends ApprovalProcessInstance {
-
-	private ScheduleApprovalValues newValues;
-
-	private ScheduleApprovalValues previousValues;
-
-	...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The example application makes use of an intermediate <code>ApprovalProcessInstance</code> base class to potentially share the approval
-logic among multiple entities in the future (if it would be real-world use case). <code>ScheduleApprovalProcessInstance</code> has
-the static fields of Activiti and a number of custom, dynamic fields like <code>resourceType</code>, <code>resourceId</code> and <code>newValues</code>.
-The dynamic fields will be mapped to to process, task resp. form variables.</p>
-</div>
-<div class="paragraph">
-<p>Notice the relation to <code>ApproveTask</code>, which is a task counter part extending from <code>TaskResource</code>. If a process has multiple
-tasks, you may introduce multiple such relationships.</p>
-</div>
-<div class="paragraph">
-<p>Finally, the setup of the <code>ActiviModule</code> looks like:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>	public static ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-		ActivitiModuleConfig config = new ActivitiModuleConfig();
-		ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-		processConfig.filterByProcessDefinitionKey("scheduleChange");
-		processConfig.addTaskRelationship(
-				"approveTask", ApproveTask.class, "approveScheduleTask"
-		);
-		TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-		taskConfig.filterByTaskDefinitionKey("approveScheduleTask");
-		taskConfig.setForm(ApproveForm.class);
-		return ActivitiModule.create(processEngine, config);
-	}</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ActivitiModuleConfig</code> allows to register processes and tasks that then will be exposed as repositories.</p>
-</li>
-<li>
-<p><code>ScheduleApprovalProcessInstance</code>, <code>ApproveTask</code> and the <code>approveTask</code> relationship are registered.</p>
-</li>
-<li>
-<p><code>ApproveTask</code> is user task that is handled by submitting an <code>ApproveForm</code>.</p>
-</li>
-<li>
-<p><code>filterByProcessDefinitionKey</code> and <code>filterByTaskDefinitionKey</code> ensure that the two repositories
-are isolated from other repositories for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>One could imagine to make this configuration also available through an annotation-based API in the future as it is
-closely related to the resource classes and fields.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_example_application">9.8.2. Example application</h4>
-<div class="paragraph">
-<p>The example application goes a few steps further in the setup. The patterns of those steps might be of
-interest of consumers of the <code>ActivitiModule</code> as well.</p>
-</div>
-<div class="paragraph">
-<p>The workflow looks as follows:</p>
-</div>
-<div class="listingblock">
-<div class="title">approval.bpmn20.xml</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-
-&lt;definitions id="approvalDefinitions"
-			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 targetNamespace="http://activiti.org/bpmn20"
-			 xmlns:activiti="http://activiti.org/bpmn"
-			 xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"&gt;
-
-
-	&lt;process id="scheduleChange" name="Approve schedule change" isExecutable="true"&gt;
-		&lt;documentation&gt;
-			This process is initiated when a user modifies a scheduleEntity trough the JSON API endpoint.
-		&lt;/documentation&gt;
-
-		&lt;startEvent id="startScheduleChange" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
-
-		&lt;userTask id="approveScheduleTask" name="Approve new Schedule"&gt;
-			&lt;extensionElements&gt;
-				&lt;activiti:formProperty id="approved" name="Do you approve this change" type="boolean" required="true" /&gt;
-			&lt;/extensionElements&gt;
-		&lt;/userTask&gt;
-
-		&lt;sequenceFlow id="startFlow" sourceRef="startScheduleChange" targetRef="approveScheduleTask"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="decideFlow" sourceRef="approveScheduleTask" targetRef="approvalExclusiveGateway"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;serviceTask id="scheduleChangeApproved" name="Create schedule Account, send Alerts"
-					 activiti:expression="${approvalManager.approved(execution)}"&gt;&lt;/serviceTask&gt;
-		&lt;serviceTask id="scheduleChangeDenied" name="send alert"
-					 activiti:expression="${approvalManager.denied(execution)}"&gt;&lt;/serviceTask&gt;
-
-		&lt;endEvent id="endEvent" name="End"&gt;&lt;/endEvent&gt;
-
-		&lt;exclusiveGateway id="approvalExclusiveGateway" name="Exclusive Gateway"&gt;&lt;/exclusiveGateway&gt;
-
-		&lt;sequenceFlow id="approveFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeApproved"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == true}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="denyFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeDenied"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == false}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow5" sourceRef="scheduleChangeDenied" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow6" sourceRef="scheduleChangeApproved" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-	&lt;/process&gt;
-&lt;/definitions&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>There is a:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>approveScheduleTask</code> task requires a form submission by a user.</p>
-</li>
-<li>
-<p><code>approvalExclusiveGateway</code> checks whether the change was accepted.</p>
-</li>
-<li>
-<p><code>scheduleChangeApproved</code> invokes <code>${approvalManager.approved(execution)}</code> whereas <code>approvalManager</code> is a Java object
-taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.</p>
-</li>
-<li>
-<p><code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
-changes. This means the regular <code>ScheduleRepository</code> implementation will be called in the same fashion as for
- a typical request. Real world use cases may also need to save and reconstruct the security context.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For the approval-related functionality a second module is registered:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>	public static SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-		FilterSpec approvalFilter = new FilterSpec(
-				Arrays.asList("definitionKey"), FilterOperator.EQ, "scheduleChange"
-		);
-		List&lt;FilterSpec&gt; approvalFilters = Arrays.asList(approvalFilter);
-
-		SimpleModule module = new SimpleModule("approval");
-		module.addRepositoryDecoratorFactory(
-				ApprovalRepositoryDecorator.createFactory(approvalManager)
-		);
-		module.addRepository(new ApprovalRelationshipRepository(Schedule.class,
-				ScheduleApprovalProcessInstance.class, "approval",
-				"approval/schedule", approvalFilters)
-		);
-		return module;
-	}</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ApprovalRepositoryDecorator</code> hooks into the request processing of the Crnk engine and intercepts
-all <code>PATCH</code> and <code>POST</code> requests for the <code>Schedule</code> resource. The decorator then may chooses to
-abort the request and start an approval flow instead with the help of <code>ApprovalManager</code>.</p>
-</li>
-<li>
-<p><code>ApprovalRelationshipRepository</code> introduces an additional relationship between the actual resources
-and approval resources. It can be used, for example, by user interfaces to show the current status
-of an open approval workflow. <code>ApprovalRelationshipRepository.getResourceFields</code> declares
-the relationship field, meaning that the original application resource does not have to declare the
-relationship. This may or may not be useful depending on how much control there is over the original resource
-(for example there is no control over JPA entities).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The chosen setup leads to an approval system that is <strong>fully transparent</strong> to the actual repository implementations
-and can be added to any kind of repository.</p>
-</div>
-<div class="paragraph">
-<p><code>ApprovalIntTest</code> showcases the example workflow by doing a change,
-starting the approval process, submitting a form and then verifying the changes have been saved.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_limitations">9.8.3. Limitations</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Currently the main entities of Activiti have been exposed. History and configuration-related repositories
-could be exposed as well in the future.</p>
-</li>
-<li>
-<p>Activiti has a limited query API that is inherited by the application. Potentially <code>crnk-jpa</code> could help
-out a bit in this area.</p>
-</li>
-<li>
-<p>Multi-tenancy is not yet done out-of-the-box.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a id="spring_modules"></a></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_spring_modules_and_auto_configuration">9.9. Spring Modules and Auto Configuration</h3>
-<div class="paragraph">
-<p>All Spring modules are hosted in the <code>crnk-spring</code> modules without explicit runtime-time dependency.
-Each module comes with an auto configuration that is enabled if the presence of the particular Spring
-component is detected. Each module comes with an enabled property to disable the auto configuration.</p>
-</div>
-<div class="sect3">
-<h4 id="_spring_mvc_module">9.9.1. Spring MVC Module</h4>
-<div class="paragraph">
-<p>Makes Spring MVC services available in the Crnk Home Module next to the json api repositories to have a list of all offered
-services. Auto configuration is provided by <code>CrnkSpringMvcAutoConfiguration</code>.</p>
-</div>
-<div class="paragraph">
-<p>With <code>CrnkErrorController</code> configured by <code>CrnkErrorControllerAutoConfiguration</code> additionally a new error controller is
-provided that returns errors in JSON API format. <code>crnk.spring.mvc.errorController=false</code> allows to disable the controller.</p>
-</div>
-<div class="paragraph">
-<p>Further integration similar to the JAX-RS one is expected in the future.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_spring_cloud_sleuth_module">9.9.2. Spring Cloud Sleuth Module</h4>
-<div class="paragraph">
-<p>Integrates in the same fashion as the Crnk Brave module to trace calls from a request to the individual repositories.
-Auto configuration is provided by <code>CrnkSpringCloudSleuthAutoConfiguration</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_spring_security_module">9.9.3. Spring Security Module</h4>
-<div class="paragraph">
-<p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON API errors that complements
-the Spring-independent <code>SecurityModule</code>.</p>
-</div>
-<div class="paragraph">
-<p>Auto configuration is provided by <code>CrnkSecurityAutoConfiguration</code>. It sets up <code>SecurityModule</code> and
-<code>SpringSecurityModule</code>. By default access to all repositories is blocked. A bean of type <code>SecurityModuleConfigurer</code>
-can be added to grant access to repositories.</p>
-</div>
-<div class="paragraph">
-<p><a id="jpa_spring"></a></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_jpa_module_auto_configuration">9.9.4. JPA Module Auto Configuration</h4>
-<div class="paragraph">
-<p><code>CrnkJpaAutoConfiguration</code> setups the <code>JpaModule</code> and <code>SpringTransactionRunner</code>. <code>SpringTransactionRunner</code> let
-all requests run in a transaction that is automatically rolled back in case of an error. The <code>JpaModule</code> is
-by default setup to expose all entities as JSON API repositories. This can be disabled by setting
-<code>crnk.jpa.exposeAll=false</code>. The setup of the JPA module can be customized by providing a bean
-implementing <code>JpaModuleConfigurer</code>. See <code>ExampleJpaModuleConfigurer</code> for an example:</p>
-</div>
-<div class="listingblock">
-<div class="title">ExampleJpaModuleConfigurer.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>package io.crnk.example.springboot;
-
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-
-import io.crnk.example.springboot.domain.model.ScheduleDto;
-import io.crnk.example.springboot.domain.model.ScheduleEntity;
-import io.crnk.jpa.JpaModuleConfig;
-import io.crnk.jpa.JpaRepositoryConfig;
-import io.crnk.jpa.mapping.JpaMapper;
-import io.crnk.jpa.query.Tuple;
-import io.crnk.jpa.query.criteria.JpaCriteriaExpressionFactory;
-import io.crnk.jpa.query.criteria.JpaCriteriaQueryFactory;
-import io.crnk.spring.setup.boot.jpa.JpaModuleConfigurer;
-import org.springframework.stereotype.Component;
-
-@Component
-public class ExampleJpaModuleConfigurer implements JpaModuleConfigurer {
-
-	@PersistenceContext
-	private EntityManager em;
-
-	/**
-	 * Expose JPA entities as repositories.
-	 *
-	 * @return module
-	 */
-
-	@Override
-	public void configure(JpaModuleConfig config) {
-		// directly expose entity
-		config.addRepository(JpaRepositoryConfig.builder(ScheduleEntity.class).build());
-
-		// additionally expose entity as a mapped dto
-		config.addRepository(
-				JpaRepositoryConfig.builder(ScheduleEntity.class, ScheduleDto.class, new ScheduleMapper()).build());
-
-		JpaCriteriaQueryFactory queryFactory = (JpaCriteriaQueryFactory) config.getQueryFactory();
-
-		// register a computed a attribute
-		// you may consider QueryDSL or generating the Criteria query objects.
-		queryFactory.registerComputedAttribute(ScheduleEntity.class, "upperName", String.class,
-				new JpaCriteriaExpressionFactory&lt;From&lt;?, ScheduleEntity&gt;&gt;() {
-
-					@SuppressWarnings({ "rawtypes", "unchecked" })
-					@Override
-					public Expression&lt;String&gt; getExpression(From&lt;?, ScheduleEntity&gt; entity, CriteriaQuery&lt;?&gt; query) {
-						CriteriaBuilder builder = em.getCriteriaBuilder();
-						return builder.upper((Expression) entity.get("name"));
-					}
-				});
-	}
-
-
-	class ScheduleMapper implements JpaMapper&lt;ScheduleEntity, ScheduleDto&gt; {
-
-		@Override
-		public ScheduleDto map(Tuple tuple) {
-			ScheduleDto dto = new ScheduleDto();
-
-			// first entry in tuple is the queried entity (if not configured otherwise)
-			ScheduleEntity entity = tuple.get(0, ScheduleEntity.class);
-			dto.setId(entity.getId());
-			dto.setName(entity.getName());
-
-			// computed attribute available as additional tuple entry
-			dto.setUpperName(tuple.get(1, String.class));
-			return dto;
-		}
-
-		@Override
-		public ScheduleEntity unmap(ScheduleDto dto) {
-			// get entity from database if already there
-			ScheduleEntity entity = em.find(ScheduleEntity.class, dto.getId());
-			if (entity == null) {
-				entity = new ScheduleEntity();
-				entity.setId(dto.getId());
-			}
-			entity.setName(dto.getName());
-			return entity;
-		}
-
-	}
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_validation_module_auto_configuration">9.9.5. Validation Module Auto Configuration</h4>
-<div class="paragraph">
-<p><code>CrnkValidationAutoConfiguration</code> sets up the <code>ValidationModule</code>. This will given validation exception to
-JSON API error mapping. And by default all incoming resources are validated. The later can be disabled by setting
-<code>crnk.validation.validateResources=false</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_ui_module_auto_configuration">9.9.6. UI Module Auto Configuration</h4>
-<div class="paragraph">
-<p><code>CrnkUIAutoConfiguration</code> sets up the <code>UIModule</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_operations_module_auto_configuration">9.9.7. Operations Module Auto Configuration</h4>
-<div class="paragraph">
-<p><code>CrnkOperationsAutoConfiguration</code> sets up the <code>OperationsModule</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_meta_module_auto_configuration">9.9.8. Meta Module Auto Configuration</h4>
-<div class="paragraph">
-<p><code>CrnkMetaAutoConfiguration</code> sets up the <code>MetaModule</code> and exposes meta data for all JSON API repositories.
-The <code>MetaModule</code> can be customized by providing a bean of type <code>MetaModuleConfigurer</code>.</p>
 </div>
 <div class="paragraph">
 <p><a id="moduledev"></a></p>
@@ -6378,9 +6735,8 @@ The <code>MetaModule</code> can be customized by providing a bean of type <code>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_module_development">10. Module Development</h2>
+<h2 id="_advanced_customizations_through_modules">12. Advanced Customizations through Modules</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Crnk has a module API that allows to extend the core functionality by third-party contributions.
@@ -6397,7 +6753,7 @@ module API.</p>
 <p><a id="requestfilter"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_request_filtering">10.1. Request Filtering</h3>
+<h3 id="_request_filtering">12.1. Request Filtering</h3>
 <div class="paragraph">
 <p>Crnk provides three different, complementing mechanisms to hook into the request processing.</p>
 </div>
@@ -6427,7 +6783,7 @@ notified about every repository registration and is then free do decorate it or 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resource_filtering">10.2. Resource Filtering</h3>
+<h3 id="_resource_filtering">12.2. Resource Filtering</h3>
 <div class="paragraph">
 <p><code>ResourceFilter</code> allows to restrict access to resources and fields. To methods <code>filterResource</code> and
 <code>filterField</code> can be implemented for this purpose. Both return a <code>FilterBehavior</code> which allows to
@@ -6449,7 +6805,7 @@ may be accessed repeatedly for a request.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_modifications">10.3. Filter Modifications</h3>
+<h3 id="_filter_modifications">12.3. Filter Modifications</h3>
 <div class="paragraph">
 <p>Changes to attributes and relationships can be tracked by implementing
 <code>ResourceModificationFilter</code>. The filter is invoked upon an incoming request
@@ -6458,7 +6814,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_priority">10.4. Filter Priority</h3>
+<h3 id="_filter_priority">12.4. Filter Priority</h3>
 <div class="paragraph">
 <p><code>DocumentFilter</code>, <code>RepositoryFilter</code> and <code>ResourceModificationFilter</code> can implement
 <code>Prioritizable</code> to introduce a priority among multiple filters.</p>
@@ -6468,7 +6824,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_access_to_http_layer">10.5. Access to HTTP layer</h3>
+<h3 id="_access_to_http_layer">12.5. Access to HTTP layer</h3>
 <div class="paragraph">
 <p><code>HttpRequestContext</code> resp. <code>HttpRequestContextProvider</code> provides access to the HTTP requests. Most
 notably to get and set HTTP request and response headers. In many cases, the underlying
@@ -6488,7 +6844,7 @@ access to <code>HttpRequestContextProvider</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_module_extensions_and_dependencies">10.6. Module Extensions and dependencies</h3>
+<h3 id="_module_extensions_and_dependencies">12.6. Module Extensions and dependencies</h3>
 <div class="paragraph">
 <p>ModuleExtension is an interface can can be implemented by modules to specify a contract how
 others can extend it. The interface has two mandator properties: targetModule and
@@ -6510,7 +6866,7 @@ over time.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integrate_third_party_data_stores">10.7. Integrate third-party data stores</h3>
+<h3 id="_integrate_third_party_data_stores">12.7. Integrate third-party data stores</h3>
 <div class="paragraph">
 <p>The core of Crnk is quite flexible when it comes to implementing repositories. As such, it is
 not mandatory to make use of the Crnk annotations and conventions. Instead, it is also
@@ -6527,7 +6883,7 @@ Such a module can then register additional (usually dynamic) repositories with
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism_2">10.8. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism_2">12.8. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Crnk comes with out-of-the-box support for Spring and CDI. Both of them implement
 <code>ServiceDiscovery</code>. You may provide your own implementation which can be hooked into the
@@ -6545,7 +6901,7 @@ through the Java service mechanism. For example, <code>crnk-cdi</code> makes use
 </div>
 </div>
 <div class="sect2">
-<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">10.9. Let a module hook into the Crnk HTTP client implementation</h3>
+<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">12.9. Let a module hook into the Crnk HTTP client implementation</h3>
 <div class="paragraph">
 <p>Modules for the Crnk client can additionally implement <code>HttpAdapterAware</code>. It gives
 the module access to the underlying HTTP client implementation and allows arbitrary
@@ -6556,7 +6912,7 @@ customizations of it. Have a look at the Crnk client documentation for more info
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_integration">10.10. Implement a custom integration</h3>
+<h3 id="_implement_a_custom_integration">12.10. Implement a custom integration</h3>
 <div class="paragraph">
 <p>Adding a new integration has become quite simple in recent times.
 Have a look at <code>crnk-servlet</code> and <code>crnk-rs</code>. Most functionality
@@ -6588,7 +6944,7 @@ and <code>PropertiesProvider</code> to interface with that particular systems.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_repositories_at_runtime">10.11. Create repositories at runtime</h3>
+<h3 id="_create_repositories_at_runtime">12.11. Create repositories at runtime</h3>
 <div class="paragraph">
 <p>Repositories are usually created at compile-time, either by making use of the various annotations or a module
 such as the ´JpaModule´. However, the module API also allows the creation of repositories at runtime.
@@ -6607,7 +6963,7 @@ this feature is in incubation, more refinements are expected in upcoming release
 </table>
 </div>
 <div class="sect3">
-<h4 id="_implementing_repositories_dynamically_at_runtime">10.11.1. Implementing repositories dynamically at runtime</h4>
+<h4 id="_implementing_repositories_dynamically_at_runtime">12.11.1. Implementing repositories dynamically at runtime</h4>
 <div class="paragraph">
 <p>There are different possibilities to implement a repository at runtime:</p>
 </div>
@@ -6733,7 +7089,7 @@ There is a further example test case and relationship repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_registering_repositories_at_runtime">10.11.2. Registering repositories at runtime</h4>
+<h4 id="_registering_repositories_at_runtime">12.11.2. Registering repositories at runtime</h4>
 <div class="paragraph">
 <p>There are two possibilities to register a new repository at runtime:</p>
 </div>
@@ -6764,7 +7120,7 @@ provides an up-to-date set of repositories that is used by the Crnk engine.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_of_modules_by_crnkclient">10.12. Discovery of Modules by CrnkClient</h3>
+<h3 id="_discovery_of_modules_by_crnkclient">12.12. Discovery of Modules by CrnkClient</h3>
 <div class="paragraph">
 <p>If a module does not need configuration, it can provide a <code>ClientModuleFactory</code>
 implementation and register it to the <code>java.util.ServiceLoader</code> by adding a
@@ -6806,14 +7162,14 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_generation">11. Generation</h2>
+<h2 id="_generation">13. Generation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Crnk allows the generation of Typescript stubs for type-safe, client-side web development. Contributions for other
 languages like iOS would be very welcomed.</p>
 </div>
 <div class="sect2">
-<h3 id="_typescript">11.1. Typescript</h3>
+<h3 id="_typescript">13.1. Typescript</h3>
 <div class="paragraph">
 <p>The Typescript generator allows the generation of:</p>
 </div>
@@ -6873,6 +7229,7 @@ export module Schedule {
 		name?: string;
 		description?: string;
 		delayed?: boolean;
+		customData?: { [key: string]: string };
 	}
 }
 export interface Schedule extends CrnkStoreResource {
@@ -6915,19 +7272,17 @@ export let createEmptySchedule = function(id: string): Schedule {
 <p>For an example have a look at the Crnk example application, see <a href="https://github.com/crnk-project/crnk-example">crnk-project/crnk-example</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">11.1.1. Setup</h4>
+<h4 id="_setup_6">13.1.1. Setup</h4>
 <div class="paragraph">
-<p>Internally the generator has to make use of the running application to gather the necessary information for generation. This
-approach not only supports the typical, manual implement resources and repositories manually, but also
-the ones obtained through third-party modules such the JPA entities exposed by the JPA module. There are different
-possibilities to do that. <a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-client-angular-ngrx/build" class="bare">https://github.com/crnk-project/crnk-framework/blob/master/crnk-client-angular-ngrx/build</a>
-.gradle[crnk-client-angular-ngrx]
-does such a setup manually in Gradle. Alternatively, there is a Gradle plugin taking care of the generator setup. It makes use
-of the JUnit to get
-the application to a running state at built-time. Currently supported are CDI and Spring-based applications.</p>
+<p>Internally the generator supports multiple ways of looking up the set of available resources and repositories
+to generate.
+The simplest way is by scanning the classpath for @JsonApiResource-annotated classes. More elaborate setups
+can also launch an application (e.g. with Spring or CDI) and extract the information from the running application.
+While the former is simpler to setup, the later can deal with all border cases like a repository being backed
+by something different than a @JsonApiResource-annotated class.</p>
 </div>
 <div class="paragraph">
-<p>Such a setup may look like:</p>
+<p>The configuration looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6941,7 +7296,6 @@ the application to a running state at built-time. Currently supported are CDI an
 node {
 	version = '6.9.1'
 	download = true
-	distBaseUrl = "${ADN_NODEJS_MIRROR_BASE_URL}/dist"
 }
 
 apply plugin: 'crnk-gen-typescript'
@@ -6956,15 +7310,19 @@ dependencies {
 
 typescriptGen{
 
-	runtime {
-		configuration = 'typescriptGenRuntime'
-        spring {
-        	profile = 'test'
-        	configuration = 'ch.adnovum.arch.demo.management.service.ManagementApplication'
-        	initializerMethod = 'someInitMethod'
-        	defaultProperties['someKey'] = 'someValue'
-        }
-	}
+    // scan for resources on the classpath
+    resourcePackages = ['io.crnk.example']
+
+    // launch a Spring application to extract information about available resources
+	// runtime {
+	//	configuration = 'typescriptGenRuntime'
+    //    spring {
+    //    	profile = 'test'
+    //    	configuration = 'io.crnk.example.ExampleApplication'
+    //    	initializerMethod = 'someInitMethod' // optional
+    //    	defaultProperties['someKey'] = 'someValue'
+    //    }
+	// }
 
 	npm {
 		// map given Java package to a subdirectory of genDir
@@ -6992,34 +7350,19 @@ typescriptGen.init()</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>An example is given in <a href="https://github.com/crnk-project/crnk-example/blob/master/crnk-example-frontend/build.gradle">crnk-example</a>.</p>
+</div>
+<div class="paragraph">
 <p>Applying <code>crnk-gen-typescript</code> results in a new <code>generateTypescript</code> task. Consumers may want to add
 that task to <code>assemble</code> as dependency. The sources are then generated to <code>genDir</code> as specified.</p>
 </div>
 <div class="paragraph">
-<p>The plugin is in need for a running application to extract the set of available resources. The <code>runtime</code> section provides
-a number of possibilities how this can be achieved. Typically the simplest way to have a running application is to
-run in the same manner as for testing. This can be achieved, for example, by replicating the classpath, configuration,
-environment, Spring profiles, etc. Currently supported are Spring and CDI to achieve this. Please open up a ticket
-if you desire to work in another environment. There are a number of properties to do that:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>runtime.configuration</code> sets the Gradle configuration to use to construct a classpath. In the given example
-<code>typescriptGenRuntime</code> is used. You may also use <code>compile</code> or anything else.</p>
-</li>
-<li>
-<p>for CDI it will work out-of-the-box if Weld is found on the classpath.</p>
-</li>
-<li>
-<p>for Spring properties allow to set the Spring profile, default properties and configuration
-class to use. Optionally an <code>initializerMethod</code> can be specified that is invoked before the
-Spring application to perform further customization.</p>
-</li>
-</ul>
+<p><code>resourcePackages</code> specifies the package to scan for resources. Alternatively and commented out, it is shown
+how to launch a Spring application to extract the resource information. Typically by running the application
+with a test profile. CDI works equally well if Weld is found on the classpath (such as with Deltaspike).</p>
 </div>
 <div class="paragraph">
-<p>The plugin strives for the generated sources to closely resemble the REST layer as possible.
+<p>The plugin strives for the generated sources to closely resemble the REST layer.
 As a consequence it makes use of the resource types and json names rather than Java names for the generated sources.
 Important to know is that each type is assigned a meta id: for resources it is <code>resources.&lt;resourceType&gt;</code> and
 for all other objects the Java package name. Based on the meta id, there are a number of possibilities to influence
@@ -7057,7 +7400,7 @@ have more stable builds.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_error_handling_2">11.1.2. Error Handling</h4>
+<h4 id="_error_handling_2">13.1.2. Error Handling</h4>
 <div class="paragraph">
 <p>Since the Typescript generator internally launches the application to extract information about its resources, the
 generator is in need of a consistent application/Crnk setup. For example, every resource must have a match
@@ -7074,7 +7417,7 @@ best to verify the the application itself is working properly.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_angular_development_with_ngrx">12. Angular Development with ngrx</h2>
+<h2 id="_angular_development_with_ngrx">14. Angular Development with ngrx</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -7114,7 +7457,7 @@ For more information about Typescript generation have a look
 at the <a href="#generation">[generation]</a> chapter.</p>
 </div>
 <div class="sect2">
-<h3 id="_feature_overview">12.1. Feature overview</h3>
+<h3 id="_feature_overview">14.1. Feature overview</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx</code> provides a number of different components:</p>
 </div>
@@ -7160,7 +7503,7 @@ at the <a href="#generation">[generation]</a> chapter.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bulk_support_with_json_patch">12.2. Bulk support with JSON Patch</h3>
+<h3 id="_bulk_support_with_json_patch">14.2. Bulk support with JSON Patch</h3>
 <div class="paragraph">
 <p><code>CrnkOperationsModule</code> imported from <code>@crnk/angular-ngrx/operations</code> provides client side support
 for <a href="http://jsonpatch.com/">JSON PATCH</a>. This enables clients to issue bulk requests. See <a href="#operations_module">Operations module</a> for
@@ -7180,7 +7523,7 @@ issue a single bulk JSON Patch request. The bulk response triggers the usual <co
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions">12.3. Expressions</h3>
+<h3 id="_expressions">14.3. Expressions</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx/expression</code> provides a QueryDSL-like expression model for Typescript. It is used  to
  address boiler-plate when working with the Angular <code>FormModule</code> resp. <code>ngModel</code> directly. For example,
@@ -7353,7 +7696,7 @@ in the next sections.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_form_binding">12.4. Form Binding</h3>
+<h3 id="_form_binding">14.4. Form Binding</h3>
 <div class="paragraph">
 <p>Working with forms and JSON API is the same for many use cases:</p>
 </div>
@@ -7384,7 +7727,7 @@ from the presentation component.</p>
 <p>The <code>FormBinding</code> class provided by <code>CrnkExpressionFormModule</code> can take care of exactly this.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_6">12.4.1. Setup</h4>
+<h4 id="_setup_7">14.4.1. Setup</h4>
 <div class="paragraph">
 <p>An example setup looks like:</p>
 </div>
@@ -7479,7 +7822,7 @@ query is located.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_updating_data">12.4.2. Updating Data</h4>
+<h4 id="_updating_data">14.4.2. Updating Data</h4>
 <div class="paragraph">
 <p><code>FormBinding</code> listens to value changes of the bound form and updates accordingly updates the store through <code>ngrx-json-api</code>
 actions. To have a mapping between JSON API resource fields and form controls, the later must follow a naming pattern.
@@ -7518,7 +7861,7 @@ do not pass. Two fields give access to that status information:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_validation_and_error_handling">12.4.3. Validation and Error handling</h4>
+<h4 id="_validation_and_error_handling">14.4.3. Validation and Error handling</h4>
 <div class="paragraph">
 <p><code>FormBinding</code> takes care of error handling. It maps back any JSON API errors back to the form controls of the
 configured form. Internally it matches the source pointers of JSON API errors against the form names (see previous section)
@@ -7562,7 +7905,7 @@ in case of a JSON API error.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap_and_open_issues">12.4.4. Roadmap and Open Issues</h4>
+<h4 id="_roadmap_and_open_issues">14.4.4. Roadmap and Open Issues</h4>
 <div class="paragraph">
 <p>The Angular <code>FormModule</code> gives a number of restrictions. In the future we expect to also support the use
 <code>FormBinding</code> without a <code>NgForm</code> instance (for some performance and simplicity benefits). Please
@@ -7584,13 +7927,13 @@ Intellij IDEA seems to have some issues when it comes to using the async pipe an
 </div>
 </div>
 <div class="sect2">
-<h3 id="_table_binding">12.5. Table Binding</h3>
+<h3 id="_table_binding">14.5. Table Binding</h3>
 <div class="paragraph">
 <p>Similar to <code>FormBinding</code> there is a <code>DataTableBinding</code> class. It can help
 taking care of interfacing a table component with JSON API.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_7">12.5.1. Setup</h4>
+<h4 id="_setup_8">14.5.1. Setup</h4>
 <div class="paragraph">
 <p>An example looks like:</p>
 </div>
@@ -7658,7 +8001,7 @@ bound to the table. <code>zoneId</code> additionally can specify in which <code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_usage_2">12.5.2. Usage</h4>
+<h4 id="_usage_2">14.5.2. Usage</h4>
 <div class="paragraph">
 <p><code>DataTableBinding</code>  makes use of a <code>DataTableImplementationAdapter</code> and offers a
 <code>onLazyLoad(&#8230;&#8203;)</code> method to translate native event of the table implementation
@@ -7689,7 +8032,7 @@ table and initial query.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_model">12.6. Meta Model</h3>
+<h3 id="_meta_model">14.6. Meta Model</h3>
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx/meta</code> hosts a Typescript API for <a href="#meta_module">Meta Module</a> generated by <code>crnk-gen-typescript</code>.</p>
 </div>
@@ -7697,7 +8040,7 @@ table and initial query.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_faq">13. FAQ</h2>
+<h2 id="_faq">15. FAQ</h2>
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
@@ -7720,7 +8063,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-18 04:27:07 UTC
+Last updated 2018-10-28 14:40:03 UTC
 </div>
 </div>
 </body>
