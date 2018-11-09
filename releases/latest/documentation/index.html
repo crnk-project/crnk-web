@@ -7296,7 +7296,7 @@ export module Schedule {
 		[key: string]: ResourceRelationship;
 		task?: TypedOneResourceRelationship&lt;Tasks&gt;;
 		lazyTask?: TypedOneResourceRelationship&lt;Tasks&gt;;
-		tasks?: TypedManyResourceRelationship&lt;Tasks&gt;;
+		taskSet?: TypedManyResourceRelationship&lt;Tasks&gt;;
 		tasksList?: TypedManyResourceRelationship&lt;Tasks&gt;;
 		project?: TypedOneResourceRelationship&lt;Projects&gt;;
 		projects?: TypedManyResourceRelationship&lt;Projects&gt;;
@@ -7335,7 +7335,7 @@ export let createEmptySchedule = function(id: string): Schedule {
 		relationships: {
 			task: {data: null},
 			lazyTask: {data: null},
-			tasks: {data: []},
+			taskSet: {data: []},
 			tasksList: {data: []},
 			project: {data: null},
 			projects: {data: []},
@@ -8142,7 +8142,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-11-09 08:22:37 UTC
+Last updated 2018-11-09 09:13:42 UTC
 </div>
 </div>
 </body>
