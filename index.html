@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Crnk: Resource-oriented Rest Development with JSON API </title>
+    <title>Crnk: Resource-oriented Rest Development with JSON:API </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -25,7 +25,7 @@
     <div class="pattern">
 
         <div class="topbar">
-            <div class="title"><a href="http://jsonapi.org/">JSON API</a> with <b>Crnk</b></div>
+            <div class="title"><a href="http://jsonapi.org/">JSON:API</a> with <b>Crnk</b></div>
             <div class="menu">
                 <a href="/releases/">Releases</a>
                 &nbsp;&nbsp;
@@ -118,7 +118,7 @@
 
             <div class="col-xs-6 col-md-4 part">
                 <div class="content">
-                    Crnk <span class="highlight">follows the <a href="http://jsonapi.org/">JSON API</a>
+                    Crnk <span class="highlight">follows the <a href="http://jsonapi.org/">JSON:API</a>
                     specification and recommendations</span> in Java to facilitate building RESTful applications.
                     To quote the specification:
                     <p>
@@ -147,10 +147,15 @@
 
 <div class="section breaking">
     <div class="section-content breaking">
-        28. October 2018:
+        29. November 2018:
         <p>
-            Crnk 2.9 is available with support for faceted search, QuerySpec improvements and many smaller, incremental
-            improvements. For more information see <a href="http://www.crnk.io/releases/v2.9/">here</a>.
+            Crnk 2.10 is available with support for a new simplified REST API endpoint next to JSON:API.
+            They are very similar in nature. But the new one trades the normalization for a bit more simplicity,
+            facilitating client development when complex data structures are not necessary. Further, two default
+            properties have changed to ease development of new applications. Historically, they
+            have been disabled to maintain 100% backward-compatibility, but more and more caused issues in newer
+            applications. Make sure to familiarize yourselves with those to changes in case of an upgrade. For
+            more information see <a href="http://www.crnk.io/releases/v2.10/">here</a>.
         </p>
     </div>
 </div>
@@ -162,7 +167,7 @@
         <h3>Get Started in 5 Minutes</h3>
 
         <p>
-            The following gives a brief example of how to setup Crnk with JAX-RS and CDI.
+            The following gives a brief example of how to setup Crnk with Spring Boot
             For more information have a look at
             the <a href="https://github.com/crnk-project/crnk-example">examples</a>
             and <a href="/releases/stable/documentation/">documentation</a> and join us on <a
@@ -178,19 +183,14 @@
                                       data-toggle="tab">Dependencies
                 </a></li>
                 <li
-                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">JAX-RS
-                    integration</a></li>
+                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">Spring Application</a></li>
                 <li
                         role="presentation"><a href="#resource" aria-controls="resource" role="tab"
                                                data-toggle="tab">Resource
                 </a></li>
                 <li
-                        role="presentation"><a href="#interface" aria-controls="interface" role="tab"
-                                               data-toggle="tab">Repository Interface
-                </a></li>
-                <li
                         role="presentation"><a href="#repository" aria-controls="repository" role="tab"
-                                               data-toggle="tab">Repository Implementation
+                                               data-toggle="tab">Repository
                 </a></li>
             </ul>
 
@@ -198,43 +198,42 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="dependencies">
 
-                    Add crnk-core together with the CDI and JAX-RS integrations to your classpath:
+                    Add the crnk-bom to your dependency management, for example:
 
                     <pre class="prettyprint">
-compile 'io.crnk:crnk-core:${version}'
-compile 'io.crnk:crnk-cdi:${version}'
-compile 'io.crnk:crnk-rs:${version}'
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.1.0.RELEASE'
+        mavenBom "io.crnk:crnk-bom:${CRNK_VERSION}"
+    }
+}
+                    </pre>
+
+                    And add the following dependencies to your classpath:
+
+                    <pre class="prettyprint">
+compile 'io.crnk:crnk-setup-spring-boot'
+compile 'io.crnk:crnk-format-plain-json'
+compile 'io.crnk:crnk-home'
+compile 'org.springframework.boot:spring-boot-starter-web'
 					</pre>
-
-
                 </div>
                 <div role="tabpanel" class="tab-pane" id="jaxrs">
 
 
                     <p>
-                        Setup a JAX-RS application and add the CrnkFeature. In this example a default page size and
-                        some
-                        meaningful Jackson settings are further configured.
+                        Setup a Spring Boot application:
                     </p>
 
                     <pre class="prettyprint">
-@ApplicationPath("/api")
-@Singleton
-public class DemoApplication extends Application {
+@Configuration
+@SpringBootApplication
+public class MinimalSpringBootApplication {
 
-	private static final Long DEFAULT_PAGE_SIZE = 20L;
-
-	@Override
-	public Set&lt;Object&gt; getSingletons() {
-		CrnkFeature crnk = new CrnkFeature();
-		crnk.setDefaultPageLimit(DEFAULT_PAGE_SIZE);
-
-		ObjectMapper objectMapper = crnk.getObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.findAndRegisterModules();
-		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-		return new HashSet<>(Arrays.asList(crnk));
+	public static void main(String[] args) {
+		SpringApplication.run(MinimalSpringBootApplication.class, args);
+		System.out.println("visit http://127.0.0.1:8080/ in your browser");
 	}
 }
 					</pre>
@@ -243,24 +242,32 @@ public class DemoApplication extends Application {
                 </div>
                 <div role="tabpanel" class="tab-pane" id="resource">
 
-                    The actual data objects known as resource in JSON API terminology looks like:
+                    The actual data objects known as resource in JSON:API terminology looks like:
 
                     <pre class="prettyprint">
-@JsonApiResource(type = "schedules")
-public class Schedule {
+@JsonApiResource(type = "projects")
+public class Project {
 
 	@JsonApiId
 	private Long id;
 
+	@JsonProperty
 	private String name;
+
+	public Project() {
+	}
+
+	public Project(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public Schedule setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
-		return this;
 	}
 
 	public String getName() {
@@ -272,57 +279,13 @@ public class Schedule {
 	}
 }
 
-					</pre>
 
-                </div>
-                <div role="tabpanel" class="tab-pane" id="interface">
-
-                    Specifying an interface for your repository is an optional step, but can be quite convient when
-                    working on the client-side (like for testing). This particular example further specifies the
-                    structure of links and meta data attached to the actual data.
-
-                    <pre class="prettyprint">
-public interface ScheduleRepository extends ResourceRepositoryV2&lt;Schedule, Long&gt; {
-
-	@Override
-	ScheduleList findAll(QuerySpec querySpec);
-
-	class ScheduleList extends ResourceListBase&lt;Schedule, ScheduleListMeta, ScheduleListLinks&gt; {
-
-	}
-
-	class ScheduleListLinks extends DefaultPagedLinksInformation implements LinksInformation {
-
-		private String someLink = "http://...";
-
-		public String getSomeLink() {
-			return someLink;
-		}
-
-		public void setSomeLink(String someLink) {
-			this.someLink = someLink;
-		}
-	}
-
-	class ScheduleListMeta implements MetaInformation {
-
-		private String someMeta = "value";
-
-		public String getSomeMeta() {
-			return someMeta;
-		}
-
-		public void setSomeMeta(String someMeta) {
-			this.someMeta = someMeta;
-		}
-	}
-}
 					</pre>
 
                 </div>
                 <div role="tabpanel" class="tab-pane" id="repository">
 
-                    The actual implementation of a JSON API repository. This example stores all data in-memory.
+                    The actual implementation of a JSON:API repository. This example stores all data in-memory.
                     Notice
                     the QuerySpec.apply to do sorting, filtering and patching in-memory. More advanced use cases
                     will translate the QuerySpec to a native query of the underlying data store. The
@@ -330,39 +293,37 @@ public interface ScheduleRepository extends ResourceRepositoryV2&lt;Schedule, Lo
 
                     <pre class="prettyprint">
 
-@ApplicationScoped
-public class ScheduleRepositoryImpl extends ResourceRepositoryBase&lt;Schedule, Long&gt; implements ScheduleRepository {
+@Component
+public class ProjectRepositoryImpl extends ResourceRepositoryBase<Project, Long> {
 
-	private static Map&lt;Long, Schedule&gt; schedules = new HashMap&lt;&gt;();
+	private static final AtomicLong ID_GENERATOR = new AtomicLong(124);
 
-	public ScheduleRepositoryImpl() {
-		super(Schedule.class);
-	}
+	private Map<Long, Project> projects = new HashMap<>();
 
-	public static void clear() {
-		schedules.clear();
-	}
-
-	@Override
-	public ScheduleList findAll(QuerySpec querySpec) {
-		ScheduleList list = new ScheduleList();
-		list.addAll(querySpec.apply(schedules.values()));
-		list.setLinks(new ScheduleListLinks());
-		list.setMeta(new ScheduleListMeta());
-		return list;
+	public ProjectRepositoryImpl() {
+		super(Project.class);
 	}
 
 	@Override
-	public &lt;S extends Schedule&gt; S save(S entity) {
-		schedules.put(entity.getId(), entity);
-		return null;
+	public synchronized void delete(Long id) {
+		projects.remove(id);
 	}
 
 	@Override
-	public void delete(Long id) {
-		schedules.remove(id);
+	public synchronized <S extends Project> S save(S project) {
+		if (project.getId() == null) {
+			project.setId(ID_GENERATOR.getAndIncrement());
+		}
+		projects.put(project.getId(), project);
+		return project;
+	}
+
+	@Override
+	public synchronized ResourceList<Project> findAll(QuerySpec querySpec) {
+		return querySpec.apply(projects.values());
 	}
 }
+
 					</pre>
                 </div>
             </div>

@@ -99,9 +99,7 @@ is no longer active. Instead always Jackson and its ObjectMapper is used for the
 TypeParser). You may want to make use the following annotation to make custom value classes String-serializable:
 
 <pre class="prettyprint">
-<![CDATA[
 	@JsonSerialize(using = ToStringSerializer.class)
-]]>
 </pre>
 
 In this case the toString method and String constructor is used by Jackson as well.

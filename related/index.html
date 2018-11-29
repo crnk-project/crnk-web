@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Crnk: Resource-oriented Rest Development with JSON API </title>
+    <title>Crnk: Resource-oriented Rest Development with JSON:API </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -24,7 +24,7 @@
 <div class="header">
     <div class="pattern">
         <div class="topbar">
-            <div class="title"><a href="/">JSON API with <b>Crnk</b></a></div>
+            <div class="title"><a href="/">JSON:API with <b>Crnk</b></a></div>
             <div class="menu">
                 <a href="/releases/">Releases</a>
                 &nbsp;&nbsp;
@@ -51,15 +51,15 @@
         </p>
 
         <p>
-            In general we feel that JSON API has many beneficial properties when it comes to implementing
+            In general we feel that JSON:API has many beneficial properties when it comes to implementing
             resource-based RESTful applications. One of the main benefits to follow a common standard
-            is demonstrated by the <a href="http://jsonapi.org/implementations/">JSON API implementations</a> page.
-            It is an entrypoint into a rich ecosystem of libraries and tooling around JSON API, only made
+            is demonstrated by the <a href="http://jsonapi.org/implementations/">JSON:API implementations</a> page.
+            It is an entrypoint into a rich ecosystem of libraries and tooling around JSON:API, only made
             possible by all of those project following that standard. Similar benefits can also be achieved within
             larger applications where many developers are involved. A standard can guide the design and implementation.
 
-            Some more benefits of JSON API are more subtile.
-            For example, one of the more striking features of JSON API is the document structure with
+            Some more benefits of JSON:API are more subtile.
+            For example, one of the more striking features of JSON:API is the document structure with
             separated attributes, relationships, meta data and links data. This may seem at first like
             an additional burden, as an extra step has to be taken when looking up a relationship.
             But this normalization can have many highly useful properties that sets it apart from
@@ -73,14 +73,14 @@
             <li>
                 The normalization works well together with newer Redux-style frontend applications.
                 For example, <a href="https://github.com/abdulhaq-e/ngrx-json-api">ngrx-json-api</a>
-                provides a neat integration of JSON API with Angular and ngrx. It is straightforward
-                to put JSON API documents in a Redux store. There is no mapping layer necessary. And
+                provides a neat integration of JSON:API with Angular and ngrx. It is straightforward
+                to put JSON:API documents in a Redux store. There is no mapping layer necessary. And
                 the Redux tooling will allow to denormalize resp. resolve relationships to have easy
                 access in the presentation layer.
             </li>
             <li>
                 While sightly harder to read, it is much easier to insert, update and delete normalized resources.
-                There is not need to process complex object graphs as individual JSON API resources
+                There is not need to process complex object graphs as individual JSON:API resources
                 are conceptually simple. Also have a look at crnk-operations making use of JSON Patch
                 to perform multiple operations atomically.
             </li>
@@ -89,8 +89,8 @@
 
         <p>
             Before diving into the various frameworks, maybe a suprising disclaimer. We <b>consider
-            Crnk not to be limited to JSON API</b>. People can be quite opinionated about how
-            their API is supposed to look like. JSON API then either matches or not. However,
+            Crnk not to be limited to JSON:API</b>. People can be quite opinionated about how
+            their API is supposed to look like. JSON:API then either matches or not. However,
             if necessary, it is perfectly possible to customize Crnk towards many requirements.
             Serializers and deserializers can be registered to customize how documents are marshalled to and
             from JSON. Similarly, the parsing of request parameters can be customized.
@@ -114,25 +114,25 @@
             to the transport layer. Plenty of declarations are necessary for each service (parameters, methods,
             body, url handling, content type, etc.). This in turn can lead to boiler-plate and inconsistent
             behavior in larger applications built by multiple developers. More opinionated specifications like
-            JSON API can help here. In particular when it comes to things like sorting, filtering or
+            JSON:API can help here. In particular when it comes to things like sorting, filtering or
             complex object graphs, the speed-up and simplification can be quite dramatic.
         </p>
         <p>
-            It is not uncommon that JSON API may not be able to cover all use cases of an application;
+            It is not uncommon that JSON:API may not be able to cover all use cases of an application;
             but probably about 90% of them. For this reason, crnk works well together
             with JAX-RS as also highlighted in the documentation. Resource-based services are then implemented
-            with JSON API, while other more custom services are implemented with JAX-RS.
-            There is the possibility to benefit from some JSON API features in
-            JAX-RS services. Crnk allows to use the JSON API exception handling in JAX-RS, providing
+            with JSON:API, while other more custom services are implemented with JAX-RS.
+            There is the possibility to benefit from some JSON:API features in
+            JAX-RS services. Crnk allows to use the JSON:API exception handling in JAX-RS, providing
             a single common error mechanism among all services. And it allows JAX-RS services
-            to return data in JSON API format. Have a look at the documentation for more information.
+            to return data in JSON:API format. Have a look at the documentation for more information.
         </p>
 
         <p>
         <h3>Spring Data Rest</h3>
 
         <p>
-            Similar to JSON API, Spring Data Rest has to goal to simplify the development of resource-based
+            Similar to JSON:API, Spring Data Rest has to goal to simplify the development of resource-based
             RESTful application. Like Crnk it provides an integration into JPA. It also has
             further integrations into other data stores that are currently still missing in
             Crnk (contributions welcomed).
@@ -140,16 +140,16 @@
 
         <p>
             There are various areas where one can highly benefit from using Crnk over Spring Data Rest,
-            with the JSON API specification itself potentially being the most important benefit:
+            with the JSON:API specification itself potentially being the most important benefit:
 
         <ul>
             <li>
-                The JSON API specification
+                The JSON:API specification
                 page lists countless implementations for various programming languages. Those
                 go far beyond the Spring ecosystem.
             </li>
             <li>
-                The JSON API specification and recommendations provide quite powerful tooling to
+                The JSON:API specification and recommendations provide quite powerful tooling to
                 deal with sorting, filtering, sparse field sets, complex object graphs,
                 inclusions, etc. Various of those features go well beyond what is possible with
                 Spring Data Rest.
@@ -173,7 +173,7 @@
                 it can also (soon) check parameters accessing related resources.
             </li>
             <li>
-                crnk-meta provides an extensive meta model tailored towards JSON API. As such it goes
+                crnk-meta provides an extensive meta model tailored towards JSON:API. As such it goes
                 beyond what Spring Data provides with the ALPS meta-data. However, it is also thinkable
                 to support ALPS at some point in the future.
             </li>
@@ -186,7 +186,7 @@
         <h3>OData / Apache Olingo</h3>
 
         <p>
-            We consider OData and JSON API to be quite similar in their goals. JSON API may can be considered
+            We consider OData and JSON:API to be quite similar in their goals. JSON:API may can be considered
             to be a bit simpler and more accessible. And it also follows more closely the best practices
             for RESTful applications. It currently seems that there is not to much momentum anymore
             in OData.
@@ -218,16 +218,16 @@
         </p>
 
         <p>
-            JSON API can provide a simpler alternative.
+            JSON:API can provide a simpler alternative.
             Its support for relationship inclusions and spare field sets are not too different from
             some GraphQL concepts (on an abstract/high level). For this reason support for a
             crnk-adapter-graphql module could be a good possibility to expose resources with GraphQL.
         </p>
 
         <p>
-        <h3>Elide (JSON API)</h3>
+        <h3>Elide (JSON:API)</h3>
 
-        Elide is another Java implementation of the JSON API specification. It is comparable
+        Elide is another Java implementation of the JSON:API specification. It is comparable
         to the feature set of crnk-jpa. But in general Crnk targets a much wider scope supporting
         use cases other than JPA.
 
@@ -237,26 +237,26 @@
         <h3>Swagger</h3>
 
         Not actually a REST framework, but commonly used for documentation. For this reason, the question is rather
-        whether Swagger supports JSON API or not. To some degree it is possible to document JSON API repositories
+        whether Swagger supports JSON:API or not. To some degree it is possible to document JSON:API repositories
         with Swagger. However, in general we do not recommend doing that for various reasons:
 
         <ul>
             <li>
                 Swagger does not follow the
-                HATEOAS for linking (some would say deliberately). This gives JSON API and any othere REST framework
+                HATEOAS for linking (some would say deliberately). This gives JSON:API and any othere REST framework
                 following the HATEOAS principles a hard time. It is not possible to properly document this.
             </li>
             <li>
-                Some other data structures like the JSON API inclusions cannot be properly modelled in Swagger.
+                Some other data structures like the JSON:API inclusions cannot be properly modelled in Swagger.
             </li>
             <li>
-                To some degree Swagger just respecifies JSON API. It is standardized how a JSON API repository
+                To some degree Swagger just respecifies JSON:API. It is standardized how a JSON:API repository
                 is supposed to look like. There is no need to document this again. The only thing necessary
                 to document is the list of attributes, relationships, meta and links, not how they
                 are structured as document.
             </li>
             <li>
-                JSON API specifies how parameters are supposed to look like (resp. gives recommendations).
+                JSON:API specifies how parameters are supposed to look like (resp. gives recommendations).
                 Swagger lacks the expressiveness to model those parameters to to the dynamic nature
                 with the possibility to filter, sort and include attributes and relationships.
                 As a result, the user interface barely allows to work with those parameters.
@@ -267,14 +267,14 @@
             The general recommendation is to rather make use of a HATEOAS user interface that allows
             to explore the repositories and its data. crnk-ui is an example for that. The use
             crnk-meta further allows to not only browse the data, but also its meta-model, bringing
-            along the same functionality as Swagger provides, but tailored towards JSON API.
+            along the same functionality as Swagger provides, but tailored towards JSON:API.
         </p>
 
         <h3>ngrx-json-api</h3>
 
         <p>
             <a href="https://github.com/abdulhaq-e/ngrx-json-api">ngrx-json-api</a> is Angular library that provides an
-            JSON API extension for the ngrx store. Currently seems like the being one of the most promising library in the
+            JSON:API extension for the ngrx store. Currently seems like the being one of the most promising library in the
             Angular area. crnk-gen-typescript will soon provide the means to generate
             type-safe stubs for use with ngrx-json-api.
         </p>
