@@ -2698,11 +2698,14 @@ An URL then looks like:</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>package io.crnk.test.mock.models.nested;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiRelationId;
 
-import java.io.Serializable;
-
+@JsonSerialize(using = ToStringSerializer.class)
 public class NestedId implements Serializable {
 
 	@JsonApiId
@@ -2712,7 +2715,12 @@ public class NestedId implements Serializable {
 	private String parentId;
 
 	public NestedId() {
+	}
 
+	public NestedId(String idString) {
+		String[] elements = idString.split("\\-");
+		parentId = elements[0];
+		id = elements[1];
 	}
 
 	public NestedId(String parentId, String id) {
@@ -2734,14 +2742,6 @@ public class NestedId implements Serializable {
 
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
-	}
-
-	public static NestedId parse(String idString) {
-		String[] elements = idString.split("\\-");
-		NestedId id = new NestedId();
-		id.parentId = elements[0];
-		id.id = elements[1];
-		return id;
 	}
 
 	public int hashCode() {
@@ -3282,9 +3282,9 @@ For example:</p>
 <ul>
 <li>
 <p><code>TypeParser</code> allows to register and override the parsing of Strings to other classes.
-By default it has has built-in parsers for various JRE classes, it looks on the type
-itself for a String constructor or static <code>parse(String)</code> parse method and otherwise
-fallbacks to Jackson. Further <code>StringParser</code> can add support for arbitrary types.</p>
+By default it has has built-in parsers for various JRE classes. Custom <code>StringMapper</code>
+ can be registered. As fallback it will make use of the <code>ObjectMapper</code> of Jackson
+ (which in most cases will be also the default).</p>
 </li>
 <li>
 <p><code>DefaultQuerySpecUrlMapper.setIgnoreParseExceptions(&#8230;&#8203;)</code> allows to ignore if parsing
@@ -8142,7 +8142,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-11-09 09:13:42 UTC
+Last updated 2018-11-29 14:27:17 UTC
 </div>
 </div>
 </body>
