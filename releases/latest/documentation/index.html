@@ -527,7 +527,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_crnkfeature">3.5.1. CrnkFeature</a></li>
 <li><a href="#_exception_mapping_for_jax_rs_services">3.5.2. Exception mapping for JAX-RS services</a></li>
-<li><a href="#_use_json_api_format_with_jax_rs_services">3.5.3. Use JSON API format with JAX-RS services</a></li>
+<li><a href="#_use_json_api_format_with_jax_rs_services">3.5.3. Use JSON:API format with JAX-RS services</a></li>
 <li><a href="#_jax_rs_service_interoperability">3.5.4. JAX-RS service interoperability</a></li>
 </ul>
 </li>
@@ -571,12 +571,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a>
 <ul class="sectlevel3">
 <li><a href="#_api">5.2.1. API</a></li>
-<li><a href="#_filtering">5.2.2. Filtering</a></li>
-<li><a href="#_sorting">5.2.3. Sorting</a></li>
-<li><a href="#_pagination">5.2.4. Pagination</a></li>
-<li><a href="#_sparse_fieldsets">5.2.5. Sparse Fieldsets</a></li>
-<li><a href="#_inclusion_of_related_resources">5.2.6. Inclusion of Related Resources</a></li>
-<li><a href="#_url_mapping">5.2.7. URL Mapping</a></li>
+<li><a href="#_basic_filtering">5.2.2. Basic Filtering</a></li>
+<li><a href="#_nested_filtering">5.2.3. Nested Filtering</a></li>
+<li><a href="#_sorting">5.2.4. Sorting</a></li>
+<li><a href="#_pagination">5.2.5. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.2.6. Sparse Fieldsets</a></li>
+<li><a href="#_inclusion_of_related_resources">5.2.7. Inclusion of Related Resources</a></li>
+<li><a href="#_url_mapping">5.2.8. URL Mapping</a></li>
 </ul>
 </li>
 <li><a href="#_relationshiprepositoryv2">5.3. RelationshipRepositoryV2</a>
@@ -592,7 +593,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_error_handling">5.5. Error Handling</a>
 <ul class="sectlevel3">
 <li><a href="#_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</a></li>
-<li><a href="#__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON API response</a></li>
+<li><a href="#__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON:API response</a></li>
 </ul>
 </li>
 <li><a href="#_meta_information">5.6. Meta Information</a></li>
@@ -759,8 +760,9 @@ table.CodeRay td.code>pre{padding:0}
 <p>Crnk is a native resource-oriented rest library where resources, their relationships and repositories are the main building
 blocks. In that regard Crnk differ quite dramatically from most REST library out there and opens up many new possibilities.
 It allows you to rapidly build REST APIs without having to worry about lower protocol details and lets you instead
-focus on what matters: your application. On the HTTP/REST layer it follows the JSON API specification and recommendations.
-JSON API and Crnk come with support for:</p>
+focus on what matters: your application. On the HTTP/REST layer it supports multiple formats. By default
+it follows the JSON:API specification and recommendations. But there is also a similar, more <a href="#format_plain">basic endpoint</a>
+targeting simpler applications. Crnk come with support for:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -780,7 +782,7 @@ JSON API and Crnk come with support for:</p>
 <p>inserting, updating and deleting of resources.</p>
 </li>
 <li>
-<p>support to request complex object graphs in a single request with JSON API inclusions.</p>
+<p>support to request complex object graphs in a single request with JSON:API inclusions.</p>
 </li>
 <li>
 <p>support for partial objects with sparse field sets.</p>
@@ -834,7 +836,7 @@ third-party libraries and frameworks.</p>
 <p>JAXRS: run Crnk as feature.</p>
 </li>
 <li>
-<p>JPA: expose entities as JSON API resources.</p>
+<p>JPA: expose entities as JSON:API resources.</p>
 </li>
 <li>
 <p>bean validation: properly marshal validation and constraints exceptions.</p>
@@ -845,7 +847,7 @@ third-party libraries and frameworks.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>While Crnk follows the JSON API specification, it is not limited to that. Have a look at the
+<p>While Crnk follows the JSON:API specification, it is not limited to that. Have a look at the
 <a href="http://www.crnk.io/" class="bare">http://www.crnk.io/</a>[roadmap&gt; for more information.</p>
 </div>
 <div class="paragraph">
@@ -873,7 +875,7 @@ with Crnk, Angular, Spring Boot and ngrx-json-api.</p>
 <p><code>spring-boot-minimal-example</code> showcasing a minimal setup of Crnk with Spring Boot.</p>
 </li>
 <li>
-<p><code>spring-boot-microservice-example</code> showcasing how to connect two separate JSON API endpoints through a relationship with crnk-client.</p>
+<p><code>spring-boot-microservice-example</code> showcasing how to connect two separate JSON:API endpoints through a relationship with crnk-client.</p>
 </li>
 <li>
 <p><code>wildfly-example</code></p>
@@ -930,10 +932,10 @@ service-oriented APIs. Later chapters will show how Crnk integrates with other l
 Based on such a model, an application implements repositories to provide access trough that model.</p>
 </div>
 <div class="paragraph">
-<p>Currently implemented is the JSON API specification to access that model as part of the <code>crnk-core</code> project. The JSON API specification provide
+<p>Currently implemented is the JSON:API specification to access that model as part of the <code>crnk-core</code> project. The JSON:API specification provide
 all the essential building blocks like sorting, filtering, paging, document formats, linking and error handling to access
-resources and relationships. But other implementations, such as GraphQL or different kinds of REST/JSON APIs, are possible as
-well. With JSON API, an incoming request is processed as follows:</p>
+resources and relationships. But other implementations, such as GraphQL or different kinds of REST/JSON:APIs, are possible as
+well. With JSON:API, an incoming request is processed as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -970,7 +972,7 @@ exceptions are handled as and mapped as well.</p>
 <li>
 <p>Resources and relationships can be defined with simple Java Beans and annotations or programmatically. The later allows
 virtually any kind of customization at runtime, like setting up repositories dynamically. One example is <code>crnk-jpa</code>
-that is able to expose any JPA entity as JSON API resource.</p>
+that is able to expose any JPA entity as JSON:API resource.</p>
 </li>
 <li>
 <p>Resources and relationships can be entirely decoupled concerns. For example, an independent relationship repository <code>C</code> can
@@ -979,7 +981,7 @@ For example, an audit component could intercept and log any modifications. Acces
 new relationship <code>history</code> onto each resource.</p>
 </li>
 <li>
-<p>Information about resources, relationships and repositories are available trough a Java API and JSON API endpoint.</p>
+<p>Information about resources, relationships and repositories are available trough a Java API and JSON:API endpoint.</p>
 </li>
 <li>
 <p>Filters and decorators allow to intercept and modify every step along the request chain. This can be used, for example,
@@ -1157,7 +1159,7 @@ Set <code>io.crnk</code> to <code>DEBUG</code> if you encounter any issues durin
 <div class="paragraph">
 <p>Crnk allows integration with JAX-RS environments through the usage of JAX-RS specification. JAX-RS 2.0 is
 required for this integration. Under the hood there is a @PreMatching filter which checks each request for
-JSON API processing. The setup can look as simple as:</p>
+JSON:API processing. The setup can look as simple as:</p>
 </div>
 <div class="sect3">
 <h4 id="_crnkfeature">3.5.1. CrnkFeature</h4>
@@ -1192,7 +1194,7 @@ A more advanced setup may look like:</p>
 
 		@Override
 		public boolean configure(FeatureContext featureContext) {
-			// also map entities to JSON API resources (see further below)
+			// also map entities to JSON:API resources (see further below)
 			JpaModule jpaModule = new JpaModule(emFactory, em, transactionRunner);
 			jpaModule.setRepositoryFactory(new ValidatedJpaRepositoryFactory());
 
@@ -1224,7 +1226,7 @@ up automatically and do not manual registration.</p>
 <div class="paragraph">
 <p>In many cases Crnk repositories are used along regular JAX-RS services. In such scenarios it can be worthwhile
 if Crnk repositories and JAX-RS services make use of the same exception handling and response format. To make
-use of the JSON API resp. Crnk exception handling in JAX-RS services, one can add the
+use of the JSON:API resp. Crnk exception handling in JAX-RS services, one can add the
 <strong>JsonapiExceptionMapperBridge</strong> to the JAX-RS application. The constructor of <code>JsonapiExceptionMapperBridge</code>
 takes <code>CrnkFeature</code> as parameter.</p>
 </div>
@@ -1233,16 +1235,16 @@ takes <code>CrnkFeature</code> as parameter.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_use_json_api_format_with_jax_rs_services">3.5.3. Use JSON API format with JAX-RS services</h4>
+<h4 id="_use_json_api_format_with_jax_rs_services">3.5.3. Use JSON:API format with JAX-RS services</h4>
 <div class="paragraph">
 <p>Similar to <code>JsonapiExceptionMapperBridge</code> in the previous section, it is possible for JAX-RS services to return
-resources in JSON API format with <strong>JsonApiResponseFilter</strong>. <code>JsonApiResponseFilter</code> wraps primitive
+resources in JSON:API format with <strong>JsonApiResponseFilter</strong>. <code>JsonApiResponseFilter</code> wraps primitive
 responses with a <code>data</code> object; resource objects with <code>data</code> and <code>included</code> objects.
 The constructor of <code>JsonApiResponseFilter</code> takes <code>CrnkFeature</code> as parameter.</p>
 </div>
 <div class="paragraph">
 <p>To determine which JAX-RS services should be wrapped, <code>JsonApiResponseFilter</code> checks whether the
-<code>@Produce</code> annotation delivers JSON API. The produce
+<code>@Produce</code> annotation delivers JSON:API. The produce
 annotation can be added, for example, to the class:</p>
 </div>
 <div class="listingblock">
@@ -1286,7 +1288,7 @@ annotation can be added, for example, to the class:</p>
 <ul>
 <li>
 <p><code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
-as JSON API responses.</p>
+as JSON:API responses.</p>
 </li>
 <li>
 <p>Make use of proper service discovery instead of <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> in real applications.</p>
@@ -1618,7 +1620,7 @@ public class ExampleJpaModuleConfigurer implements JpaModuleConfigurer {
 <div class="ulist">
 <ul>
 <li>
-<p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON API errors that complements
+<p><code>SpringSecurityModule</code> provides a mapping of Spring Security exception types to JSON:API errors that complements
 the Spring-independent <code>SecurityModule</code>. Auto configuration is provided by <code>CrnkSecurityAutoConfiguration</code>. It sets up <code>SecurityModule</code> and
 <code>SpringSecurityModule</code>. By default access to all repositories is blocked. A bean of type <code>SecurityModuleConfigurer</code>
 can be added to grant access to repositories.</p>
@@ -1628,12 +1630,12 @@ can be added to grant access to repositories.</p>
 In case of an error, the transaction is rolled back.</p>
 </li>
 <li>
-<p>Spring MVC Module makes Spring MVC services available in the Crnk Home Module next to the json api repositories to have a list of all offered
+<p>Spring MVC Module makes Spring MVC services available in the Crnk Home Module next to the JSON:API repositories to have a list of all offered
 services. Auto configuration is provided by <code>CrnkSpringMvcAutoConfiguration</code>.</p>
 </li>
 <li>
 <p>With <code>CrnkErrorController</code> configured by <code>CrnkErrorControllerAutoConfiguration</code> additionally a new error controller is
-provided that returns errors in JSON API format. <code>crnk.spring.mvc.errorController=false</code> allows to disable the controller.</p>
+provided that returns errors in JSON:API format. <code>crnk.spring.mvc.errorController=false</code> allows to disable the controller.</p>
 </li>
 </ul>
 </div>
@@ -1712,10 +1714,10 @@ that allows to process <code>HttpServerRequest</code> objects of Vert.x.</p>
 <h3 id="_tomcat_setup">3.9. Tomcat Setup</h3>
 <div class="paragraph">
 <p>There is a bit of a controversy about which characters to encode or not encode in URLs based on
-RFC 7230 and RFC 3986. JSON API is affected in that regard due to the use of [ and ].
+RFC 7230 and RFC 3986. JSON:API is affected in that regard due to the use of [ and ].
 Browser vendors have yet to endorse those RFCs. But unfortunately, Tomcat already started
 to enforce the RFCs from their side. As such it is useful to
-relax the [ and ] characters to simplify development with JSON API, like entering
+relax the [ and ] characters to simplify development with JSON:API, like entering
 URLs manually in the browser. For this purpose <code>relaxedPathChars</code> can be set to <code>[]</code>, for more information
 see:</p>
 </div>
@@ -1903,7 +1905,7 @@ auto configurations and properties. Some possibilities:</p>
 </li>
 <li>
 <p><code>getQuerySpecDeserializer</code> and <code>setQuerySpecDeserializer</code> allows to reconfigure how parameters are parsed.
-Note that in some areas JSON API only provides reocmmendations and Crnk follows those recommendations
+Note that in some areas JSON:API only provides reocmmendations and Crnk follows those recommendations
 by default. So depending on your use cases, you may want to configure or implement some aspects differently.</p>
 </li>
 <li>
@@ -1917,19 +1919,19 @@ fail to provide pagination. As a result, your entire database may get downloaded
 your servers depending on the datasize.</p>
 </li>
 <li>
-<p><code>setWebPathPrefix</code> like <code>/api</code> to specify the path from where the JSON API endpoint is available.</p>
+<p><code>setWebPathPrefix</code> like <code>/api</code> to specify the path from where the JSON:API endpoint is available.</p>
 </li>
 <li>
 <p><code>setUrlMapper</code> to provide a new url mapping implementation to customize how Crnk generates links.</p>
 </li>
 <li>
-<p><code>getResourceRegistry</code> to access the available JSON API resources and repositories.</p>
+<p><code>getResourceRegistry</code> to access the available JSON:API resources and repositories.</p>
 </li>
 <li>
 <p><code>setAllowUnknownAttributes</code> to ignore unknown filter and sort attributes.</p>
 </li>
 <li>
-<p><code>setAllowUnknownParameters</code> to ignore query parameters not specified by JSON API (<code>filter</code>, <code>sort</code>, etc.).</p>
+<p><code>setAllowUnknownParameters</code> to ignore query parameters not specified by JSON:API (<code>filter</code>, <code>sort</code>, etc.).</p>
 </li>
 </ul>
 </div>
@@ -2009,7 +2011,7 @@ request. For more information see <code>CrnkProperties.RESOURCE_FIELD_IMMUTABLE_
 <li>
 <p><code>crnk.config.resource.response.return_404</code> with values true and false (default).
 Enforces a 404 response should a repository return a null value. This is common practice, but
-not strictly mandated by the JSON API specification. In general it is recommended for
+not strictly mandated by the JSON:API specification. In general it is recommended for
 repository to throw <code>ResourceNotFoundException</code>.</p>
 </li>
 <li>
@@ -2039,7 +2041,7 @@ objects (with a <code>self</code> attribute holding the url).</p>
 </li>
 <li>
 <p>If <code>crnk.enforceIdName</code> is set to <code>true</code> all <code>@JsonApiId</code> annotated fields will be named <code>id</code> on the rest layer (for sorting, filtering, etc.) regardless of its Java name.
-By default this is not enabled for historic reasons. But enabling it more closely reflects the JSON API specification and is recommended to do so.
+By default this is not enabled for historic reasons. But enabling it more closely reflects the JSON:API specification and is recommended to do so.
 It likely will be enabled in Crnk 3 by default.</p>
 </li>
 </ul>
@@ -2056,7 +2058,7 @@ directory paths always end with a '/' and the <code>HomeModule</code> will proce
 relationship repository serving that particular path.</p>
 </div>
 <div class="paragraph">
-<p>The <code>HomeModule</code> supports two kinds of formats that can be choosen upon creation. A JSON API-style format where a
+<p>The <code>HomeModule</code> supports two kinds of formats that can be choosen upon creation. A JSON:API-style format where a
 links node holds all links to child directories and repositories. And a JSON HOME format as specified by
 <a href="https://tools.ietf.org/html/draft-nottingham-json-home-06">JSON Home</a>.</p>
 </div>
@@ -2149,7 +2151,7 @@ Have a look at the Spring Boot example application to see a working example.</p>
 <h2 id="_resource">4. Resource</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A resource as defined by JSON API holds the actual data. The engine part of <code>crnk-core</code> is agnostic to how such resources are
+<p>A resource as defined by JSON:API holds the actual data. The engine part of <code>crnk-core</code> is agnostic to how such resources are
 actually implemented (see the <a href="#architecture">[architecture]</a> and <a href="#modules">[modules]</a> chapters). This chapter describes the most common
 way Java Beans and annotations. See <a href="#runtimerepository">here</a> for more information how setup resources and repositories
 programmatically at runtime.</p>
@@ -2157,7 +2159,7 @@ programmatically at runtime.</p>
 <div class="sect2">
 <h3 id="_jsonapiresource">4.1. JsonApiResource</h3>
 <div class="paragraph">
-<p>It is the most important annotation which defines a resource. It requires type parameter to be defined that is used to form a URLs and type field in passed JSONs. According to JSON API standard, the name defined in type can be either plural or singular</p>
+<p>It is the most important annotation which defines a resource. It requires type parameter to be defined that is used to form a URLs and type field in passed JSONs. According to JSON:API standard, the name defined in type can be either plural or singular</p>
 </div>
 <div class="paragraph">
 <p>The example below shows a sample class which contains a definition of a resource.</p>
@@ -2174,7 +2176,7 @@ programmatically at runtime.</p>
 <p>where <code>type</code> parameter specifies the resource&#8217;s name.</p>
 </div>
 <div class="paragraph">
-<p>By default the type of a resource in a JSON API document and its name within URLs match, for example:</p>
+<p>By default the type of a resource in a JSON:API document and its name within URLs match, for example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2818,7 +2820,7 @@ one of those two repository interfaces:</p>
 </div>
 <div class="paragraph">
 <p>The repositories are used to serve <code>POST</code>, <code>GET</code>, <code>PATCH</code> and <code>DELETE</code> requests as specified by
-JSON API specification. The repository contract closely resembles the JSON API specification. Subsequent
+JSON:API specification. The repository contract closely resembles the JSON:API specification. Subsequent
 sections and chapters outline various possibilities to speed-up and potentially reuse existing
 repository implementations.</p>
 </div>
@@ -2846,7 +2848,7 @@ The interface takes two generic arguments:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The type of a resource. Typically this is a plain Java Bean making use of the JSON API annotations. But may also be something
+<p>The type of a resource. Typically this is a plain Java Bean making use of the JSON:API annotations. But may also be something
 entirely different (see <a href="#architectures&gt; and &lt;&lt;modules">[architectures&gt; and &lt;&lt;modules]</a>). One other example is the
 <code>io.crnk.core.engine.document.Resource</code> class used to setup dynamically types repositories.</p>
 </li>
@@ -3062,8 +3064,8 @@ insertable, updateable, deltable for such repositories as false.</p>
 <div class="sect2">
 <h3 id="_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</h3>
 <div class="paragraph">
-<p>Crnk passes JSON API query parameters to repositories trough a QuerySpec parameter. It holds
-request parameters like sorting and filtering specified by JSON API. The subsequent
+<p>Crnk passes JSON:API query parameters to repositories trough a QuerySpec parameter. It holds
+request parameters like sorting and filtering specified by JSON:API. The subsequent
 sections will provide a number of example.</p>
 </div>
 <div class="admonitionblock note">
@@ -3073,7 +3075,7 @@ sections will provide a number of example.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Not everything is specified by JSON API. For some request parameters only recommendations
+Not everything is specified by JSON:API. For some request parameters only recommendations
 are provided as different applications are likely to be in need of different semantics and
 implementations. For this reason the engine part in <code>crnk-core</code> makes use of <code>QueryAdapter</code> and allows implementations other than
 QuerySpec (like the legacy <code>QueryParams</code>). The mapping of HTTP request parameters to QuerySpec and back
@@ -3150,7 +3152,7 @@ the implementation of a repository as simple as possible.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_filtering">5.2.2. Filtering</h4>
+<h4 id="_basic_filtering">5.2.2. Basic Filtering</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3158,7 +3160,7 @@ the implementation of a repository as simple as possible.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-The JSON API specification does not a mandate a specific filtering semantic. Instead
+The JSON:API specification does not a mandate a specific filtering semantic. Instead
 it provides a recommendation that comes by default with Crnk. Depending on the data store
 in use, application may choose to extend or replace that default implementation by extending or
 replacing <code>DefaultQuerySpecUrlMapper</code>.
@@ -3308,11 +3310,110 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 </ul>
 </div>
 <div class="paragraph">
+<p><a id="nested_filtering"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nested_filtering">5.2.3. Nested Filtering</h4>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is experimental. Please provide feedback.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The url patterns from the previous section allow to <code>AND</code> multiple filter conditions. For scenarios where
+this is insufficient, it is also possible to specify more complex filter specifications through JSON.
+The subsequent example filters projects by either their <code>name</code> being equals <code>Great Project</code> or its <code>id</code>
+being smaller or equals 122.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://127.0.0.1:8080/projects?filter={"OR": {"name": "Great Project", "LE": {"id": 122}}}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JSON field names matching an operator can be used in two different ways: to setup arbitrary nesting
+of <code>AND</code>, <code>OR</code>, <code>NOT</code> or to specify an operator for field, name pair like <code>{"id": 122}</code>.</p>
+</li>
+<li>
+<p>JSON field names matching a resource field name can also be used in two different ways: to filter the
+attribute by the specified value or to setup nested attributes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some further examples:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To require a single attribute to equal a value:</p>
+<div class="literalblock">
+<div class="content">
+<pre>{"name": "test"}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To require a single attribute to equal a value from within a set:</p>
+<div class="literalblock">
+<div class="content">
+<pre>{"id": [12, 13, 14]}</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To filter by multiple attributes with the <code>OR</code> operator:</p>
+<div class="literalblock">
+<div class="content">
+<pre>{ "OR": [ {"id": [12, 13, 14]}, {"completed": "true"} ] }</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To filter by multiple attributes with the <code>AMD</code> operator:</p>
+<div class="literalblock">
+<div class="content">
+<pre>{ "AND": [ {"id": [12, 13, 14]}, {"completed": "true"} ] }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or more simply:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>{"id": [12, 13, 14], "completed": "true" }</pre>
+</div>
+</div>
+</li>
+<li>
+<p>To nest <code>AND</code>, <code>OR</code>, <code>NOT</code> operators:</p>
+<div class="literalblock">
+<div class="content">
+<pre>{"name": "Great Task", "OR": {"id": 122, "name": "Other Task"}}</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
 <p><a id="sorting"></a></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sorting">5.2.3. Sorting</h4>
+<h4 id="_sorting">5.2.4. Sorting</h4>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
 </div>
@@ -3344,7 +3445,7 @@ SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.D
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination">5.2.4. Pagination</h4>
+<h4 id="_pagination">5.2.5. Pagination</h4>
 <div class="sect4">
 <h5 id="_offset_limit_paging">Offset/Limit Paging</h5>
 <div class="paragraph">
@@ -3387,7 +3488,7 @@ The conversion takes place automatically when invoking <code>QuerySpec.getPaging
 <div class="sect4">
 <h5 id="_pagination_links">Pagination Links</h5>
 <div class="paragraph">
-<p>JSON API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
+<p>JSON:API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
 The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
 by repositories along with the result data. There is a default implementation named <code>DefaultPagedLinksInformation</code>.</p>
 </div>
@@ -3476,7 +3577,7 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sparse_fieldsets">5.2.5. Sparse Fieldsets</h4>
+<h4 id="_sparse_fieldsets">5.2.6. Sparse Fieldsets</h4>
 <div class="paragraph">
 <p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter:</p>
 </div>
@@ -3488,7 +3589,7 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.2.6. Inclusion of Related Resources</h4>
+<h4 id="_inclusion_of_related_resources">5.2.7. Inclusion of Related Resources</h4>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing an <code>include</code> parameter. Examples:</p>
 </div>
@@ -3532,10 +3633,10 @@ The QuerySpec for a particular resource type can be obtained with <code>QuerySpe
 </div>
 </div>
 <div class="sect3">
-<h4 id="_url_mapping">5.2.7. URL Mapping</h4>
+<h4 id="_url_mapping">5.2.8. URL Mapping</h4>
 <div class="paragraph">
 <p>The mapping of request parameters to QuerySpec and back is implemented by <code>QuerySpecUrlMapper</code>.
-With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON API
+With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON:API
 specification and recommendations and introduces some further defaults as documented
 in the previous sections (like the filter operators) where the recommendations
 do not go far enough. The used <code>QuerySpecUrlMapper</code> can be obtained
@@ -3710,7 +3811,7 @@ as done in the example from the previous section.</p>
 <div class="sect3">
 <h4 id="_self_and_related_links">5.3.3. Self and Related Links</h4>
 <div class="paragraph">
-<p>The JSON API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
+<p>The JSON:API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
 mandates two relationship links:</p>
 </div>
 <div class="ulist">
@@ -3890,7 +3991,7 @@ and used by both servers and clients:</p>
 <h3 id="_error_handling">5.5. Error Handling</h3>
 <div class="paragraph">
 <p>Processing errors in Crnk can be handled by throwing an exception and providing
-a corresponding exception mapper which defines mapping to a proper JSON API error response.</p>
+a corresponding exception mapper which defines mapping to a proper JSON:API error response.</p>
 </div>
 <div class="sect3">
 <h4 id="_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</h4>
@@ -3931,7 +4032,7 @@ a corresponding exception mapper which defines mapping to a proper JSON API erro
 </div>
 </div>
 <div class="sect3">
-<h4 id="__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON API response</h4>
+<h4 id="__and_mapping_it_to_json_api_response">5.5.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
 <div class="paragraph">
 <p>Class responsible for mapping the exception should:</p>
 </div>
@@ -3991,7 +4092,7 @@ public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt;
 </div>
 <div class="paragraph">
 <p>On the server-side an exception should be mapped to an <code>ErrorResponse</code> object
-with <code>toErrorResponse</code>. It consists of an HTTP status and <code>ErrorData</code> (which is consistent with JSON API error structure).
+with <code>toErrorResponse</code>. It consists of an HTTP status and <code>ErrorData</code> (which is consistent with JSON:API error structure).
 On the client-side an <code>ExceptionMapper</code> returning <code>true</code> upon <code>accept(&#8230;&#8203;)</code> is used to map an
 <code>ErrorResponse</code> back to an exception with <code>fromErrorResponse</code>.</p>
 </div>
@@ -4249,7 +4350,7 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 <h3 id="__jsonapiexposed">5.12. @JsonApiExposed</h3>
 <div class="paragraph">
 <p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
-externally on the JSON API endpoint. There are different use cases for this:</p>
+externally on the JSON:API endpoint. There are different use cases for this:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4628,8 +4729,8 @@ headers to OkHttp request interceptor</a>.</p>
 <h2 id="_formats">7. Formats</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default Crnk follows the JSON API specification to establish a REST endpoint. This chapter outlines the support
-for formats other than JSON API.</p>
+<p>By default Crnk follows the JSON:API specification to establish a REST endpoint. This chapter outlines the support
+for formats other than JSON:API.</p>
 </div>
 <div class="paragraph">
 <p><a id="format_plain"></a></p>
@@ -4637,14 +4738,14 @@ for formats other than JSON API.</p>
 <div class="sect2">
 <h3 id="_plain_json">7.1. Plain JSON</h3>
 <div class="paragraph">
-<p>The relationships and inclusions mechanisms of JSON API allow to built powerful applications. But
+<p>The relationships and inclusions mechanisms of JSON:API allow to built powerful applications. But
 sometimes those advanced features can also make simpler applications harder to write.
 For example, clients do not have direct access to relationships, but rather have the resolve them through their
 identifiers.</p>
 </div>
 <div class="paragraph">
 <p><code>crnk-format-plain-json</code> hosts the <code>PlainJsonFormatModule</code> that allows to setup a simpler,
-non-JSON API format. An example looks like:</p>
+non-JSON:API format. An example looks like:</p>
 </div>
 <div class="listingblock">
 <div class="title"><a href="http://localhost:8080/tasks/12" class="bare">http://localhost:8080/tasks/12</a></div>
@@ -4681,8 +4782,8 @@ non-JSON API format. An example looks like:</p>
 <code>attributes</code> and <code>relationships</code> containers. Contributions to add more flexibility to the module are always welcome.</p>
 </div>
 <div class="paragraph">
-<p>Note that the JSON API endpoint remains fully functional. The HTTP <code>Accept</code> and <code>Content-Type</code> headers are used to select
-the format. As such, the Crnk client continues to make use of the JSON API format. Related to this there is
+<p>Note that the JSON:API endpoint remains fully functional. The HTTP <code>Accept</code> and <code>Content-Type</code> headers are used to select
+the format. As such, the Crnk client continues to make use of the JSON:API format. Related to this there is
 a <code>format</code> attribute for
 the Typescript generator to select the desired format for generation:</p>
 </div>
@@ -4775,7 +4876,7 @@ Traditional and reactive-style programming APIs are considered being equally imp
 </li>
 <li>
 <p><code>Mono</code> rather than <code>Flux</code> is used for list return types since meta and links information must be returned as well, not just a sequence of resources.
-For large number of resources, the JSON API pagination mechanisms can be applied.</p>
+For large number of resources, the JSON:API pagination mechanisms can be applied.</p>
 </li>
 <li>
 <p>Internally the traditional and reactive repositories are served by the same Crnk engine and share virtually all of the code base.
@@ -4978,7 +5079,7 @@ worker threads are spanned as necessary.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The resource-oriented nature of Crnk makes a number of quite powerful security schemes possible
-to authorize access to resources. The semantics of JSON API with resources, relationships, fields
+to authorize access to resources. The semantics of JSON:API with resources, relationships, fields
 and parameters provide much more information about an application compared to, for example, a
 more classical JAX-RS oder Spring MVC application. This in turn allows to automate and simplify
 many security-related topics, which in turn allows for a more robust authorization.</p>
@@ -5146,7 +5247,7 @@ It can be obtained with <code>ModuleContext.getResourceFilterDirectory(&#8230;&#
 <div class="sect2">
 <h3 id="_dataroom_access_control">9.4. Dataroom Access Control</h3>
 <div class="paragraph">
-<p>Filtering of resources is one of the main building blocks of JSON API. As such it is typically
+<p>Filtering of resources is one of the main building blocks of JSON:API. As such it is typically
 not too hard to implement DAC. The roles of a user can be checked and if necessary
 for filters specific to that user can be added. There are two possibilities
 to add such filters:</p>
@@ -5295,7 +5396,7 @@ indistinguishable from non-existing ones.</p>
 <div class="sect2">
 <h3 id="_jpa">10.1. JPA</h3>
 <div class="paragraph">
-<p>The JPA module allows to automatically expose JPA entities as JSON API repositories. No implementation
+<p>The JPA module allows to automatically expose JPA entities as JSON:API repositories. No implementation
 or Crnk-specific annotations are necessary.</p>
 </div>
 <div class="paragraph">
@@ -5304,10 +5405,10 @@ or Crnk-specific annotations are necessary.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>expose JPA entities to JSON API repositories</p>
+<p>expose JPA entities to JSON:API repositories</p>
 </li>
 <li>
-<p>expose JPA relations as JSON API repositories</p>
+<p>expose JPA relations as JSON:API repositories</p>
 </li>
 <li>
 <p>decide which entities to expose as endpoints</p>
@@ -5328,7 +5429,7 @@ join to related entities. For example, <code>sort=-project.name,project.id</code
 to refer to attributes on subtypes.</p>
 </li>
 <li>
-<p>support for Jackson annotations to customize entity attributes on the JSON API layer, see <a href="#jackson_annotations">here</a>.</p>
+<p>support for Jackson annotations to customize entity attributes on the JSON:API layer, see <a href="#jackson_annotations">here</a>.</p>
 </li>
 <li>
 <p>DTO mapping support to map entities to DTOs before sending them to clients.</p>
@@ -5346,13 +5447,13 @@ to refer to attributes on subtypes.</p>
 <p>automatic transaction handling spanning requests and doing a rollback in case of an exception.</p>
 </li>
 <li>
-<p><code>OptimisticLockExceptionMapper</code> mapped to JSON API errors with
+<p><code>OptimisticLockExceptionMapper</code> mapped to JSON:API errors with
 <code>409</code> status code.</p>
 </li>
 <li>
 <p><code>PersistenceException</code> and <code>RollbackException</code> are unwrapped
 to the usually more interesting exceptions like
-<code>ValidationException</code> and then translated to JSON API errors.</p>
+<code>ValidationException</code> and then translated to JSON:API errors.</p>
 </li>
 </ul>
 </div>
@@ -5405,7 +5506,7 @@ application just has to implement <code>JpaModuleConfigurer</code> to configure 
 </li>
 <li>
 <p><code>exposeAllEntities</code> takes an <code>EntityManagerFactory</code> and exposes all registered entities as
-JSON API repository.</p>
+JSON:API repository.</p>
 </li>
 <li>
 <p>To manually select the entities exposed to Crnk use <code>JpaModuleConfig.addRepository(&#8230;&#8203;)</code>.
@@ -5437,7 +5538,7 @@ environment (Spring, JEE, etc.). This might be as simple as a Spring bean implem
 <div class="sect3">
 <h4 id="_jpa_entity_setup">10.1.2. JPA Entity Setup</h4>
 <div class="paragraph">
-<p>Most features of JPA are supported and get mapped to JSON API:</p>
+<p>Most features of JPA are supported and get mapped to JSON:API:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5460,7 +5561,7 @@ of the values in the string.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>It is possible to add additional JSON API related fields to entities by annotating them with <code>@javax.persistence.Transient</code> (or the other way around by marking
+<p>It is possible to add additional JSON:API related fields to entities by annotating them with <code>@javax.persistence.Transient</code> (or the other way around by marking
 it with <code>@JsonIgnore</code>):</p>
 </div>
 <div class="listingblock">
@@ -5779,8 +5880,8 @@ JPA implementation mostly likely will fail with an incorrect type is passed to i
 <div class="paragraph">
 <p>A <code>ValidationModule</code> provided by <code>io.crnk:crnk-validation</code> implements
 resource validation and provides exception mappers for <code>javax.validation.ValidationException</code> and <code>javax.validation.ConstraintViolationException</code>.
-Among others, it properly translates 'javax.validation.ConstraintViolation' instances to JSON API errors.
-A JSON API error can, among others, contain a source pointer. This source pointer allows a clients/UI to
+Among others, it properly translates 'javax.validation.ConstraintViolation' instances to JSON:API errors.
+A JSON:API error can, among others, contain a source pointer. This source pointer allows a clients/UI to
 display the validation errors next to the corresponding input fields.</p>
 </div>
 <div class="paragraph">
@@ -5833,7 +5934,7 @@ module should be defined in the following way:</p>
 <div class="sect2">
 <h3 id="_meta_module">10.3. Meta Module</h3>
 <div class="paragraph">
-<p>This is a module that exposes the internal workings of Crnk as JSON API repositories.
+<p>This is a module that exposes the internal workings of Crnk as JSON:API repositories.
 It lets you browse the set of available resources, their types, their attributes, etc. For example,
 Crnk UI make use of the meta module to implement auto-completing of input fields.</p>
 </div>
@@ -5844,12 +5945,12 @@ Crnk UI make use of the meta module to implement auto-completing of input fields
 <div class="title">Note</div>
 </td>
 <td class="content">
-There is currently no JSON API standard for meta data. There are more
+There is currently no JSON:API standard for meta data. There are more
 general formats like Swagger and ALPS. At some point those might be supported as
 well (probably rather the later than the former). One
 can view them to be complementary to the <code>MetaModule</code> as the later
-is exactly tailored towards JSON API, such as the accessability as regular
-JSON API (meta) repository and data structures matching the standard. Most likely,
+is exactly tailored towards JSON:API, such as the accessability as regular
+JSON:API (meta) repository and data structures matching the standard. Most likely,
 any future standard implementation will built up on the information from the
 <code>MetaModule</code>.
 </td>
@@ -5868,7 +5969,7 @@ any future standard implementation will built up on the information from the
 </div>
 </div>
 <div class="paragraph">
-<p><code>ResourceMetaProvider</code> exposes all JSON API resources and repositories as meta data. You may add further provides to
+<p><code>ResourceMetaProvider</code> exposes all JSON:API resources and repositories as meta data. You may add further provides to
 expose more meta data, such as the <code>JpaMetaProvider</code>.</p>
 </div>
 </div>
@@ -5929,7 +6030,7 @@ most important classes are:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/meta/dataObject</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MetaDataObject</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Base type for any object holding data, like
-																			 JPA entities or JSON API resources.</p></td>
+																			 JPA entities or JSON:API resources.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/meta/attribute</code></p></td>
@@ -5939,12 +6040,12 @@ most important classes are:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/meta/resource</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MetaResource</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON API resource representation extending <code>MetaDataObject</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON:API resource representation extending <code>MetaDataObject</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/meta/resourceRepository</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MetaResourceRepository</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON API repository representation holding resources.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON:API repository representation holding resources.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6079,7 +6180,7 @@ implementation. This allows to:</p>
 </li>
 <li>
 <p>add <code>MetaPartition</code> implementations to introduce new, isolated areas in the meta model, like a JPA
-meta model next to the JSON API one (like for documentation purposes).</p>
+meta model next to the JSON:API one (like for documentation purposes).</p>
 </li>
 </ul>
 </div>
@@ -6109,8 +6210,8 @@ The motivation of <code>ActivitiModule</code> is to:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>have a JSON API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
-and client-side tooling of JSON API.</p>
+<p>have a JSON:API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
+and client-side tooling of JSON:API.</p>
 </li>
 <li>
 <p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
@@ -6153,7 +6254,7 @@ It sets up an approval flow where changes to the <code>Schedule</code> resource 
 </ul>
 </div>
 <div class="paragraph">
-<p>To setup a JSON API repository for a process or task, the corresponding resource class can be subclassed and extended with
+<p>To setup a JSON:API repository for a process or task, the corresponding resource class can be subclassed and extended with
 the application specific fields. For example:</p>
 </div>
 <div class="listingblock">
@@ -6483,7 +6584,7 @@ implement their own <code>FacetProvider</code> implementation and register it th
 <div class="sect3">
 <h4 id="_examples_3">10.5.2. Examples</h4>
 <div class="paragraph">
-<p>All the facets are then available as regular, new JSON API resource that can filtered, paged, sorted, etc. like
+<p>All the facets are then available as regular, new JSON:API resource that can filtered, paged, sorted, etc. like
 any other resource:</p>
 </div>
 <div class="listingblock">
@@ -6510,7 +6611,7 @@ any other resource:</p>
       },
       "name" : "name",
       "type" : "projects",
-      "labels" : [ "Great Project", "Crnk Project", "Some Project", "JSON API Project" ]
+      "labels" : [ "Great Project", "Crnk Project", "Some Project", "JSON:API Project" ]
     },
   }]
 }</code></pre>
@@ -6589,7 +6690,7 @@ resource starts holding complex object graphs again.</p>
 <div class="paragraph">
 <p>For all the before mentioned reason support for <a href="http://jsonpatch.com/">jsonpatch.com</a> is provided. It allows to send multiple
 insertions, updates and deletions with a single request and provides the results for each such executed operation.
-Note that numerous attempts and discussions have taken place and are still ongoing to establish a common JSON API standard,
+Note that numerous attempts and discussions have taken place and are still ongoing to establish a common JSON:API standard,
 but that does not seem to make much progress. With  <a href="http://jsonpatch.com/">jsonpatch.com</a> there is already an estabilished
 standard that fits well for many use cases.</p>
 </div>
@@ -6613,7 +6714,7 @@ transaction spanning all requests. This looks as follows:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>There is further an operations client implementation that works along the regular JSON API client implementation:</p>
+<p>There is further an operations client implementation that works along the regular JSON:API client implementation:</p>
 </div>
 <div class="listingblock">
 <div class="title">OperationsPostTest.java</div>
@@ -7050,7 +7151,7 @@ this feature is in incubation, more refinements are expected in upcoming release
 pattern as for any compile-time repository.</p>
 </li>
 <li>
-<p>Make use of the <code>Resource</code> class. It is the generic JSON API resource presentation within the Crnk engine.</p>
+<p>Make use of the <code>Resource</code> class. It is the generic JSON:API resource presentation within the Crnk engine.</p>
 </li>
 <li>
 <p>Make use of an arbitrary dynamic object like a <code>java.util.Map</code> and provide a <code>ResourceFieldAccessor</code> for
@@ -7518,14 +7619,14 @@ development from React to Angular. Its motivation is to separate the presentatio
 application state for a clean, mockable, debug-friendly, performant and scalable design.</p>
 </div>
 <div class="paragraph">
-<p>We believe that JSON API and redux can complement each other well. The resource-based nature
-of JSON API and its normalized response document format (trough relationships and inclusions)
+<p>We believe that JSON:API and redux can complement each other well. The resource-based nature
+of JSON:API and its normalized response document format (trough relationships and inclusions)
 are well suited to be put into an ngrx-based store. <code>ngrx-json-api</code> is a project that does exactly that.
 The missing piece is how to integrate Angular components like forms and tables with <code>ngrx-json-api</code>.
-Tables need to display JSON API resources and do sorting, filtering, paging.
-Forms need to display JSON API resources and trigger <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> requests.
+Tables need to display JSON:API resources and do sorting, filtering, paging.
+Forms need to display JSON:API resources and trigger <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> requests.
 Errors should be displayed to the user in a dialog, header section or next to
-input component causing the issue (based on JSON API source pointers).</p>
+input component causing the issue (based on JSON:API source pointers).</p>
 </div>
 <div class="paragraph">
 <p>Crnk provides two tools: <code>crnk-gen-typescript</code> and <code>@crnk/angular-ngrx</code>. <code>crnk-gen-typescript</code>
@@ -7561,11 +7662,11 @@ at the <a href="#generation">[generation]</a> chapter.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@crnk/angular-ngrx/expression/forms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Binding of the expression model to Angular form components (a JSON API specific flavor of <code>ngModel</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Binding of the expression model to Angular form components (a JSON:API specific flavor of <code>ngModel</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@crnk/angular-ngrx/binding</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Helper classes that take care of binding tables or forms to JSON API. Makes use of <code>@crnk/angular-ngrx/expression</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Helper classes that take care of binding tables or forms to JSON:API. Makes use of <code>@crnk/angular-ngrx/expression</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@crnk/angular-ngrx/meta</code></p></td>
@@ -7606,7 +7707,7 @@ issue a single bulk JSON Patch request. The bulk response triggers the usual <co
 <div class="paragraph">
 <p><code>@crnk/angular-ngrx/expression</code> provides a QueryDSL-like expression model for Typescript. It is used  to
  address boiler-plate when working with the Angular <code>FormModule</code> resp. <code>ngModel</code> directly. For example,
- when an input field needs to be bound to a JSON API resource field, a number of things must happen:</p>
+ when an input field needs to be bound to a JSON:API resource field, a number of things must happen:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7620,7 +7721,7 @@ issue a single bulk JSON Patch request. The bulk response triggers the usual <co
 <p>The input field must sent changes back to the store.</p>
 </li>
 <li>
-<p>The <code>FormControl</code> backing the input field must be properly validated. JSON API errors may
+<p>The <code>FormControl</code> backing the input field must be properly validated. JSON:API errors may
 may contain a source pointer. If the source pointer points to a field that is bound to a <code>FormControl</code>, it
 must be accounted for in its valid state.</p>
 </li>
@@ -7634,7 +7735,7 @@ must be accounted for in its valid state.</p>
 </div>
 <div class="paragraph">
 <p><code>ngModel</code> is limited to holding a simple value. In contrast, the use cases here require an understanding of the
-entire resource. It is necessary to have full JSON API resource and the path to the
+entire resource. It is necessary to have full JSON:API resource and the path to the
 field to determine the field value and errors. This is achieved with <code>@crnk/angular-ngrx/expression</code>:</p>
 </div>
 <div class="ulist">
@@ -7737,7 +7838,7 @@ resource type, resource id and path to allow editing of multiple resources on th
 </li>
 <li>
 <p><code>toQueryPath</code> constructs a path used for sorting and filtering. Such a path does not include any
-<code>attributes</code>, <code>relationships</code> or <code>data</code> elements necessary to navigate through JSON API structures.</p>
+<code>attributes</code>, <code>relationships</code> or <code>data</code> elements necessary to navigate through JSON:API structures.</p>
 </li>
 <li>
 <p>QMetaAttribute can also be constructed without a bean binding. In this case it can still
@@ -7777,7 +7878,7 @@ in the next sections.</p>
 <div class="sect2">
 <h3 id="_form_binding">15.4. Form Binding</h3>
 <div class="paragraph">
-<p>Working with forms and JSON API is the same for many use cases:</p>
+<p>Working with forms and JSON:API is the same for many use cases:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7791,10 +7892,10 @@ in the next sections.</p>
 <p>components may perform basic local validation. For example with the Angular <code>required</code> directive.</p>
 </li>
 <li>
-<p>components may get server-side validation errors using the JSON API error format.</p>
+<p>components may get server-side validation errors using the JSON:API error format.</p>
 </li>
 <li>
-<p>components may perform complex client-side validation using <code>@ngrx/effects</code>. JSON API is
+<p>components may perform complex client-side validation using <code>@ngrx/effects</code>. JSON:API is
 well suited for this purpose. For example,  a (validation) effect can listen to value changes
 in the store and trigger <code>ModifyStoreResourceErrorsAction</code> of <code>ngrx-json-api</code> when necessary.
 That validation effect is free to perform any kind of validation logic cleanly decoupled
@@ -7904,7 +8005,7 @@ query is located.</p>
 <h4 id="_updating_data">15.4.2. Updating Data</h4>
 <div class="paragraph">
 <p><code>FormBinding</code> listens to value changes of the bound form and updates accordingly updates the store through <code>ngrx-json-api</code>
-actions. To have a mapping between JSON API resource fields and form controls, the later must follow a naming pattern.
+actions. To have a mapping between JSON:API resource fields and form controls, the later must follow a naming pattern.
 There are two possibilities for form control names:</p>
 </div>
 <div class="ulist">
@@ -7942,10 +8043,10 @@ do not pass. Two fields give access to that status information:</p>
 <div class="sect3">
 <h4 id="_validation_and_error_handling">15.4.3. Validation and Error handling</h4>
 <div class="paragraph">
-<p><code>FormBinding</code> takes care of error handling. It maps back any JSON API errors back to the form controls of the
-configured form. Internally it matches the source pointers of JSON API errors against the form names (see previous section)
-to match errors with form control. The <code>FormBinding</code> has an <code>unmappedErrors</code> property that lists any JSON API error that could not be assigned to a specific form
-control instance, either because the matching instance does not exists or the JSON API error is not specific to given attribute
+<p><code>FormBinding</code> takes care of error handling. It maps back any JSON:API errors back to the form controls of the
+configured form. Internally it matches the source pointers of JSON:API errors against the form names (see previous section)
+to match errors with form control. The <code>FormBinding</code> has an <code>unmappedErrors</code> property that lists any JSON:API error that could not be assigned to a specific form
+control instance, either because the matching instance does not exists or the JSON:API error is not specific to given attribute
 but concerns the entire resource (like a conflict).</p>
 </div>
 <div class="paragraph">
@@ -7957,7 +8058,7 @@ but concerns the entire resource (like a conflict).</p>
 <p>Make use of the default Angular API and display the errors of the <code>FormControl</code> instances.</p>
 </li>
 <li>
-<p>Access the JSON API errors from the store directly.</p>
+<p>Access the JSON:API errors from the store directly.</p>
 </li>
 </ul>
 </div>
@@ -7969,18 +8070,18 @@ components take an expression as parameter:</p>
 <ul>
 <li>
 <p><code>crnk-control-errors</code> retrieves the errors from the <code>FormControl</code> having been bound to the same expression. As a consequence,
-it displays both local and JSON API errors.</p>
+it displays both local and JSON:API errors.</p>
 </li>
 <li>
-<p><code>crnk-resource-errors</code> retrieves the JSON API error directory from the store. As such, it works independently of the forms
-but can display JSON API errors only.</p>
+<p><code>crnk-resource-errors</code> retrieves the JSON:API error directory from the store. As such, it works independently of the forms
+but can display JSON:API errors only.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>In both case a template must be specified how the error is rendered. In case of multiple errors, the template is rendered
-multiple times. <code>errorCode</code> and <code>errorData</code>  are available as variable. <code>errorData</code> contains the full JSON API error
-in case of a JSON API error.</p>
+multiple times. <code>errorCode</code> and <code>errorData</code>  are available as variable. <code>errorData</code> contains the full JSON:API error
+in case of a JSON:API error.</p>
 </div>
 </div>
 <div class="sect3">
@@ -8009,7 +8110,7 @@ Intellij IDEA seems to have some issues when it comes to using the async pipe an
 <h3 id="_table_binding">15.5. Table Binding</h3>
 <div class="paragraph">
 <p>Similar to <code>FormBinding</code> there is a <code>DataTableBinding</code> class. It can help
-taking care of interfacing a table component with JSON API.</p>
+taking care of interfacing a table component with JSON:API.</p>
 </div>
 <div class="sect3">
 <h4 id="_setup_8">15.5.1. Setup</h4>
@@ -8084,7 +8185,7 @@ bound to the table. <code>zoneId</code> additionally can specify in which <code>
 <div class="paragraph">
 <p><code>DataTableBinding</code>  makes use of a <code>DataTableImplementationAdapter</code> and offers a
 <code>onLazyLoad(&#8230;&#8203;)</code> method to translate native event of the table implementation
-to JSON API query parameters and then updates the query in the store accordingly. The update of the store in turns
+to JSON:API query parameters and then updates the query in the store accordingly. The update of the store in turns
 triggers a refresh from the server and lets the table component get the new data through the <code>result$</code> variable
 of type <code>Observable&lt;ManyQueryResult&gt;</code>. <code>ManyQueryResult</code> holds, next to the resources, information about
 linking, meta data, loading state and errors.</p>
@@ -8142,7 +8243,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-11-29 14:27:10 UTC
+Last updated 2018-11-30 10:20:50 UTC
 </div>
 </div>
 </body>
