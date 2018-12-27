@@ -709,22 +709,21 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_advanced_customizations_through_modules">13. Advanced Customizations through Modules</a>
 <ul class="sectlevel2">
 <li><a href="#_request_filtering">13.1. Request Filtering</a></li>
-<li><a href="#_resource_filtering">13.2. Resource Filtering</a></li>
-<li><a href="#_filter_modifications">13.3. Filter Modifications</a></li>
-<li><a href="#_filter_priority">13.4. Filter Priority</a></li>
-<li><a href="#_access_to_http_layer">13.5. Access to HTTP layer</a></li>
-<li><a href="#_module_extensions_and_dependencies">13.6. Module Extensions and dependencies</a></li>
-<li><a href="#_integrate_third_party_data_stores">13.7. Integrate third-party data stores</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism_2">13.8. Implement a custom discovery mechanism</a></li>
-<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">13.9. Let a module hook into the Crnk HTTP client implementation</a></li>
-<li><a href="#_implement_a_custom_integration">13.10. Implement a custom integration</a></li>
-<li><a href="#_create_repositories_at_runtime">13.11. Create repositories at runtime</a>
+<li><a href="#_filter_modifications">13.2. Filter Modifications</a></li>
+<li><a href="#_filter_priority">13.3. Filter Priority</a></li>
+<li><a href="#_access_to_http_layer">13.4. Access to HTTP layer</a></li>
+<li><a href="#_module_extensions_and_dependencies">13.5. Module Extensions and dependencies</a></li>
+<li><a href="#_integrate_third_party_data_stores">13.6. Integrate third-party data stores</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism_2">13.7. Implement a custom discovery mechanism</a></li>
+<li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">13.8. Let a module hook into the Crnk HTTP client implementation</a></li>
+<li><a href="#_implement_a_custom_integration">13.9. Implement a custom integration</a></li>
+<li><a href="#_create_repositories_at_runtime">13.10. Create repositories at runtime</a>
 <ul class="sectlevel3">
-<li><a href="#_implementing_repositories_dynamically_at_runtime">13.11.1. Implementing repositories dynamically at runtime</a></li>
-<li><a href="#_registering_repositories_at_runtime">13.11.2. Registering repositories at runtime</a></li>
+<li><a href="#_implementing_repositories_dynamically_at_runtime">13.10.1. Implementing repositories dynamically at runtime</a></li>
+<li><a href="#_registering_repositories_at_runtime">13.10.2. Registering repositories at runtime</a></li>
 </ul>
 </li>
-<li><a href="#_discovery_of_modules_by_crnkclient">13.12. Discovery of Modules by CrnkClient</a></li>
+<li><a href="#_discovery_of_modules_by_crnkclient">13.11. Discovery of Modules by CrnkClient</a></li>
 </ul>
 </li>
 <li><a href="#_generation">14. Generation</a>
@@ -2497,19 +2496,22 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 <div class="ulist">
 <ul>
 <li>
-<p><code>sortable</code> defines whether an attribute can be sorted.</p>
+<p><code>sortable</code> defines whether a field can be sorted.</p>
 </li>
 <li>
-<p><code>filterable</code> defines whether an attribute can be filtered.</p>
+<p><code>filterable</code> defines whether a field can be filtered.</p>
 </li>
 <li>
-<p><code>postable</code> defines whether an attribute can be set with a POST request.</p>
+<p><code>postable</code> defines whether a field can be set with a POST request.</p>
 </li>
 <li>
-<p><code>patchable</code> defines whether an attribute can be changed with a PATCH request.</p>
+<p><code>patchable</code> defines whether a field can be changed with a PATCH request.</p>
 </li>
 <li>
-<p><code>readable</code> defines whether an attribute can be read with a GET request.</p>
+<p><code>deletable</code> defines whether a multi-valued relationship field can be changed with a DELETE request.</p>
+</li>
+<li>
+<p><code>readable</code> defines whether a field can be read with a GET request.</p>
 </li>
 <li>
 <p><code>patchStrategy</code> defines the behavior of value with PATCH request. It can be either <code>MERGE</code> if you want the value be merged with an original one or <code>SET</code> if you want the value be totaly replaced with a new one.</p>
@@ -6803,33 +6805,11 @@ can be registered with <code>ModuleContext.addRepositoryDecoratorFactory</code>.
 notified about every repository registration and is then free do decorate it or not.</p>
 </div>
 <div class="paragraph">
-<p><a id="resourcefilter"></a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_resource_filtering">13.2. Resource Filtering</h3>
-<div class="paragraph">
-<p><code>ResourceFilter</code> allows to restrict access to resources and fields. To methods <code>filterResource</code> and
-<code>filterField</code> can be implemented for this purpose. Both return a <code>FilterBehavior</code> which allows to
-distinguish between <code>NONE</code>, <code>IGNORE</code> and <code>FORBIDDEN</code>. For example, a field like a
-lock count can make use of <code>IGNORE</code> in order to be ignored for POST and PATCH requests (the current value
-on the server is left untouched). While access to an unauthorized resource or
-field results in a forbidden error with <code>FORBIDDEN</code>.</p>
-</div>
-<div class="paragraph">
-<p>The <code>SecurityModule</code> makes use of <code>ResourceFilter</code> to perform access control.
-<code>SecurityResourceFilter</code> in 'crnk-security` gives an example how it is used. The <code>MetaModule</code> and
-<code>HomeModule</code> make use of <code>ResourceFilterDirectory</code> obtained with <code>ModuleContext.getResourceFilterDirectory(&#8230;&#8203;)</code> to
-query those <code>ResourceFilter</code> and only display information about resources and fields accessible in the context
-of the current re quest. The <code>ResourceFilterDirectory</code> makes use of per-request caching as the information
-may be accessed repeatedly for a request.</p>
-</div>
-<div class="paragraph">
 <p><a id="modificationfilter"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_modifications">13.3. Filter Modifications</h3>
+<h3 id="_filter_modifications">13.2. Filter Modifications</h3>
 <div class="paragraph">
 <p>Changes to attributes and relationships can be tracked by implementing
 <code>ResourceModificationFilter</code>. The filter is invoked upon an incoming request
@@ -6838,7 +6818,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_priority">13.4. Filter Priority</h3>
+<h3 id="_filter_priority">13.3. Filter Priority</h3>
 <div class="paragraph">
 <p><code>DocumentFilter</code>, <code>RepositoryFilter</code> and <code>ResourceModificationFilter</code> can implement
 <code>Prioritizable</code> to introduce a priority among multiple filters.</p>
@@ -6848,7 +6828,7 @@ Such filters are useful, for example, to implement auditing functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_access_to_http_layer">13.5. Access to HTTP layer</h3>
+<h3 id="_access_to_http_layer">13.4. Access to HTTP layer</h3>
 <div class="paragraph">
 <p><code>HttpRequestContext</code> resp. <code>HttpRequestContextProvider</code> provides access to the HTTP requests. Most
 notably to get and set HTTP request and response headers. In many cases, the underlying
@@ -6868,7 +6848,7 @@ access to <code>HttpRequestContextProvider</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_module_extensions_and_dependencies">13.6. Module Extensions and dependencies</h3>
+<h3 id="_module_extensions_and_dependencies">13.5. Module Extensions and dependencies</h3>
 <div class="paragraph">
 <p>ModuleExtension is an interface can can be implemented by modules to specify a contract how
 others can extend it. The interface has two mandator properties: targetModule and
@@ -6890,7 +6870,7 @@ over time.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_integrate_third_party_data_stores">13.7. Integrate third-party data stores</h3>
+<h3 id="_integrate_third_party_data_stores">13.6. Integrate third-party data stores</h3>
 <div class="paragraph">
 <p>The core of Crnk is quite flexible when it comes to implementing repositories. As such, it is
 not mandatory to make use of the Crnk annotations and conventions. Instead, it is also
@@ -6907,7 +6887,7 @@ Such a module can then register additional (usually dynamic) repositories with
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism_2">13.8. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism_2">13.7. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Crnk comes with out-of-the-box support for Spring and CDI. Both of them implement
 <code>ServiceDiscovery</code>. You may provide your own implementation which can be hooked into the
@@ -6925,7 +6905,7 @@ through the Java service mechanism. For example, <code>crnk-cdi</code> makes use
 </div>
 </div>
 <div class="sect2">
-<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">13.9. Let a module hook into the Crnk HTTP client implementation</h3>
+<h3 id="_let_a_module_hook_into_the_crnk_http_client_implementation">13.8. Let a module hook into the Crnk HTTP client implementation</h3>
 <div class="paragraph">
 <p>Modules for the Crnk client can additionally implement <code>HttpAdapterAware</code>. It gives
 the module access to the underlying HTTP client implementation and allows arbitrary
@@ -6936,7 +6916,7 @@ customizations of it. Have a look at the Crnk client documentation for more info
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_integration">13.10. Implement a custom integration</h3>
+<h3 id="_implement_a_custom_integration">13.9. Implement a custom integration</h3>
 <div class="paragraph">
 <p>Adding a new integration has become quite simple in recent times.
 Have a look at <code>crnk-servlet</code> and <code>crnk-rs</code>. Most functionality
@@ -6968,7 +6948,7 @@ and <code>PropertiesProvider</code> to interface with that particular systems.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_repositories_at_runtime">13.11. Create repositories at runtime</h3>
+<h3 id="_create_repositories_at_runtime">13.10. Create repositories at runtime</h3>
 <div class="paragraph">
 <p>Repositories are usually created at compile-time, either by making use of the various annotations or a module
 such as the ´JpaModule´. However, the module API also allows the creation of repositories at runtime.
@@ -6987,7 +6967,7 @@ this feature is in incubation, more refinements are expected in upcoming release
 </table>
 </div>
 <div class="sect3">
-<h4 id="_implementing_repositories_dynamically_at_runtime">13.11.1. Implementing repositories dynamically at runtime</h4>
+<h4 id="_implementing_repositories_dynamically_at_runtime">13.10.1. Implementing repositories dynamically at runtime</h4>
 <div class="paragraph">
 <p>There are different possibilities to implement a repository at runtime:</p>
 </div>
@@ -7113,7 +7093,7 @@ There is a further example test case and relationship repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_registering_repositories_at_runtime">13.11.2. Registering repositories at runtime</h4>
+<h4 id="_registering_repositories_at_runtime">13.10.2. Registering repositories at runtime</h4>
 <div class="paragraph">
 <p>There are two possibilities to register a new repository at runtime:</p>
 </div>
@@ -7144,7 +7124,7 @@ provides an up-to-date set of repositories that is used by the Crnk engine.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_of_modules_by_crnkclient">13.12. Discovery of Modules by CrnkClient</h3>
+<h3 id="_discovery_of_modules_by_crnkclient">13.11. Discovery of Modules by CrnkClient</h3>
 <div class="paragraph">
 <p>If a module does not need configuration, it can provide a <code>ClientModuleFactory</code>
 implementation and register it to the <code>java.util.ServiceLoader</code> by adding a
@@ -7467,7 +7447,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-12-26 19:54:13 UTC
+Last updated 2018-12-27 19:38:25 UTC
 </div>
 </div>
 </body>
