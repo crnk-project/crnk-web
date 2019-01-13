@@ -147,15 +147,10 @@
 
 <div class="section breaking">
     <div class="section-content breaking">
-        29. November 2018:
+        13. January 2019:
         <p>
-            Crnk 2.10 is available with support for a new simplified REST API endpoint next to JSON:API.
-            They are very similar in nature. But the new one trades the normalization for a bit more simplicity,
-            facilitating client development when complex data structures are not necessary. Further, two default
-            properties have changed to ease development of new applications. Historically, they
-            have been disabled to maintain 100% backward-compatibility, but more and more caused issues in newer
-            applications. Make sure to familiarize yourselves with those to changes in case of an upgrade. For
-            more information see <a href="http://www.crnk.io/releases/v2.10/">here</a>.
+            Crnk 2.11 is available with a simplified and more flexible JPA module, support for nested queries
+            and more. See <a href="http://www.crnk.io/releases/v2.11/">here</a>.
         </p>
     </div>
 </div>
@@ -294,11 +289,11 @@ public class Project {
                     <pre class="prettyprint">
 
 @Component
-public class ProjectRepositoryImpl extends ResourceRepositoryBase<Project, Long> {
+public class ProjectRepositoryImpl extends ResourceRepositoryBase&lt;Project, Long&gt; {
 
 	private static final AtomicLong ID_GENERATOR = new AtomicLong(124);
 
-	private Map<Long, Project> projects = new HashMap<>();
+	private Map&lt;Long, Project&gt; projects = new HashMap<&gt;();
 
 	public ProjectRepositoryImpl() {
 		super(Project.class);
@@ -310,7 +305,7 @@ public class ProjectRepositoryImpl extends ResourceRepositoryBase<Project, Long>
 	}
 
 	@Override
-	public synchronized <S extends Project> S save(S project) {
+	public synchronized &lt;S extends Project&gt; S save(S project) {
 		if (project.getId() == null) {
 			project.setId(ID_GENERATOR.getAndIncrement());
 		}
@@ -319,7 +314,7 @@ public class ProjectRepositoryImpl extends ResourceRepositoryBase<Project, Long>
 	}
 
 	@Override
-	public synchronized ResourceList<Project> findAll(QuerySpec querySpec) {
+	public synchronized ResourceList&lt;Project&gt; findAll(QuerySpec querySpec) {
 		return querySpec.apply(projects.values());
 	}
 }
