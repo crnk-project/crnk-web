@@ -6178,6 +6178,10 @@ tasks, you may introduce multiple such relationships.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>	public static ActivitiModule createActivitiModule(ProcessEngine processEngine) {
 		ActivitiModuleConfig config = new ActivitiModuleConfig();
+
+		ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
+		terminatationProcessConfig.filterByProcessDefinitionKey("immediateTerminationFlow");
+
 		ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
 		processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
 		processConfig.filterByProcessDefinitionKey("scheduleChange");
@@ -6278,6 +6282,20 @@ interest of consumers of the <code>ActivitiModule</code> as well.</p>
 		&lt;/sequenceFlow&gt;
 		&lt;sequenceFlow id="flow5" sourceRef="scheduleChangeDenied" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
 		&lt;sequenceFlow id="flow6" sourceRef="scheduleChangeApproved" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
+	&lt;/process&gt;
+
+
+	&lt;process id="immediateTerminationFlow" name="Directly terminates" isExecutable="true"&gt;
+		&lt;documentation&gt;
+			This process directly terminates
+		&lt;/documentation&gt;
+
+		&lt;startEvent id="quickStartEvent" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
+
+		&lt;sequenceFlow id="quickStartFlow" sourceRef="quickStartEvent" targetRef="quickEndEvent"&gt;&lt;/sequenceFlow&gt;
+
+		&lt;endEvent id="quickEndEvent" name="End"&gt;&lt;/endEvent&gt;
+
 	&lt;/process&gt;
 &lt;/definitions&gt;</code></pre>
 </div>
@@ -7467,7 +7485,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-02-24 20:03:12 UTC
+Last updated 2019-02-27 15:06:19 UTC
 </div>
 </div>
 </body>
