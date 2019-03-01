@@ -672,6 +672,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_lazy_and_eager_loading">10.1.4. Lazy and Eager Loading</a></li>
 <li><a href="#_access_with_crnk_client">10.1.5. Access with Crnk client</a></li>
 <li><a href="#_customizing_the_exposed_resources_over_the_underlying_entity_model">10.1.6. Customizing the exposed resources over the underlying entity model</a></li>
+<li><a href="#_standalone_usage">10.1.7. Standalone Usage</a></li>
 </ul>
 </li>
 <li><a href="#_jsr_303_validation_module">10.2. JSR 303 Validation Module</a></li>
@@ -5388,82 +5389,82 @@ to the usually more interesting exceptions like
 <div class="listingblock">
 <div class="title">ScheduleEntity.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>package io.crnk.example.springboot.domain.model;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">io.crnk.example.springboot.domain.model</span>;
 
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.JsonApiRelationId;
-import io.crnk.core.resource.annotations.SerializeType;
+<span class="keyword">import</span> <span class="include">io.crnk.core.resource.annotations.JsonApiRelation</span>;
+<span class="keyword">import</span> <span class="include">io.crnk.core.resource.annotations.JsonApiRelationId</span>;
+<span class="keyword">import</span> <span class="include">io.crnk.core.resource.annotations.SerializeType</span>;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import java.util.Set;
+<span class="keyword">import</span> <span class="include">javax.persistence.Column</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.Entity</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.FetchType</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.Id</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.JoinColumn</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.JoinColumns</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.ManyToMany</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.ManyToOne</span>;
+<span class="keyword">import</span> <span class="include">java.util.Set</span>;
 
-@Entity
-public class ScheduleEntity {
+<span class="annotation">@Entity</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleEntity</span> {
 
-    @Id
-    private Long id;
+    <span class="annotation">@Id</span>
+    <span class="directive">private</span> <span class="predefined-type">Long</span> id;
 
-    private String name;
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
 
-    @JsonApiRelationId()
-    @Column(name = "creator_id")
-    private String creatorId;
+    <span class="annotation">@JsonApiRelationId</span>()
+    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">creator_id</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> <span class="predefined-type">String</span> creatorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({@JoinColumn(name = "creator_id", insertable = false, updatable = false)})
-    @JsonApiRelation(serialize = SerializeType.ONLY_ID)
-    private UserEntity creator;
+    <span class="annotation">@ManyToOne</span>(fetch = FetchType.LAZY)
+    <span class="annotation">@JoinColumns</span>({<span class="annotation">@JoinColumn</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">creator_id</span><span class="delimiter">&quot;</span></span>, insertable = <span class="predefined-constant">false</span>, updatable = <span class="predefined-constant">false</span>)})
+    <span class="annotation">@JsonApiRelation</span>(serialize = SerializeType.ONLY_ID)
+    <span class="directive">private</span> UserEntity creator;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set&lt;UserEntity&gt; verifiers;
+    <span class="annotation">@ManyToMany</span>(fetch = FetchType.LAZY)
+    <span class="directive">private</span> <span class="predefined-type">Set</span>&lt;UserEntity&gt; verifiers;
 
-    public Long getId() {
-        return id;
+    <span class="directive">public</span> <span class="predefined-type">Long</span> getId() {
+        <span class="keyword">return</span> id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    <span class="directive">public</span> <span class="type">void</span> setId(<span class="predefined-type">Long</span> id) {
+        <span class="local-variable">this</span>.id = id;
     }
 
-    public String getName() {
-        return name;
+    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+        <span class="keyword">return</span> name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+        <span class="local-variable">this</span>.name = name;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    <span class="directive">public</span> <span class="predefined-type">String</span> getCreatorId() {
+        <span class="keyword">return</span> creatorId;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-        this.creator = null;
+    <span class="directive">public</span> <span class="type">void</span> setCreatorId(<span class="predefined-type">String</span> creatorId) {
+        <span class="local-variable">this</span>.creatorId = creatorId;
+        <span class="local-variable">this</span>.creator = <span class="predefined-constant">null</span>;
     }
 
-    public UserEntity getCreator() {
-        return creator;
+    <span class="directive">public</span> UserEntity getCreator() {
+        <span class="keyword">return</span> creator;
     }
 
-    public void setCreator(UserEntity creator) {
-        this.creator = creator;
-        this.creatorId = creator != null ? creator.getLoginId() : null;
+    <span class="directive">public</span> <span class="type">void</span> setCreator(UserEntity creator) {
+        <span class="local-variable">this</span>.creator = creator;
+        <span class="local-variable">this</span>.creatorId = creator != <span class="predefined-constant">null</span> ? creator.getLoginId() : <span class="predefined-constant">null</span>;
     }
 
-    public Set&lt;UserEntity&gt; getVerifiers() {
-        return verifiers;
+    <span class="directive">public</span> <span class="predefined-type">Set</span>&lt;UserEntity&gt; getVerifiers() {
+        <span class="keyword">return</span> verifiers;
     }
 
-    public void setVerifiers(Set&lt;UserEntity&gt; verifiers) {
-        this.verifiers = verifiers;
+    <span class="directive">public</span> <span class="type">void</span> setVerifiers(<span class="predefined-type">Set</span>&lt;UserEntity&gt; verifiers) {
+        <span class="local-variable">this</span>.verifiers = verifiers;
     }
 }</code></pre>
 </div>
@@ -5495,31 +5496,31 @@ it with <code>@JsonIgnore</code>).</p>
 <div class="listingblock">
 <div class="title">JpaTransientTestEntity.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>@Entity
-public class JpaTransientTestEntity extends TestMappedSuperclass {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Entity</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">JpaTransientTestEntity</span> <span class="directive">extends</span> TestMappedSuperclass {
 
-	@Id
-	private Long id;
+        <span class="annotation">@Id</span>
+        <span class="directive">private</span> <span class="predefined-type">Long</span> id;
 
-	@Transient
-	@JsonApiRelation(serialize = SerializeType.LAZY, lookUp = LookupIncludeBehavior.NONE)
-	private Task task;
+        <span class="annotation">@Transient</span>
+        <span class="annotation">@JsonApiRelation</span>(serialize = SerializeType.LAZY, lookUp = LookupIncludeBehavior.NONE)
+        <span class="directive">private</span> Task task;
 
-	public Long getId() {
-		return id;
-	}
+        <span class="directive">public</span> <span class="predefined-type">Long</span> getId() {
+                <span class="keyword">return</span> id;
+        }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+        <span class="directive">public</span> <span class="type">void</span> setId(<span class="predefined-type">Long</span> id) {
+                <span class="local-variable">this</span>.id = id;
+        }
 
-	public Task getTask() {
-		return task;
-	}
+        <span class="directive">public</span> Task getTask() {
+                <span class="keyword">return</span> task;
+        }
 
-	public void setTask(Task task) {
-		this.task = task;
-	}
+        <span class="directive">public</span> <span class="type">void</span> setTask(Task task) {
+                <span class="local-variable">this</span>.task = task;
+        }
 }</code></pre>
 </div>
 </div>
@@ -5528,14 +5529,14 @@ public class JpaTransientTestEntity extends TestMappedSuperclass {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	@Column(name="project_id")
-	@JsonApiRelationId
-	private Long projectId;
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="annotation">@Column</span>(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">project_id</span><span class="delimiter">&quot;</span></span>)
+        <span class="annotation">@JsonApiRelationId</span>
+        <span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
 
-    @JsonApiRelation(serialize=SerializeType.ID_ONLY)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "project_id", insertable = false, updatable = false)
-	private Project project;</code></pre>
+    <span class="annotation">@JsonApiRelation</span>(serialize=SerializeType.ID_ONLY)
+        <span class="annotation">@ManyToOne</span>(fetch = FetchType.LAZY)
+        <span class="annotation">@JoinColumn</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">project_id</span><span class="delimiter">&quot;</span></span>, insertable = <span class="predefined-constant">false</span>, updatable = <span class="predefined-constant">false</span>)
+        <span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5554,17 +5555,17 @@ an entity as resource, provide a repository implementation inheriting from
 <div class="listingblock">
 <div class="title">ScheduleRepositoryImpl.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>package io.crnk.example.springboot.domain.repository;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">io.crnk.example.springboot.domain.repository</span>;
 
-import io.crnk.example.springboot.domain.model.ScheduleEntity;
-import io.crnk.jpa.JpaEntityRepositoryBase;
-import org.springframework.stereotype.Component;
+<span class="keyword">import</span> <span class="include">io.crnk.example.springboot.domain.model.ScheduleEntity</span>;
+<span class="keyword">import</span> <span class="include">io.crnk.jpa.JpaEntityRepositoryBase</span>;
+<span class="keyword">import</span> <span class="include">org.springframework.stereotype.Component</span>;
 
-@Component
-public class ScheduleRepositoryImpl extends JpaEntityRepositoryBase&lt;ScheduleEntity, Long&gt; {
+<span class="annotation">@Component</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleRepositoryImpl</span> <span class="directive">extends</span> JpaEntityRepositoryBase&lt;ScheduleEntity, <span class="predefined-type">Long</span>&gt; {
 
-    public ScheduleRepositoryImpl() {
-        super(ScheduleEntity.class);
+    <span class="directive">public</span> ScheduleRepositoryImpl() {
+        <span class="local-variable">super</span>(ScheduleEntity.class);
     }
 }</code></pre>
 </div>
@@ -5582,17 +5583,17 @@ manually:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	TransactionRunner transactionRunner = ...;
+<pre class="CodeRay highlight"><code data-lang="java">        TransactionRunner transactionRunner = ...;
 
-	JpaModuleConfig config = new JpaModuleConfig();
+        JpaModuleConfig config = <span class="keyword">new</span> JpaModuleConfig();
 
-	// expose all entitities from provided EntityManagerFactory
-	config.exposeAllEntities(entityManagerFactory);
+        <span class="comment">// expose all entitities from provided EntityManagerFactory</span>
+        config.exposeAllEntities(entityManagerFactory);
 
-	JpaModule jpaModule = JpaModule.createServerModule(config, em, transactionRunner());
+        JpaModule jpaModule = JpaModule.createServerModule(config, em, transactionRunner());
 
-	CrnkFeature feature = new CrnkFeature(...);
-	feature.addModule(jpaModule);</code></pre>
+        CrnkFeature feature = <span class="keyword">new</span> CrnkFeature(...);
+        feature.addModule(jpaModule);</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -5653,14 +5654,14 @@ If a relationship is supposed to be truly eager, <code>@JsonApiRelation(serializ
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	client = new CrnkClient(getBaseUri().toString());
+<pre class="CodeRay highlight"><code data-lang="java">        client = <span class="keyword">new</span> CrnkClient(getBaseUri().toString());
 
-	JpaModule module = JpaModule.newClientModule();
-	setupModule(module, false);
-	client.addModule(module);
+        JpaModule module = JpaModule.newClientModule();
+        setupModule(module, <span class="predefined-constant">false</span>);
+        client.addModule(module);
 
-	ResourceRepositoryV2&lt;TaskEntity, UUID&gt; genericRepo = client.getRepositoryForType(TypeEntity.class)
-	TaskRepository typedRepo = client.getRepositoryForInterface(TaskRepository.class)</code></pre>
+        ResourceRepositoryV2&lt;TaskEntity, <span class="predefined-type">UUID</span>&gt; genericRepo = client.getRepositoryForType(TypeEntity.class)
+        TaskRepository typedRepo = client.getRepositoryForInterface(TaskRepository.class)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5673,26 +5674,26 @@ link information and list return type. An example can look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>public interface TaskRepository extends ResourceRepositoryV2&lt;TaskEntity, UUID&gt; {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">TaskRepository</span> <span class="directive">extends</span> ResourceRepositoryV2&lt;TaskEntity, <span class="predefined-type">UUID</span>&gt; {
 
-	static class TaskListLinks implements LinksInformation, SelfLinksInformation {
+        <span class="directive">static</span> <span class="type">class</span> <span class="class">TaskListLinks</span> <span class="directive">implements</span> LinksInformation, SelfLinksInformation {
 
-		public String someLink = "test";
+                <span class="directive">public</span> <span class="predefined-type">String</span> someLink = <span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>;
 
-	}
+        }
 
-	public static class TaskListMeta implements MetaInformation {
+        <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">TaskListMeta</span> <span class="directive">implements</span> MetaInformation {
 
-		public String someMeta = "test";
+                <span class="directive">public</span> <span class="predefined-type">String</span> someMeta = <span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>;
 
-	}
+        }
 
-	public class TaskList extends ResourceListBase&lt;TaskEntity, TaskListMeta, TaskListLinks&gt; {
+        <span class="directive">public</span> <span class="type">class</span> <span class="class">TaskList</span> <span class="directive">extends</span> ResourceListBase&lt;TaskEntity, TaskListMeta, TaskListLinks&gt; {
 
-	}
+        }
 
-	@Override
-	public TaskList findAll(QuerySpec querySpec);
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> TaskList findAll(QuerySpec querySpec);
 }</code></pre>
 </div>
 </div>
@@ -5701,7 +5702,7 @@ link information and list return type. An example can look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>  JpaRepositoryConfig.builder(PersonEntity.class)
+<pre class="CodeRay highlight"><code data-lang="java">  JpaRepositoryConfig.builder(PersonEntity.class)
            .setInterfaceClass(PersonRepository.class).build()</code></pre>
 </div>
 </div>
@@ -5727,6 +5728,28 @@ various techniques to customize the resource model:</p>
 </li>
 </ul>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_standalone_usage">10.1.7. Standalone Usage</h4>
+<div class="paragraph">
+<p>The given snipped shows how to translate a QuerySpec to a JPA Criteria query without involving
+repositories and Crnk:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">                JpaCriteriaQueryFactory queryFactory = JpaCriteriaQueryFactory.newInstance(em);
+
+                PathSpec idAttr = PathSpec.of(TestEntity.ATTR_id);
+                QuerySpec querySpec = <span class="keyword">new</span> QuerySpec(TestEntity.class);
+                querySpec.addFilter(idAttr.filter(FilterOperator.GT, <span class="integer">0L</span>));
+                querySpec.addSort(idAttr.sort(Direction.DESC));
+                querySpec.includeRelation(PathSpec.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">oneRelatedValue</span><span class="delimiter">&quot;</span></span>));
+
+                JpaCriteriaQuery&lt;TestEntity&gt; query = queryFactory.query(TestEntity.class);
+                JpaQueryExecutor&lt;TestEntity&gt; executor = query.buildExecutor(querySpec);
+                <span class="predefined-type">List</span>&lt;TestEntity&gt; resultList = executor.getResultList();</code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p><a id="validation_module"></a></p>
 </div>
@@ -5744,9 +5767,12 @@ display the validation errors next to the corresponding input fields.</p>
 <div class="paragraph">
 <p>A translated exception can look like:</p>
 </div>
+<div class="paragraph">
+<p>]</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>{
+<pre>{
 	"errors": [
 		{
 			"status": "422",
@@ -5763,7 +5789,7 @@ display the validation errors next to the corresponding input fields.</p>
 			}
 		}
 	]
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5776,10 +5802,10 @@ module should be defined in the following way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>{
-	@Bean
+<pre class="CodeRay highlight"><code data-lang="java">{
+        <span class="annotation">@Bean</span>
     ValidationModule validationModule()
-        return ValidationModule.create(false);
+        <span class="keyword">return</span> ValidationModule.create(<span class="predefined-constant">false</span>);
     }
 }</code></pre>
 </div>
@@ -5821,8 +5847,8 @@ any future standard implementation will built up on the information from the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>		MetaModule metaModule = MetaModule.create();
-		metaModule.addMetaProvider(new ResourceMetaProvider());</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java">                MetaModule metaModule = MetaModule.create();
+                metaModule.addMetaProvider(<span class="keyword">new</span> ResourceMetaProvider());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5909,9 +5935,12 @@ most important classes are:</p>
 <div class="paragraph">
 <p>A <code>MetaResource</code> looks like:</p>
 </div>
+<div class="paragraph">
+<p>]</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>{
+<pre>{
     "id" : "resources.project",
     "type" : "meta/resource",
     "attributes" : {
@@ -5950,15 +5979,18 @@ most important classes are:</p>
         ...
       }
     }
-  }</code></pre>
+  }</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>A <code>MetaAttribute</code> looks like:</p>
 </div>
+<div class="paragraph">
+<p>]</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>{
+<pre>{
     "id" : "resources.project.name",
     "type" : "meta/resourceField",
     "attributes" : {
@@ -5992,7 +6024,7 @@ most important classes are:</p>
         ...
       }
     }
-  }</code></pre>
+  }</pre>
 </div>
 </div>
 </div>
@@ -6117,17 +6149,17 @@ the application specific fields. For example:</p>
 <div class="listingblock">
 <div class="title">ApprovalProcessInstance.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>public abstract class ApprovalProcessInstance extends ProcessInstanceResource {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">ApprovalProcessInstance</span> <span class="directive">extends</span> ProcessInstanceResource {
 
-	private String resourceId;
+        <span class="directive">private</span> <span class="predefined-type">String</span> resourceId;
 
-	private String resourceType;
+        <span class="directive">private</span> <span class="predefined-type">String</span> resourceType;
 
-	public String getResourceId() {
-		return resourceId;
-	}
+        <span class="directive">public</span> <span class="predefined-type">String</span> getResourceId() {
+                <span class="keyword">return</span> resourceId;
+        }
 
-	...
+        ...
 }</code></pre>
 </div>
 </div>
@@ -6137,34 +6169,34 @@ the application specific fields. For example:</p>
 <div class="listingblock">
 <div class="title">ScheduleApprovalProcessInstance.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "approval/schedule")
-public class ScheduleApprovalProcessInstance extends ApprovalProcessInstance {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleApprovalProcessInstance</span> <span class="directive">extends</span> ApprovalProcessInstance {
 
-	private ScheduleApprovalValues newValues;
+        <span class="directive">private</span> ScheduleApprovalValues newValues;
 
-	private ScheduleApprovalValues previousValues;
+        <span class="directive">private</span> ScheduleApprovalValues previousValues;
 
-	private String stringValue;
+        <span class="directive">private</span> <span class="predefined-type">String</span> stringValue;
 
-	private int intValue;
+        <span class="directive">private</span> <span class="type">int</span> intValue;
 
-	public int getIntValue() {
-		return intValue;
-	}
+        <span class="directive">public</span> <span class="type">int</span> getIntValue() {
+                <span class="keyword">return</span> intValue;
+        }
 
-	public void setIntValue(int intValue) {
-		this.intValue = intValue;
-	}
+        <span class="directive">public</span> <span class="type">void</span> setIntValue(<span class="type">int</span> intValue) {
+                <span class="local-variable">this</span>.intValue = intValue;
+        }
 
-	public String getStringValue() {
-		return stringValue;
-	}
+        <span class="directive">public</span> <span class="predefined-type">String</span> getStringValue() {
+                <span class="keyword">return</span> stringValue;
+        }
 
-	public void setStringValue(String stringValue) {
-		this.stringValue = stringValue;
-	}
+        <span class="directive">public</span> <span class="type">void</span> setStringValue(<span class="predefined-type">String</span> stringValue) {
+                <span class="local-variable">this</span>.stringValue = stringValue;
+        }
 
-	...
+        ...
 }</code></pre>
 </div>
 </div>
@@ -6184,24 +6216,24 @@ tasks, you may introduce multiple such relationships.</p>
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>	public static ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-		ActivitiModuleConfig config = new ActivitiModuleConfig();
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
+                ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
 
-		ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
-		terminatationProcessConfig.filterByProcessDefinitionKey("immediateTerminationFlow");
+                ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
+                terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
 
-		ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-		processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
-		processConfig.filterByProcessDefinitionKey("scheduleChange");
-		processConfig.addTaskRelationship(
-				"approveTask", ApproveTask.class, "approveScheduleTask"
-		);
-		TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-		taskConfig.historic(HistoricApproveTask.class);
-		taskConfig.filterByTaskDefinitionKey("approveScheduleTask");
-		taskConfig.setForm(ApproveForm.class);
-		return ActivitiModule.create(processEngine, config);
-	}</code></pre>
+                ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
+                processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
+                processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
+                processConfig.addTaskRelationship(
+                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
+                );
+                TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
+                taskConfig.historic(HistoricApproveTask.class);
+                taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
+                taskConfig.setForm(ApproveForm.class);
+                <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
+        }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -6235,10 +6267,13 @@ interest of consumers of the <code>ActivitiModule</code> as well.</p>
 <div class="paragraph">
 <p>The workflow looks as follows:</p>
 </div>
+<div class="paragraph">
+<p>]
+.approval.bpmn20.xml</p>
+</div>
 <div class="listingblock">
-<div class="title">approval.bpmn20.xml</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;definitions id="approvalDefinitions"
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -6305,7 +6340,7 @@ interest of consumers of the <code>ActivitiModule</code> as well.</p>
 		&lt;endEvent id="quickEndEvent" name="End"&gt;&lt;/endEvent&gt;
 
 	&lt;/process&gt;
-&lt;/definitions&gt;</code></pre>
+&lt;/definitions&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6336,22 +6371,22 @@ changes. This means the regular <code>ScheduleRepository</code> implementation w
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>	public static SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-		FilterSpec approvalFilter = new FilterSpec(
-				Arrays.asList("definitionKey"), FilterOperator.EQ, "scheduleChange"
-		);
-		List&lt;FilterSpec&gt; approvalFilters = Arrays.asList(approvalFilter);
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
+                FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
+                                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
+                );
+                <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
 
-		SimpleModule module = new SimpleModule("approval");
-		module.addRepositoryDecoratorFactory(
-				ApprovalRepositoryDecorator.createFactory(approvalManager)
-		);
-		module.addRepository(new ApprovalRelationshipRepository(Schedule.class,
-				ScheduleApprovalProcessInstance.class, "approval",
-				"approval/schedule", approvalFilters)
-		);
-		return module;
-	}</code></pre>
+                SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
+                module.addRepositoryDecoratorFactory(
+                                ApprovalRepositoryDecorator.createFactory(approvalManager)
+                );
+                module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
+                                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
+                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
+                );
+                <span class="keyword">return</span> module;
+        }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -6443,17 +6478,17 @@ annotated with <code>@Facet</code>:</p>
 <div class="listingblock">
 <div class="title">FacetedProject.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "projects")
-public class FacetedProject {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">projects</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">FacetedProject</span> {
 
-	@JsonApiId
-	private Long id;
+        <span class="annotation">@JsonApiId</span>
+        <span class="directive">private</span> <span class="predefined-type">Long</span> id;
 
-	@Facet
-	private String name;
+        <span class="annotation">@Facet</span>
+        <span class="directive">private</span> <span class="predefined-type">String</span> name;
 
-	@Facet
-	private int priority;
+        <span class="annotation">@Facet</span>
+        <span class="directive">private</span> <span class="type">int</span> priority;
 
 }</code></pre>
 </div>
@@ -6482,10 +6517,13 @@ implement their own <code>FacetProvider</code> implementation and register it th
 <p>All the facets are then available as regular, new JSON:API resource that can filtered, paged, sorted, etc. like
 any other resource:</p>
 </div>
+<div class="paragraph">
+<p>]
+.http://127.0.0.1:8080/api/facet</p>
+</div>
 <div class="listingblock">
-<div class="title"><a href="http://127.0.0.1:8080/api/facet" class="bare">http://127.0.0.1:8080/api/facet</a></div>
 <div class="content">
-<pre class="CodeRay highlight"><code>{
+<pre>{
 
   "data" : [ {
     "id" : "projects_name",
@@ -6509,7 +6547,7 @@ any other resource:</p>
       "labels" : [ "Great Project", "Crnk Project", "Some Project", "JSON:API Project" ]
     },
   }]
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7493,7 +7531,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-01 09:30:38 UTC
+Last updated 2019-03-01 10:28:12 UTC
 </div>
 </div>
 </body>
