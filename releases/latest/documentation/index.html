@@ -574,7 +574,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
-<li><a href="#_nested_resources">4.9. Nested Resources</a></li>
+<li><a href="#_nested_resources">4.9. Nested Resources</a>
+<ul class="sectlevel3">
+<li><a href="#_single_nested_resources">4.9.1. Single Nested Resources</a></li>
+<li><a href="#_multiple_nested_resources">4.9.2. Multiple Nested Resources</a></li>
+<li><a href="#_usage">4.9.3. Usage</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -625,7 +631,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_client">6. Client</a>
 <ul class="sectlevel2">
 <li><a href="#_setup_2">6.1. Setup</a></li>
-<li><a href="#_usage">6.2. Usage</a></li>
+<li><a href="#_usage_2">6.2. Usage</a></li>
 <li><a href="#_url_handling">6.3. URL handling</a></li>
 <li><a href="#_modules">6.4. Modules</a></li>
 <li><a href="#_type_safety">6.5. Type-Safety</a></li>
@@ -2581,77 +2587,121 @@ This feature is experimental and will be refined in subsequent releases.
 </table>
 </div>
 <div class="paragraph">
-<p>A resource may be nested and belong to a parent resource. In this case the nested resource is access through its parent resource.
-An URL then looks like:</p>
+<p>A resource may be nested and belong to a parent resource. URLs then look like:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="http://example.com/posts/1/header" class="bare">http://example.com/posts/1/header</a></code> (single)</p>
+</li>
+<li>
+<p><code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code> (multiple)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><code><a href="http://example.com/posts/1/comments/2" class="bare">http://example.com/posts/1/comments/2</a></code></p>
+<p>Here a <code>post</code> resource holds two nested relationships: <code>header</code> and <code>comments</code>. Both of those relationships have resources
+that cannot exist without the <code>post</code> itself. The former case the relationship holds a single resource, while the later
+there might be multiple comments.</p>
 </div>
 <div class="paragraph">
-<p>For a resource to become nested, it must make use of a structured identifier:</p>
+<p>Nested resources are implemented like any other resource, most notably by providing a resource repository.
+The subsequent two section go into detail how to setup such resources.</p>
+</div>
+<div class="sect3">
+<h4 id="_single_nested_resources">4.9.1. Single Nested Resources</h4>
+<div class="paragraph">
+<p>Single nested resources share the identifier with the parent resource. From the example aboce:</p>
+</div>
+<div class="paragraph">
+<p><code><a href="http://example.com/posts/1/header" class="bare">http://example.com/posts/1/header</a></code></p>
+</div>
+<div class="paragraph">
+<p>Both the <code>post</code> and its <code>header</code> share the identifier <code>1</code>. A resource looks like:</p>
 </div>
 <div class="listingblock">
-<div class="title">NestedId.java</div>
+<div class="title">PostHeader.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>package io.crnk.test.mock.models.nested;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">header</span><span class="delimiter">&quot;</span></span>, nested = <span class="predefined-constant">true</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">PostHeader</span> {
 
-import java.io.Serializable;
+        <span class="annotation">@JsonApiId</span>
+        <span class="annotation">@JsonApiRelationId</span>
+        <span class="directive">private</span> <span class="predefined-type">String</span> postId;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import io.crnk.core.resource.annotations.JsonApiId;
-import io.crnk.core.resource.annotations.JsonApiRelationId;
+        <span class="directive">private</span> <span class="predefined-type">String</span> value;
 
-@JsonSerialize(using = ToStringSerializer.class)
-public class NestedId implements Serializable {
+        <span class="annotation">@JsonApiRelation</span>(opposite = <span class="string"><span class="delimiter">&quot;</span><span class="content">header</span><span class="delimiter">&quot;</span></span>, lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,
+                        repositoryBehavior = RelationshipRepositoryBehavior.FORWARD_OWNER)
+        <span class="directive">private</span> Post post;
 
-	@JsonApiId
-	private String id;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice the <code>nested = true</code> and that the ID also serves as <code>@JsonApiRelationId</code> to point to the parent <code>post</code>. This two
+properties introduce the singular nesting to the resource. The repository itself can then be implemented like any other
+repository.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_multiple_nested_resources">4.9.2. Multiple Nested Resources</h4>
+<div class="paragraph">
+<p>To nest multiple resource below a parent, structured identifier can be used:</p>
+</div>
+<div class="listingblock">
+<div class="title">PostCommendId.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonSerialize</span>(using = ToStringSerializer.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">PostCommentId</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
 
-	@JsonApiRelationId
-	private String parentId;
+        <span class="annotation">@JsonApiId</span>
+        <span class="directive">private</span> <span class="predefined-type">String</span> id;
 
-	public NestedId() {
-	}
+        <span class="annotation">@JsonApiRelationId</span>
+        <span class="directive">private</span> <span class="predefined-type">String</span> postId;
 
-	public NestedId(String idString) {
-		String[] elements = idString.split("\\-");
-		parentId = elements[0];
-		id = elements[1];
-	}
+        <span class="directive">public</span> PostCommentId() {
+        }
 
-	public NestedId(String parentId, String id) {
-		this.parentId = parentId;
-		this.id = id;
-	}
+        <span class="directive">public</span> PostCommentId(<span class="predefined-type">String</span> idString) {
+                <span class="predefined-type">String</span><span class="type">[]</span> elements = idString.split(<span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">-</span><span class="delimiter">&quot;</span></span>);
+                postId = elements[<span class="integer">0</span>];
+                id = elements[<span class="integer">1</span>];
+        }
 
-	public String getId() {
-		return id;
-	}
+        <span class="directive">public</span> PostCommentId(<span class="predefined-type">String</span> postId, <span class="predefined-type">String</span> id) {
+                <span class="local-variable">this</span>.postId = postId;
+                <span class="local-variable">this</span>.id = id;
+        }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+        <span class="directive">public</span> <span class="predefined-type">String</span> getId() {
+                <span class="keyword">return</span> id;
+        }
 
-	public String getParentId() {
-		return parentId;
-	}
+        <span class="directive">public</span> <span class="type">void</span> setId(<span class="predefined-type">String</span> id) {
+                <span class="local-variable">this</span>.id = id;
+        }
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
+        <span class="directive">public</span> <span class="predefined-type">String</span> getPostId() {
+                <span class="keyword">return</span> postId;
+        }
 
-	public int hashCode() {
-		return toString().hashCode();
-	}
+        <span class="directive">public</span> <span class="type">void</span> setPostId(<span class="predefined-type">String</span> postId) {
+                <span class="local-variable">this</span>.postId = postId;
+        }
 
-	public boolean equals(Object object) {
-		return object instanceof NestedId &amp;&amp; object.toString().equals(toString());
-	}
+        <span class="directive">public</span> <span class="type">int</span> hashCode() {
+                <span class="keyword">return</span> toString().hashCode();
+        }
 
-	public String toString() {
-		return parentId + "-" + id;
-	}
+        <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> object) {
+                <span class="keyword">return</span> object <span class="keyword">instanceof</span> PostCommentId &amp;&amp; object.toString().equals(toString());
+        }
+
+        <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+                <span class="keyword">return</span> postId + <span class="string"><span class="delimiter">&quot;</span><span class="content">-</span><span class="delimiter">&quot;</span></span> + id;
+        }
 }</code></pre>
 </div>
 </div>
@@ -2669,28 +2719,54 @@ public class NestedId implements Serializable {
 </ul>
 </div>
 <div class="paragraph">
-<p><code>NestedId</code> further implements <code>parse</code>, <code>toString</code>, <code>hashCode</code> and <code>equals</code> to deal with String serialization and equality.</p>
+<p><code>PostCommentId</code> further implements <code>public PostCommentId(String idString)</code>, <code>toString</code>, <code>hashCode</code> and <code>equals</code> and carries the
+<code>@JsonSerialize(using = ToStringSerializer.class)</code> annotation to deal with String serialization and equality.</p>
 </div>
+<div class="paragraph">
+<p>The resource itself looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">PostComment.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, nested = <span class="predefined-constant">true</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">PostComment</span> {
+
+        <span class="annotation">@JsonApiId</span>
+        <span class="directive">private</span> PostCommentId id;
+
+        <span class="directive">private</span> <span class="predefined-type">String</span> value;
+
+        <span class="annotation">@JsonApiRelation</span>(opposite = <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>, lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,
+                        repositoryBehavior = RelationshipRepositoryBehavior.FORWARD_OWNER)
+        <span class="directive">private</span> Post post;
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usage">4.9.3. Usage</h4>
 <div class="paragraph">
 <p>For an example have a look at <code>NestedRepositoryClientTest</code> and its parent class. Depending on the use of <a href="#JsonApiExposed">[JsonApiExposed]</a> it
 is or is not be possible to also directly access <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code> without going
 through the parents.</p>
 </div>
 <div class="paragraph">
-<p>Current Limitations:</p>
+<p>When creating new resources with CrnkClient, the nested identifier must be set to let CrnkClient access the postId
+to compute URLs.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Nesting is currently limited to a single level (and the possibility to have further relationships on the nested resource).</p>
-</li>
-<li>
-<p>When creating new resources with CrnkClient, the nested identifier must be setup in order to let CrnkClient access the parentId.</p>
-</li>
-<li>
-<p>Being experimental.</p>
-</li>
-</ul>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Nesting is currently limited to a single level (and the possibility to have further relationships on the nested resource).
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -4346,7 +4422,7 @@ To explicitly set HTTP implementation use:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_usage">6.2. Usage</h3>
+<h3 id="_usage_2">6.2. Usage</h3>
 <div class="paragraph">
 <p>The client has three main methods:</p>
 </div>
@@ -7572,7 +7648,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-05 09:20:31 UTC
+Last updated 2019-03-07 16:59:49 UTC
 </div>
 </div>
 </body>
