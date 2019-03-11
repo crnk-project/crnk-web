@@ -4302,6 +4302,11 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 			@Override
 			public void setValue(Object resource, Object fieldValue) {
 			}
+
+			@Override
+			public Class getImplementationClass() {
+				return List.class;
+			}
 		});
 		return Arrays.asList(fieldBuilder.build());
 	}
@@ -4690,8 +4695,8 @@ the respective HTTP client implementation. This allows to cover various use case
 <div class="ulist">
 <ul>
 <li>
-<p><a
-		href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-monitor/crnk-monitor-brave4/src/main/java/io/crnk/monitor/brave/BraveClientModule.java">crnk-monitor-brave4</a> for an advanced example.</p>
+<p><a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-monitor/crnk-monitor-brave4/src/main/java/io/crnk/monitor/brave/BraveClientModule.java">crnk-monitor-brave4</a> for
+an advanced example.</p>
 </li>
 <li>
 <p><a href="https://stackoverflow.com/questions/32196424/how-to-add-headers-to-okhttp-request-interceptor?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa">How to add
@@ -6873,8 +6878,10 @@ The limitations are expected to be addressed at some point as well, contribution
 <div class="sect2">
 <h3 id="_opentracing">12.1. OpenTracing</h3>
 <div class="paragraph">
-<p><a href="https://opentracing.io/">OpenTracing</a> is a standard API for tracing similar to SLF4J for logging.
-<code>crnk-monitor-opentracing</code> provides a <code>OpenTracingServerModule</code>. The module sets a
+<p><a href="https://opentracing.io/">OpenTracing</a> is a open, vendor-neutral API for tracing similar to SLF4J for logging.
+The project is a member of the <a href="https://www.cncf.io/">Cloud Native Foundation</a>. <a href="https://www.jaegertracing.io/">Jeager</a> and
+<a href="https://www.elastic.co/solutions/apm">Elastic APM</a> are two implementation providing support for it.
+<code>crnk-monitor-opentracing</code> features an <code>OpenTracingServerModule</code>. The module sets a
 human-readable name to any span tracing a JSON:API call, for example:</p>
 </div>
 <div class="ulist">
@@ -6892,10 +6899,28 @@ human-readable name to any span tracing a JSON:API call, for example:</p>
 </div>
 <div class="paragraph">
 <p>INFORMATION:  The module does not start spans on its own. It is the duty of the underlying HTTP layer
-  to start spans to support tracing any kind of call, not just JSON_API ones.</p>
+  to do so. This way the HTTP layer can cover all kinds of calls, not just JSON_API ones.</p>
+</div>
+<div class="paragraph">
+<p>In Kibana together with Elastic APM it looks like:</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/tracing.png" alt="tracing"></span></p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Distributed tracing  is  still an evolving topic. Most notably
+ <a href="https://www.w3.org/community/trace-context/">W3C Trace Context</a> will provide a standard for
+ header propagation that hopefully will allow various systems to better work together on a
+ protocol-level.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -7649,7 +7674,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-07 16:59:49 UTC
+Last updated 2019-03-11 16:17:10 UTC
 </div>
 </div>
 </body>
