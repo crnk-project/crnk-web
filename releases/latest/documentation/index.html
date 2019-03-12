@@ -6255,6 +6255,11 @@ the application specific fields. For example:</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>)
 <span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleApprovalProcessInstance</span> <span class="directive">extends</span> ApprovalProcessInstance {
 
+        <span class="directive">public</span> <span class="type">enum</span> ScheduleStatus {
+                DONE,
+                SHIPPED
+        }
+
         <span class="directive">private</span> ScheduleApprovalValues newValues;
 
         <span class="directive">private</span> ScheduleApprovalValues previousValues;
@@ -6262,6 +6267,17 @@ the application specific fields. For example:</p>
         <span class="directive">private</span> <span class="predefined-type">String</span> stringValue;
 
         <span class="directive">private</span> <span class="type">int</span> intValue;
+
+        <span class="directive">private</span> ScheduleStatus status;
+
+        <span class="directive">public</span> ScheduleStatus getStatus() {
+                <span class="keyword">return</span> status;
+        }
+
+        <span class="directive">public</span> <span class="type">void</span> setStatus(ScheduleStatus status) {
+                <span class="local-variable">this</span>.status = status;
+        }
+
 
         <span class="directive">public</span> <span class="type">int</span> getIntValue() {
                 <span class="keyword">return</span> intValue;
@@ -7674,7 +7690,7 @@ the other parts of the application.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-12 07:15:37 UTC
+Last updated 2019-03-12 15:06:22 UTC
 </div>
 </div>
 </body>
