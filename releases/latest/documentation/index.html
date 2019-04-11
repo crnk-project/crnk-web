@@ -635,8 +635,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_url_handling">6.3. URL handling</a></li>
 <li><a href="#_modules">6.4. Modules</a></li>
 <li><a href="#_type_safety">6.5. Type-Safety</a></li>
-<li><a href="#_jax_rs_interoperability">6.6. JAX-RS interoperability</a></li>
-<li><a href="#_http_customization">6.7. HTTP customization</a></li>
+<li><a href="#_http_customization">6.6. HTTP customization</a></li>
+<li><a href="#_jax_rs_interoperability">6.7. JAX-RS interoperability</a></li>
 </ul>
 </li>
 <li><a href="#_formats">7. Formats</a>
@@ -712,6 +712,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_java_annotation_processor">11.1. Java Annotation Processor</a></li>
 <li><a href="#_typescript">11.2. Typescript</a></li>
 <li><a href="#_gradle_customizations">11.3. Gradle customizations</a></li>
+<li><a href="#_documentation_with_asciidoc">11.4. Documentation with AsciiDoc</a></li>
 </ul>
 </li>
 <li><a href="#_bulk_updates_with_operations_module">12. Bulk Updates with Operations Module</a></li>
@@ -1569,30 +1570,36 @@ the following dependencies specified:</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>public class CrnkVerticle extends AbstractVerticle {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CrnkVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CrnkVerticle.class);
 
-	public ReactiveTestModule testModule = new ReactiveTestModule();
+    public ReactiveTestModule testModule = new ReactiveTestModule();
 
-	private int port;
+    private int port;
 
-	public CrnkVerticle(int port) {
-		this.port = port;
-	}
+    private CrnkVertxHandler handler;
 
-	@Override
-	public void start() {
-		HttpServer server = vertx.createHttpServer();
+    public CrnkVerticle(int port) {
+        this.port = port;
 
-		CrnkVertxHandler handler = new CrnkVertxHandler((boot) -&gt; {
-			boot.addModule(HomeModule.create());
-			boot.addModule(testModule);
-		});
+        handler = new CrnkVertxHandler((boot) -&gt; {
+            boot.addModule(HomeModule.create());
+            boot.addModule(testModule);
+        });
+    }
 
-		server.requestStream().toFlowable()
-				.flatMap(request -&gt; handler.process(request))
-				.subscribe((response) -&gt; LOGGER.debug("delivered response {}", response), error -&gt; LOGGER.debug("error occured", error));
-		server.listen(port);
-	}
+    @Override
+    public void start() {
+        HttpServer server = vertx.createHttpServer();
+
+        server.requestStream().toFlowable()
+                .flatMap(request -&gt; handler.process(request))
+                .subscribe((response) -&gt; LOGGER.debug("delivered response {}", response), error -&gt; LOGGER.debug("error occured", error));
+        server.listen(port);
+    }
+
+    public CrnkBoot getBoot() {
+        return handler.getBoot();
+    }
 }</code></pre>
 </div>
 </div>
@@ -4359,7 +4366,7 @@ communicating with JSON-API compliant servers.</p>
 <div class="sect2">
 <h3 id="_setup_2">6.1. Setup</h3>
 <div class="paragraph">
-<p>The basic setup is as simple as:</p>
+<p>The basic setup is:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4367,7 +4374,9 @@ communicating with JSON-API compliant servers.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Three underlying http client libraries are supported:</p>
+<p>Four underlying http client libraries are supported.
+Add one of those library to the classpath and Crnk will pick it up automatically.
+A custom <code>HttpAdapter</code> can also set passed to <code>CrnkClient.setHttpAdapter(&#8230;&#8203;)</code>.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4386,11 +4395,21 @@ Spring application benefit from using this over the underlying native implementa
 the setup configuration setup. It is used by default if the presence of Spring is detected.
 Implemented by <code>io.crnk.spring.client.RestTemplateAdapter</code>.</p>
 </li>
-</ul>
+<li>
+<p><code>InMemoryHttpAdapter</code> to directly connect a client to a server without a TCP transport layer
+or HTTP server. This <strong>implementation is well suited for unit testing</strong> as no server must be setup, making
+unit tests simpler and faster to write, execute and debug. In contrast to invoking a repository directly
+on the server, <code>InMemoryHttpAdapter</code> request still pass through the entire Crnk serialization layer
+and are processed like any other HTTP request.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>  String url = "http://localhost:8080/api";
+  CrnkClient client = new CrnkClient(url);
+  client.setHttpAdapter(new InMemoryHttpAdapter(crnkBoot, url));</code></pre>
 </div>
-<div class="paragraph">
-<p>Add one of those library to the classpath and Crnk will pick it up automatically.
-A custom <code>HttpAdapter</code> can also set passed to <code>CrnkClient.setHttpAdapter(&#8230;&#8203;)</code>.</p>
+</div>
+</li>
+</ul>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -4461,7 +4480,7 @@ To explicitly set HTTP implementation use:
 <div class="sect2">
 <h3 id="_url_handling">6.3. URL handling</h3>
 <div class="paragraph">
-<p>Crnk clienet and server share the URL handling. <code>QuerySpecUrlMapper</code> performs the mapping of HTTP request parameters to QuerySpec.
+<p>Crnk client and server share the URL handling. <code>QuerySpecUrlMapper</code> performs the mapping of HTTP request parameters to QuerySpec.
 For more information see <a href="#urlmapper">url mapping</a>.</p>
 </div>
 </div>
@@ -4492,6 +4511,9 @@ For more information see <a href="#urlmapper">url mapping</a>.</p>
 </li>
 <li>
 <p>adding security tokens to requests</p>
+</li>
+<li>
+<p>setup the <code>PlainJsonFormatModule</code></p>
 </li>
 </ul>
 </div>
@@ -4555,20 +4577,20 @@ allow a fully automated setup.</p>
 <div class="listingblock">
 <div class="title">QuerySpecClientTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		ScheduleRepository scheduleRepository = ((ClientTestContainer) testContainer).getClient().getRepositoryForInterface(ScheduleRepository.class);
+<pre class="CodeRay highlight"><code>        ScheduleRepository scheduleRepository = ((ClientTestContainer) testContainer).getClient().getRepositoryForInterface(ScheduleRepository.class);
 
-		Schedule schedule = new Schedule();
-		schedule.setId(13L);
-		schedule.setName("mySchedule");
-		scheduleRepository.create(schedule);
+        Schedule schedule = new Schedule();
+        schedule.setId(13L);
+        schedule.setName("mySchedule");
+        scheduleRepository.create(schedule);
 
-		QuerySpec querySpec = new QuerySpec(Schedule.class);
-		ScheduleList list = scheduleRepository.findAll(querySpec);
-		Assert.assertEquals(1, list.size());
-		ScheduleListMeta meta = list.getMeta();
-		ScheduleListLinks links = list.getLinks();
-		Assert.assertNotNull(meta);
-		Assert.assertNotNull(links);</code></pre>
+        QuerySpec querySpec = new QuerySpec(Schedule.class);
+        ScheduleList list = scheduleRepository.findAll(querySpec);
+        Assert.assertEquals(1, list.size());
+        ScheduleListMeta meta = list.getMeta();
+        ScheduleListLinks links = list.getLinks();
+        Assert.assertNotNull(meta);
+        Assert.assertNotNull(links);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4576,7 +4598,57 @@ allow a fully automated setup.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jax_rs_interoperability">6.6. JAX-RS interoperability</h3>
+<h3 id="_http_customization">6.6. HTTP customization</h3>
+<div class="paragraph">
+<p><code>CrnkClient#getHttpAdapter()</code> gives access to the <code>HttpAdapter</code>.
+There are two ways to customize HTTP requests:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>HttpAdapterListener</code> can be added with <code>addListener</code>
+to  <code>HttpAdapter</code>. <code>HttpAdapterListener</code>  allows to intercept both requests and responses and perform changes.</p>
+</li>
+<li>
+<p>The <code>HttpAdapter</code> interface can be cast to used implementation, which in turn gives access to the native
+builder/listener mechanisms to perform any kind of advanced customization.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Typical use cases to customize the HTTP requests and responses are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>add custom request headers (security, tracing, etc.)</p>
+</li>
+<li>
+<p>collect statistics</p>
+</li>
+<li>
+<p>&#8230;&#8203;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-monitor/crnk-monitor-brave4/src/main/java/io/crnk/monitor/brave/BraveClientModule.java">crnk-monitor-brave4</a> for
+an advanced example.</p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/32196424/how-to-add-headers-to-okhttp-request-interceptor?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa">How to add
+headers to OkHttp request interceptor</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jax_rs_interoperability">6.7. JAX-RS interoperability</h3>
 <div class="paragraph">
 <p>The interface stubs from the previous section can also be used to make calls to JAX-RS. For example, the
 <code>ScheduleRepository</code> can be complemented with a JAX-RS annotation:</p>
@@ -4663,44 +4735,6 @@ request headers (like security), as it has to be done in two places (unfortunate
 </tr>
 </table>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_http_customization">6.7. HTTP customization</h3>
-<div class="paragraph">
-<p>It is possible to hook into the HTTP implementation used by Crnk ( or Apache).
-Make use of <code>CrnkClient#getHttpAdapter()</code> and cast it to either
-<code>HttpAdapter</code>. Both implementations provide a
-<code>addListener</code> method, which in turn gives access to the native builder used to construct
-the respective HTTP client implementation. This allows to cover various use cases:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>add custom request headers (security, tracing, etc.)</p>
-</li>
-<li>
-<p>collect statistics</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Some examples:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/crnk-project/crnk-framework/blob/master/crnk-monitor/crnk-monitor-brave4/src/main/java/io/crnk/monitor/brave/BraveClientModule.java">crnk-monitor-brave4</a> for
-an advanced example.</p>
-</li>
-<li>
-<p><a href="https://stackoverflow.com/questions/32196424/how-to-add-headers-to-okhttp-request-interceptor?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa">How to add
-headers to OkHttp request interceptor</a>.</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p><a id="format"></a></p>
 </div>
@@ -4727,7 +4761,7 @@ identifiers.</p>
 </div>
 <div class="paragraph">
 <p><code>crnk-format-plain-json</code> hosts the <code>PlainJsonFormatModule</code> that allows to setup a simpler,
-non-JSON:API format. An example looks like:</p>
+non-JSON:API format. The module can be applied both to CrnkBoot and CrnkClient. An example looks like:</p>
 </div>
 <div class="listingblock">
 <div class="title"><a href="http://localhost:8080/tasks/12" class="bare">http://localhost:8080/tasks/12</a></div>
@@ -4771,9 +4805,12 @@ the Typescript generator to select the desired format for generation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>typescriptGen{
-  ...
-  format = 'PLAINJSON' // or 'JSONAPI'
+<pre class="CodeRay highlight"><code>crnkGen{
+
+  typescript{
+    ...
+    format = 'PLAINJSON' // or 'JSONAPI'
+  }
 }</code></pre>
 </div>
 </div>
@@ -5128,21 +5165,21 @@ A setup can looks as follows:</p>
 <div class="listingblock">
 <div class="title">SecurityModuleIntTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>			Builder builder = SecurityConfig.builder();
-			builder.permitRole("allRole", ResourcePermission.ALL);
-			builder.permitRole("getRole", ResourcePermission.GET);
-			builder.permitRole("patchRole", ResourcePermission.PATCH);
-			builder.permitRole("postRole", ResourcePermission.POST);
-			builder.permitRole("deleteRole", ResourcePermission.DELETE);
-			builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
-			builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
-			builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
-			builder.permitAll(ResourcePermission.GET);
-			builder.permitAll(Project.class, ResourcePermission.POST);
-			module = SecurityModule.newServerModule(builder.build());
+<pre class="CodeRay highlight"><code>            Builder builder = SecurityConfig.builder();
+            builder.permitRole("allRole", ResourcePermission.ALL);
+            builder.permitRole("getRole", ResourcePermission.GET);
+            builder.permitRole("patchRole", ResourcePermission.PATCH);
+            builder.permitRole("postRole", ResourcePermission.POST);
+            builder.permitRole("deleteRole", ResourcePermission.DELETE);
+            builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
+            builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
+            builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
+            builder.permitAll(ResourcePermission.GET);
+            builder.permitAll(Project.class, ResourcePermission.POST);
+            module = SecurityModule.newServerModule(builder.build());
 
-			CrnkFeature feature = new CrnkFeature();
-			feature.addModule(module);</code></pre>
+            CrnkFeature feature = new CrnkFeature();
+            feature.addModule(module);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7025,6 +7062,193 @@ crnkGen.init()</code></pre>
 <p>Typically a test profile is used to bring the Spring application up in order to then extract the repositories for generation.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_documentation_with_asciidoc">11.4. Documentation with AsciiDoc</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This is still experimental. Feedback welcomed.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Documentation of REST APIs has a long history of various tooling. Swagger/OpenAPI there is the classical choice,
+but comes with a variety of disadvantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mechanisms used to extract information from an implementation often fail understand the full scope of it.</p>
+</li>
+<li>
+<p>Annotations for descriptions lead to a large amount of boiler-plate.</p>
+</li>
+<li>
+<p>Swagger UI is delivered as webapp and hard to enrich with custom information.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This triggered, for example, the development of <a href="https://github.com/Swagger2Markup/swagger2markup">swagger2markup</a> to
+make is of AsciiDoc as output target. This in turn lets developers manually written and generated
+documentation and publish it as HTML and PDF in a potentially versioned manner.</p>
+</div>
+<div class="paragraph">
+<p>Further progress iad made by <a href="https://docs.spring.io/spring-restdocs/docs/1.2.6.RELEASE/reference/html5/">spring-restdocs</a>.
+Instead of attempting to write a specification, request and responses are captured from unit tests and
+enriched with documentation to then save as AsciiDoc.  This ensures 100% accurate documentation at all time since.</p>
+</div>
+<div class="paragraph">
+<p>JSON:API enables developers to take a further leap. Since it provides a well-defined standard for many aspects
+of a REST endpoint, such as parameter handling, status codes and linking, it greatly simplifies the documentation task.
+Many things are covered by the standard and the documentation can focus on the essential aspects of the
+application. This in turn is realized by the AsciiDoc module of the Crnk generator.</p>
+</div>
+<div class="paragraph">
+<p>The setup looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>crnkGen{
+    runtime {
+        configuration = 'typescriptGenRuntime'
+    }
+
+    // specify the package to look for resources
+    resourcePackages = ['io.crnk.test']
+
+    asciidoc {
+        // enable Typescript generation within Gradle plugin
+        enabled = true
+
+        // title of generated document
+        title = "Api Documentation"
+
+        // specify location of generated sources
+        genDir = file('build/generated/source/asciidoc')
+    }
+}
+crnkGen.init()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a <code>generateAsciidoc</code> task to perform the generation.  The output directory then
+contains a collection of files that can either be included individually or together with the main <code>index.adoc</code>.</p>
+</div>
+<div class="paragraph">
+<p>Descriptions for resources and fields are extracted from JavaDoc.</p>
+</div>
+<div class="paragraph">
+<p>The generated documentation can be enriched with request/response examples from unit tests. An example looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>package io.crnk.gen.asciidoc;
+
+import io.crnk.client.CrnkClient;
+import io.crnk.client.http.inmemory.InMemoryHttpAdapter;
+import io.crnk.core.boot.CrnkBoot;
+import io.crnk.core.queryspec.FilterOperator;
+import io.crnk.core.queryspec.PathSpec;
+import io.crnk.core.queryspec.QuerySpec;
+import io.crnk.core.repository.ResourceRepositoryV2;
+import io.crnk.core.resource.list.ResourceList;
+import io.crnk.format.plainjson.PlainJsonFormatModule;
+import io.crnk.gen.asciidoc.capture.AsciidocCaptureConfig;
+import io.crnk.gen.asciidoc.capture.AsciidocCaptureModule;
+import io.crnk.test.mock.TestModule;
+import io.crnk.test.mock.models.Task;
+import io.crnk.test.mock.models.TaskStatus;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+
+public class AsciiDocCaptureTest {
+
+    private ResourceRepositoryV2&lt;Task, Long&gt; repository;
+
+    private AsciidocCaptureModule asciidoc;
+
+    @Before
+    public void setup() {
+        CrnkBoot boot = setupServer();
+
+        asciidoc = setupAsciidoc();
+        CrnkClient client = setupClient(boot, asciidoc);
+        repository = client.getRepositoryForType(Task.class);
+    }
+
+    private CrnkClient setupClient(CrnkBoot boot, AsciidocCaptureModule module) {
+        String baseUrl = "http://127.0.0.1:8080/api";
+        InMemoryHttpAdapter httpAdapter = new InMemoryHttpAdapter(boot, baseUrl);
+
+        CrnkClient client = new CrnkClient(baseUrl);
+        client.addModule(module);
+        client.addModule(new PlainJsonFormatModule());
+        client.setHttpAdapter(httpAdapter);
+        return client;
+    }
+
+    private AsciidocCaptureModule setupAsciidoc() {
+        File outputDir = new File("build/tmp/asciidoc/generated/source/asciidoc");
+        AsciidocCaptureConfig asciidocConfig = new AsciidocCaptureConfig();
+        asciidocConfig.setGenDir(outputDir);
+        return new AsciidocCaptureModule(asciidocConfig);
+    }
+
+    private CrnkBoot setupServer() {
+        CrnkBoot boot = new CrnkBoot();
+        boot.addModule(new TestModule());
+        boot.addModule(new PlainJsonFormatModule());
+        boot.boot();
+        return boot;
+    }
+
+    @Test
+    public void checkAccess() {
+        Task newTask = new Task();
+        newTask.setName("Favorite Task");
+        newTask.setStatus(TaskStatus.OPEN);
+
+        Task createdTask = asciidoc.capture("Create new Task").call(() -&gt; repository.create(newTask));
+
+        QuerySpec querySpec = new QuerySpec(Task.class);
+        querySpec.addFilter(PathSpec.of("name").filter(FilterOperator.EQ, "Favorite Task"));
+        querySpec.setOffset(0);
+        querySpec.setLimit(5L);
+        ResourceList&lt;Task&gt; list = asciidoc.capture("Find Task by Name").call(() -&gt; repository.findAll(querySpec));
+        Assert.assertNotEquals(0, list.size());
+
+        createdTask.setName("Updated Task");
+        asciidoc.capture("Update a Task").call(() -&gt; repository.save(createdTask));
+
+        asciidoc.capture("Delete a Task").call(() -&gt; repository.delete(createdTask.getId()));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example sets up a Crnk client and server. They are directly connected through <code>InMemoryHttpAdapter</code> to
+by-pass the HTTP layer and forgo the setup of a web server. The <code>AsciidocCaptureModule</code> is add to the
+client to do the capturing. To then capture a request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asciidoc.capture("Create new Task").call(() -&gt; repository.create(newTask));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the output is matched with Crnk generator plugin, then the captured test cases will be picked up automatically.
+A full setup is available in the main <a href="https://github.com/crnk-project/crnk-example">crnk-example</a> application.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7748,7 +7972,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-06 09:31:50 UTC
+Last updated 2019-04-11 19:30:55 UTC
 </div>
 </div>
 </body>
