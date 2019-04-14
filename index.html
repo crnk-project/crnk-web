@@ -147,10 +147,17 @@
 
 <div class="section breaking">
     <div class="section-content breaking">
-        13. January 2019:
+        14. April 2019:
         <p>
-            Crnk 2.11 is available with a simplified and more flexible JPA module, support for nested queries
-            and more. See <a href="http://www.crnk.io/releases/v2.11/">here</a>.
+            With 3.0.20190414162254-BETA a first beta of the next major version is available! There
+            have been many incremental improvements
+            to the code base over the past year. In particular the relationship handling has been automated
+            in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of the
+            configuration defaults. This in turn allows to setup resources and relationships more quickly
+            with even fewer code and better usability. A variety of new features complement the release,
+            most notably the generation of Asciidoc documentation and a type-safe query API.
+            For more information see <a href="http://www.crnk.io/releases/v3.0/">here</a>. Please
+            provide feedback. Further beta releases will bring more refinement.
         </p>
     </div>
 </div>
@@ -178,7 +185,8 @@
                                       data-toggle="tab">Dependencies
                 </a></li>
                 <li
-                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">Spring Application</a></li>
+                        role="presentation"><a href="#jaxrs" aria-controls="jaxrs" role="tab" data-toggle="tab">Spring
+                    Application</a></li>
                 <li
                         role="presentation"><a href="#resource" aria-controls="resource" role="tab"
                                                data-toggle="tab">Resource
@@ -328,6 +336,12 @@ public class ProjectRepositoryImpl extends ResourceRepositoryBase&lt;Project, Lo
                     e.preventDefault()
                     $(this).tab('show')
                 })
+
+
+
+
+
+
 
             </script>
 
