@@ -44,10 +44,150 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 2.12.20190411192945</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      <h4>Experimental Annotation Processor for type-safe QuerySpec construction</h4>
+      <h3>Latest</h3>      <p>Version: 3.0.20190414100453-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. The major change brings two different things.
+There are a variety of new features and usability improvements by cleaning up historic issues.
+While being a major release, changes required should be minimal (see below).
+<p>
+    A first BETA is available. Further BETA releases are going to finalize the new features
+    and providing more documentation and examples.
+</p>
 
-An annotation processor is introduced that generates type-safe QuerySpec and PathSpec subtypes for their
-type-safe construction:
+
+<h4>Cleanup &amp; Migration</h4>
+
+<ul>
+    <li>
+        The V2 suffixes have been removed from the repository interfaces. They have been in place for historic reasons
+        to follow the former QueryParams-based repositories. QueryParams continue to be supported, but the repository
+        now carry a &quot;Legacy&quot; prefix.
+    </li>
+    <li>
+        Repository interface make us of the Collection type rather than Iterable. The later can be quite cumbersome to
+        use
+        and not necessary for this particular use cases.
+    </li>
+    <li>
+        Resource identifier no longer must extend Serializable. There has been no requirements and complicated
+        their usage.
+    </li>
+    <li>
+        RelationshipRepositoryV2 and BulkRelationshipRepositoryV2 have been deprecated in favor
+        of OneRelationshipRepository and ManyRelationshipRepository. The new repositories
+        have a number of advantages. Finders of the new repositories follow
+        the concepts of BulkRelationshipRepositoryV2 to have efficiency by default. RelationshipMatch
+        is used by default to bind the repository to resources.
+        Repositories may still implement
+        both interfaces to gain the original RelationshipRepositoryV2 functionality.
+    </li>
+    <li>
+        JPA repositories with DTO mapping now behave exactly like regular resources. Make sure that
+        the DTOs are properly annotation with @JsonApiRelation and @JsonApiRelationId. No information is
+        inferred from the underlying entities.
+    </li>
+    <li>
+        RepositoryDecoratorFactory has been simplified to a single decorateRepository method and
+        WrappedResourceRepository, WrappedOneRelationshipRepository and WrappedManyRelationshipRepository.
+        There are no dedicated decoration repository interfaces anymore, just the regular interfaces.
+    </li>
+    <li>
+        Decorators have been removed form the JpaRepositoryConfig. The regular RepositoryDecoratorFactory can be
+        used instead.
+    </li>
+    <li>
+        @JsonApiRelation.oppositeName has been deprecated in favor of @JsonApiRelation.mappedBy.
+        See below for more information. Be aware of the changed semantics. The property must only be
+        set on one side.
+    </li>
+    <li>New defaults for @JsonApiRelation.lookup and @JsonApiRelation.repositoryBehavior should
+        allow to eliminate a large part of the custom configuration. For more information see below.
+    </li>
+    <li>
+        crnk-jpa has been renamed to crnk-data-jpa and the Java package updated accordingly.
+    </li>
+    <li>
+        crnk-activiti has been renamed to crnk-data-activiti and the Java package updated accordingly.
+    </li>
+    <li>
+        QueryParams: let us know if you are still attached to it. Otherwise it is going to get dropped
+        in a subsequent Beta release.
+    </li>
+</ul>
+
+<h4>Simplified Relationship Setup with @JsonApiRelation.mappedBy</h4>
+
+<ul>
+    <li>
+        @JsonApiRelation.oppositeName has been deprecated in favor of @JsonApiRelation.mappedBy. MappedBy works
+        in exactly the same fashion as known from JPA-related annotations. It must be set on one side of
+        a bidirectional relationship to point to the opposite owning side. By default requests are then served
+        from the resource repository of the owning side.
+
+        <pre class="prettyprint">
+@JsonApiResource(type = "tasks")
+public class Task {
+
+    @JsonApiRelation
+    private Project project;
+
+    ...
+}
+
+@JsonApiResource(type = "tasks")
+public class Task {
+
+    @JsonApiRelation(mappedBy="project")
+    private Set&lt;Task&gt; tasks;
+
+    ...
+}
+</pre>
+
+        <p>
+            For example, for a one-to-many relationship, the owning side is typically the single-valued field, whereas
+            the
+            multi-valued
+            field declares the mappedBy to point to the single-valued field. This is because the single-valued field
+            is typically something like a column in a database table that can be accessed and updated. In contrast,
+            the multi-valued field can only be obtained by specifying issuing a query against the single-valued field.
+        </p>
+
+        Under the hood the mappedBy property will trigger a suitable default for @JsonApiRelation.repositoryBehavior
+        and @JsonApiRelation.lookup on both sides, simplifying the relationship setup for most use cases.
+        If no relationship repository can be setup, Crnk will no fail directly upon startup.
+    </li>
+    <li>
+        @JsonApiRelation.lookUp and @JsonApiRelation.repositoryBehavior are setup automatically by default based
+        the resource and relationship declaration and the presence of relationship repository implementation.
+        In many cases it should no longer be necessary those properties. Have a look at
+        the updated documentation and the new example in the
+        <a href="http://www.crnk.io/releases/latest/documentation/#_jsonapirelation">documentation</a>.
+    </li>
+    <li>
+        An exception rather a warning is thrown when a relationship cannot be setup.
+    </li>
+</ul>
+
+More information is available in the documentation. Please provide feedback in this area!
+
+
+<h4>Go Faster with Graal Native</h4>
+
+<p>
+    <i>This feature will be available in a subsequent BETA release</i>
+</p>
+
+Sub-100ms startup times and reduced memory requirements to reduce cost and open up new application fields
+like serverless computing.
+
+
+<h4>Type-safe QuerySpec construction with a Crnk Annotation Processor</h4>
+
+<p>
+    <i>Available as a preview in the first BETA</i>
+</p>
+
+An annotation processor is introduced that allows the type-safe construction of QuerySpec and PathSpec.
+
 
 <pre class="prettyprint">
 UserQuerySpec querySpec = new UserQuerySpec();
@@ -60,11 +200,9 @@ UserQuerySpec querySpec = new UserQuerySpec();
 More information can be found <a href="www.crnk.io/releases/latest/documentation/#_generation_java">here</a>.
 
 
-<h4>Refactored Gradle generator plugin</h4>
+<h4>More flexible Gradle generator plugin</h4>
 
-The Gradle Typescript generator has been refactored to support the generator of artifacts other than Typescript.
-For this purpose the project has been split into `crnk-gen-gradle`, `crnk-gen-typescript` and a number of
-helper projects. The new setup looks like:
+The Gradle Typescript generator adds support for the generation of artifacts other than Typescript.
 
 <pre class="prettyprint">
 buildscript {
@@ -80,7 +218,7 @@ crnkGen {
     }
 
     forked = true
-    resourcePackages = ['ch.adnovum.sb4b.management.api', 'ch.adnovum.sb4b.identity.api', 'ch.adnovum.sb4b.corda.base.contract']
+    resourcePackages = ['io.crnk.example.api']
 
     typescript {
         enabled = true
@@ -90,15 +228,23 @@ crnkGen {
 }
 </pre>
 
-More information about Typescript generation is available
+For this purpose the project has been split into `crnk-gen-gradle`, `crnk-gen-typescript` and a number of
+helper projects.  More information about Typescript generation is available
 <a href="documentation/#_typescript">here</a>.
 
-<h4>More flexible EntityManager setup with JPA module</h4>
 
-JpaModule.createServerModule(...) comes with a new flavor that allows to pass the EntityManager
-as java.util.Supplier. Every time a repository makes use of the EntityManager, the supplier is called and must
-return an instance. The supplier together with the existing TransactionRunner
-allows for custom JPA setups and transaction handling.
+<h4>Documentation generation with AsciiDoc</h4>
+
+The new <i>crnk-gen-asciidoc</i> project helps automating REST documentation. It makes use of two kinds of sources:
+resource classes and test cases. The resource classes give an overview of a REST endpoint with a list of available
+resources, attributes and relationships. Whereas test cases can serve as examples for developers. This mix
+of model-driven and test-driven documentation together with the standardization provided by JSON:API
+can greatly help in writing consistent, documented REST endpoints.
+
+
+For more information have a look at the <a href="documentation/#_documentation_with_asciidoc">documentation</a> and
+<a href="https://github.com/crnk-project/crnk-example">crnk-example</a>.
+
 
 <h4>Allow QuerySpec conversion to Criteria query</h4>
 
@@ -119,7 +265,6 @@ List&lt;TestEntity&gt; resultList = executor.getResultList();
 </pre>
 
 
-
 <h4>InMemoryHttpAdapter to connect CrnkClient with a server</h4>
 
 There is a new InMemoryHttpAdapter implementation completing OkHttp, Apache HTTP client and RestTemplate.
@@ -133,7 +278,6 @@ and faster setup:
     CrnkClient client = new CnrkClient(url).
     client.setHttpAdapter(new InMemoryHttpAdapter(crnkBoot, url));
 </pre>
-
 
 
 <h4>HttpAdapterListener for a vendor-neutral HTTP request/response interception</h4>
@@ -162,7 +306,6 @@ rather than
 <pre class="prettyprint">
     http://127.0.0.1/api/tasks?filter[tasks][name][EQ]=Doe
 </pre>
-
 
 
 <h4>OpenTracing Support</h4>
@@ -207,8 +350,16 @@ More information can be found <a href="documentation/#_nested_resources">here</a
 
 <h4>Enum support for Activiti</h4>
 
-crnk-jpa maps Enum types to Strings for Activiti. This to by-pass the regular Activiti serialization mechanism that
+crnk-data-jpa maps Enum types to Strings for Activiti. This to by-pass the regular Activiti serialization mechanism that
 treats the enum like a java.lang.Object by storing it is as serialized blob and not supporting filtering.
+
+
+<h4>More flexible EntityManager setup with JPA module</h4>
+
+JpaModule.createServerModule(...) comes with a new flavor that allows to pass the EntityManager
+as java.util.Supplier. Every time a repository makes use of the EntityManager, the supplier is called and must
+return an instance. The supplier together with the existing TransactionRunner
+allows for custom JPA setups and transaction handling.
 
   </div>
 </div>

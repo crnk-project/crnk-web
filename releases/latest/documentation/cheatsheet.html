@@ -712,7 +712,7 @@ use <a href="http://www.crnk.io/releases/latest/documentation/#_nested_resources
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">CrnkClient client = <span class="keyword">new</span> CrnkClient(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span>);
-ResourceRepositoryV2&lt;Task, <span class="predefined-type">Serializable</span>&gt; taskRepo = client.getRepositoryForType(Task.class);
+ResourceRepository&lt;Task, <span class="predefined-type">Serializable</span>&gt; taskRepo = client.getRepositoryForType(Task.class);
 QuerySpec querySpec = <span class="keyword">new</span> QuerySpec(Task.class);
 querySpec.addFilter(
   <span class="keyword">new</span> FilterSpec(PathSpec.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">task.assignee.name</span><span class="delimiter">&quot;</span></span>), FilterOperator.NEQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">Joe</span><span class="delimiter">&quot;</span></span>)
@@ -991,7 +991,7 @@ if found on the classpath and <code>SecurityConfigurer</code> allows its customi
 <div class="ulist">
 <ul>
 <li>
-<p>Use crnk-jpa to access JPA entities.</p>
+<p>Use crnk-data-jpa to access JPA entities.</p>
 </li>
 <li>
 <p>Use crnk-activity to access Activiti workflow and tasks.</p>
@@ -1009,7 +1009,7 @@ if found on the classpath and <code>SecurityConfigurer</code> allows its customi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-11 19:30:55 UTC
+Last updated 2019-04-14 10:05:57 UTC
 </div>
 </div>
 </body>
