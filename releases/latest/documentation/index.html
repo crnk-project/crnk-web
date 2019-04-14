@@ -535,20 +535,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_repository">3.2. Repository</a></li>
 <li><a href="#_bom">3.3. BOM</a></li>
 <li><a href="#_logging">3.4. Logging</a></li>
-<li><a href="#_integration_with_jax_rs">3.5. Integration with JAX-RS</a>
-<ul class="sectlevel3">
-<li><a href="#_crnkfeature">3.5.1. CrnkFeature</a></li>
-<li><a href="#_exception_mapping_for_jax_rs_services">3.5.2. Exception mapping for JAX-RS services</a></li>
-<li><a href="#_use_jsonapi_format_with_jax_rs_services">3.5.3. Use JSON:API format with JAX-RS services</a></li>
-<li><a href="#_jax_rs_service_interoperability">3.5.4. JAX-RS service interoperability</a></li>
-</ul>
-</li>
-<li><a href="#_integration_with_servlet_api">3.6. Integration with Servlet API</a>
-<ul class="sectlevel3">
-<li><a href="#_integrating_using_a_servlet">3.6.1. Integrating using a Servlet</a></li>
-<li><a href="#_integrating_using_a_filter">3.6.2. Integrating using a filter</a></li>
-</ul>
-</li>
+<li><a href="#_integration_with_jax_rs">3.5. Integration with JAX-RS</a></li>
+<li><a href="#_integration_with_servlet_api">3.6. Integration with Servlet API</a></li>
 <li><a href="#_integration_with_spring_and_spring_boot">3.7. Integration with Spring and Spring Boot</a></li>
 <li><a href="#_integration_with_vert_x">3.8. Integration with Vert.x</a></li>
 <li><a href="#_tomcat_setup">3.9. Tomcat Setup</a></li>
@@ -574,53 +562,19 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
-<li><a href="#_nested_resources">4.9. Nested Resources</a>
-<ul class="sectlevel3">
-<li><a href="#_single_nested_resources">4.9.1. Single Nested Resources</a></li>
-<li><a href="#_multiple_nested_resources">4.9.2. Multiple Nested Resources</a></li>
-<li><a href="#_usage">4.9.3. Usage</a></li>
-</ul>
-</li>
+<li><a href="#_nested_resources">4.9. Nested Resources</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
 <ul class="sectlevel2">
 <li><a href="#_resourcerepository">5.1. ResourceRepository</a></li>
-<li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a>
-<ul class="sectlevel3">
-<li><a href="#_api">5.2.1. API</a></li>
-<li><a href="#_basic_filtering">5.2.2. Basic Filtering</a></li>
-<li><a href="#_nested_filtering">5.2.3. Nested Filtering</a></li>
-<li><a href="#_sorting">5.2.4. Sorting</a></li>
-<li><a href="#_pagination">5.2.5. Pagination</a></li>
-<li><a href="#_sparse_fieldsets">5.2.6. Sparse Fieldsets</a></li>
-<li><a href="#_inclusion_of_related_resources">5.2.7. Inclusion of Related Resources</a></li>
-<li><a href="#_url_mapping">5.2.8. URL Mapping</a></li>
-</ul>
-</li>
-<li><a href="#_relationship_repositories">5.3. Relationship Repositories</a>
-<ul class="sectlevel3">
-<li><a href="#_example">5.3.1. Example</a></li>
-<li><a href="#_relationshipmatcher">5.3.2. RelationshipMatcher</a></li>
-<li><a href="#_self_and_related_links">5.3.3. Self and Related Links</a></li>
-<li><a href="#_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</a></li>
-</ul>
-</li>
+<li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a></li>
+<li><a href="#_relationship_repositories">5.3. Relationship Repositories</a></li>
 <li><a href="#_resourcelist">5.4. ResourceList</a></li>
-<li><a href="#_error_handling">5.5. Error Handling</a>
-<ul class="sectlevel3">
-<li><a href="#_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</a></li>
-<li><a href="#_and_mapping_it_to_jsonapi_response">5.5.2. &#8230;&#8203;and mapping it to JSON:API response</a></li>
-</ul>
-</li>
+<li><a href="#_error_handling">5.5. Error Handling</a></li>
 <li><a href="#_meta_information">5.6. Meta Information</a></li>
 <li><a href="#_links_information">5.7. Links Information</a></li>
-<li><a href="#_inheritance">5.8. Inheritance</a>
-<ul class="sectlevel3">
-<li><a href="#_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</a></li>
-<li><a href="#_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</a></li>
-</ul>
-</li>
+<li><a href="#_inheritance">5.8. Inheritance</a></li>
 <li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
 <li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
 <li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
@@ -656,12 +610,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_resource_based_access_control_with_the_securitymodule">9.2. Resource-based Access Control with the SecurityModule</a></li>
 <li><a href="#_role_based_access_control_with_resourcefilter">9.3. Role-based Access Control with ResourceFilter</a></li>
 <li><a href="#_dataroom_access_control">9.4. Dataroom Access Control</a></li>
-<li><a href="#_adapt_user_interfaces_based_on_authorizations">9.5. Adapt User Interfaces based on Authorizations</a>
-<ul class="sectlevel3">
-<li><a href="#_resourcepermissioninformation">9.5.1. ResourcePermissionInformation</a></li>
-<li><a href="#_home_and_meta_module">9.5.2. Home and Meta Module</a></li>
-</ul>
-</li>
+<li><a href="#_adapt_user_interfaces_based_on_authorizations">9.5. Adapt User Interfaces based on Authorizations</a></li>
 <li><a href="#_provide_authentication_information_to_the_user">9.6. Provide Authentication Information to the User</a></li>
 <li><a href="#_exception_mapping">9.7. Exception Mapping</a></li>
 <li><a href="#_potential_future_work">9.8. (Potential) Future Work</a></li>
@@ -669,41 +618,11 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_data_access">10. Data Access</a>
 <ul class="sectlevel2">
-<li><a href="#_jpa">10.1. JPA</a>
-<ul class="sectlevel3">
-<li><a href="#_jpa_module_setup">10.1.1. JPA Module Setup</a></li>
-<li><a href="#_pagination_2">10.1.2. Pagination</a></li>
-<li><a href="#_criteria_api_and_querydsl">10.1.3. Criteria API and QueryDSL</a></li>
-<li><a href="#_lazy_and_eager_loading">10.1.4. Lazy and Eager Loading</a></li>
-<li><a href="#_access_with_crnk_client">10.1.5. Access with Crnk client</a></li>
-<li><a href="#_customizing_the_exposed_resources_over_the_underlying_entity_model">10.1.6. Customizing the exposed resources over the underlying entity model</a></li>
-<li><a href="#_standalone_usage">10.1.7. Standalone Usage</a></li>
-</ul>
-</li>
+<li><a href="#_jpa">10.1. JPA</a></li>
 <li><a href="#_jsr_303_validation_module">10.2. JSR 303 Validation Module</a></li>
-<li><a href="#_meta_module">10.3. Meta Module</a>
-<ul class="sectlevel3">
-<li><a href="#_setup_3">10.3.1. Setup</a></li>
-<li><a href="#_examples_2">10.3.2. Examples</a></li>
-<li><a href="#_identifiers_for_meta_elements">10.3.3. Identifiers for Meta Elements</a></li>
-<li><a href="#_extending_the_meta_module">10.3.4. Extending the Meta Module</a></li>
-</ul>
-</li>
-<li><a href="#_activiti_module">10.4. Activiti Module</a>
-<ul class="sectlevel3">
-<li><a href="#_setup_4">10.4.1. Setup</a></li>
-<li><a href="#_example_application">10.4.2. Example application</a></li>
-<li><a href="#_limitations">10.4.3. Limitations</a></li>
-</ul>
-</li>
-<li><a href="#_faceted_search">10.5. Faceted Search</a>
-<ul class="sectlevel3">
-<li><a href="#_setup_5">10.5.1. Setup</a></li>
-<li><a href="#_examples_3">10.5.2. Examples</a></li>
-<li><a href="#_nesting">10.5.3. Nesting</a></li>
-<li><a href="#_roadmap">10.5.4. Roadmap</a></li>
-</ul>
-</li>
+<li><a href="#_meta_module">10.3. Meta Module</a></li>
+<li><a href="#_activiti_module">10.4. Activiti Module</a></li>
+<li><a href="#_faceted_search">10.5. Faceted Search</a></li>
 </ul>
 </li>
 <li><a href="#_generation">11. Generation</a>
@@ -733,12 +652,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_implement_a_custom_discovery_mechanism_2">15.7. Implement a custom discovery mechanism</a></li>
 <li><a href="#_let_a_module_hook_into_the_crnk_http_client_implementation">15.8. Let a module hook into the Crnk HTTP client implementation</a></li>
 <li><a href="#_implement_a_custom_integration">15.9. Implement a custom integration</a></li>
-<li><a href="#_create_repositories_at_runtime">15.10. Create repositories at runtime</a>
-<ul class="sectlevel3">
-<li><a href="#_implementing_repositories_dynamically_at_runtime">15.10.1. Implementing repositories dynamically at runtime</a></li>
-<li><a href="#_registering_repositories_at_runtime">15.10.2. Registering repositories at runtime</a></li>
-</ul>
-</li>
+<li><a href="#_create_repositories_at_runtime">15.10. Create repositories at runtime</a></li>
 <li><a href="#_discovery_of_modules_by_crnkclient">15.11. Discovery of Modules by CrnkClient</a></li>
 </ul>
 </li>
@@ -8084,7 +7998,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-14 10:05:57 UTC
+Last updated 2019-04-14 15:59:32 UTC
 </div>
 </div>
 </body>
