@@ -5313,7 +5313,69 @@ For more information see <a href="#repository_decoration">Repository Decoration<
 </ul>
 </div>
 <div class="paragraph">
-<p>In the future the <code>SecurityModule</code> may be enhanced to also support DAC.</p>
+<p>The <code>SecurityModule</code> comes with built-in support for DAC. An example looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">DataRoomFilterTest.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>Unresolved directive in security.adoc - include::../../../../crnk-security/src/test/java/io/crnk/security/DataRoomFilterTest.java[tags=docs]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>DataRoomFilter</code> can be passed to the <code>SecurityConfig</code>. It has to provide
+a <code>QuerySpec</code> of what the current caller is allowed to see. In the
+example here all callers are just allowed to see tasks named
+<code>foo</code>. Real-world scenarios access the user principal and roles to decide for
+a particular filter. The returned <code>QuerySpec</code> is applied to all repository operations: <code>GET</code>, <code>PATCH</code>, <code>POST</code> and
+<code>DELETE</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Descripton</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Added to the caller <code>QuerySpec</code> to filter by both caller and DataRoom filters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifies that the created resources matches with DataRoom filter. Checks are
+  performed in memory with <code>QuerySpec.apply</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PATCH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Equivalent to <code>POST</code> but further verifiers that the caller has access to the existing,
+  unchanged resource. Implementors may further those to make involved fields
+  immutable with <code>@JsonApiField(patchable=false)</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifies that deleted resources match DataRoom filtering by querying them before deletion.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+When accessing relationship repositories, only one side is checked
+  for performance reasons. It is assumed that <code>DataRoomFilter</code> applies proper filters to
+  both sides of a relationship. For <code>GET</code> it is the target side of the relationship
+  (the returned resources), for <code>PATCH</code>, <code>POST</code> and <code>DELETE</code> the modified source side.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -7998,7 +8060,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-19 05:48:48 UTC
+Last updated 2019-04-19 16:15:26 UTC
 </div>
 </div>
 </body>
