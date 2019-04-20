@@ -44,7 +44,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 3.0.20190419153833-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
+      <h3>Latest</h3>      <p>Version: 3.0.20190420144250-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
 have been many incremental improvements
 to the code base over the past year. In particular the relationship handling has been automated
 in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of the
@@ -444,6 +444,28 @@ public class PostHeader {
 </pre>
 
 More information can be found <a href="documentation/#_nested_resources">here</a>.
+
+<h4>Specify access mode with @JsonApiResource</h4>
+
+<p>Available in Beta 2</p>
+
+@JsonApiResource has new properties to configure the allowed access modes to a resource:
+sortable, filterable, postable, readable, patchable and deletable. An example looks like:
+
+<pre class="prettyprint">
+@JsonApiResource(
+    type = "tasks", sortable = false, filterable = true,
+    postable = false, readable = false, patchable = false, deletable = false
+)
+public class AccessDeniedTestResource {
+
+    ...
+
+}
+</pre>
+
+The new properties match the ones from @JsonApiField and provide the base line for it.
+For example, if a resource does not allow filtering, none of its fields will.
 
 
 <h4>Enum support for Activiti</h4>
