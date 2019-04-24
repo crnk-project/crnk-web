@@ -44,8 +44,13 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>3.0.20190414162254-BETA</h3>      <p>Version: 3.0.20190414162254-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. The major change brings two different things.
-There are a variety of new features and usability improvements by cleaning up historic issues.
+      <h3>3.0.20190424131804-BETA</h3>      <p>Version: 3.0.20190424131804-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
+have been many incremental improvements
+to the code base over the past year. In particular the relationship handling has been automated
+in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of the
+configuration defaults. This in turn allows to setup resources and relationships
+more simply, more quickly and  with fewer lines of code. A variety of new features complement the release,
+most notably the generation of Asciidoc documentation and a type-safe query API.
 While being a major release, changes required should be minimal (see below).
 <p>
     A first BETA is available. Further BETA releases are going to finalize the new features
@@ -275,7 +280,7 @@ For this purpose the project has been split into `crnk-gen-gradle`, `crnk-gen-ty
 helper projects.  More information about Typescript generation is available
 <a href="documentation/#_typescript">here</a>.
 
-      
+
 <h4>Documentation generation with AsciiDoc</h4>
 
 The new <i>crnk-gen-asciidoc</i> project helps automating REST documentation. It makes use of two kinds of sources:
@@ -286,14 +291,14 @@ can greatly help in writing consistent, documented REST endpoints.
 
 <p>
 <table width="90%">
-  <tr>
-      <td>
-          <img src="asciidoc_graph.png" width="90%">
-      </td>
-      <td>
-          <img src="asciidoc_example.png" width="90%">
-      </td>
-  </tr>
+    <tr>
+        <td>
+            <img src="asciidoc_graph.png" width="90%">
+        </td>
+        <td>
+            <img src="asciidoc_example.png" width="90%">
+        </td>
+    </tr>
 </table>
 </p>
 
@@ -333,6 +338,40 @@ and faster setup:
     CrnkClient client = new CnrkClient(url).
     client.setHttpAdapter(new InMemoryHttpAdapter(crnkBoot, url));
 </pre>
+
+
+<h4>DataRoom Filtering</h4>
+
+<p>
+    Available with Beta 2.
+</p>
+
+The SecurityModule of crnk-security has been enhanced to allow dataroom
+access control. A DataRoomFilter can specify what a caller is allowed to
+see in the form of a QuerySpec. This QuerySpec is added to any repository
+call complementing the parameters provided by the caller. In the
+example here all callers are just allowed to see tasks with name
+&quot;foo&quot;:
+
+<pre class="prettyprint">
+Builder builder = SecurityConfig.builder();
+builder.permitAll(ResourcePermission.ALL);
+builder.setDataRoomFilter((querySpec, method) -> {
+    if (querySpec.getResourceClass() == Task.class) {
+        QuerySpec clone = querySpec.clone();
+        clone.addFilter(PathSpec.of("name").filter(FilterOperator.EQ, "foo"));
+        return clone;
+    }
+    return querySpec;
+});
+SecurityConfig config = builder.build();
+securityModule = SecurityModule.newServerModule(config);
+</pre>
+
+Real-world example would here access the user principal/roles to make up a decision.
+The provided QuerySpec not checks access for GET, but also PATCH, POST and DELETE
+by fetching the existing entry and verify access. More information is available
+in the documentation.
 
 
 <h4>HttpAdapterListener for a vendor-neutral HTTP request/response interception</h4>
@@ -405,6 +444,28 @@ public class PostHeader {
 </pre>
 
 More information can be found <a href="documentation/#_nested_resources">here</a>.
+
+<h4>Specify access mode with @JsonApiResource</h4>
+
+<p>Available in Beta 2</p>
+
+@JsonApiResource has new properties to configure the allowed access modes to a resource:
+sortable, filterable, postable, readable, patchable and deletable. An example looks like:
+
+<pre class="prettyprint">
+@JsonApiResource(
+    type = "tasks", sortable = false, filterable = true,
+    postable = false, readable = false, patchable = false, deletable = false
+)
+public class AccessDeniedTestResource {
+
+    ...
+
+}
+</pre>
+
+The new properties match the ones from @JsonApiField and provide the base line for it.
+For example, if a resource does not allow filtering, none of its fields will.
 
 
 <h4>Enum support for Activiti</h4>

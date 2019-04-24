@@ -1971,6 +1971,9 @@ actually implemented (see the <a href="#architecture">[architecture]</a> and <a 
 way Java Beans and annotations. See <a href="#runtimerepository">here</a> for more information how setup resources and repositories
 programmatically at runtime.</p>
 </div>
+<div class="paragraph">
+<p><a id="jsonApiResource"></a></p>
+</div>
 <div class="sect2">
 <h3 id="_jsonapiresource">4.1. JsonApiResource</h3>
 <div class="paragraph">
@@ -2015,9 +2018,9 @@ programmatically at runtime.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", resourcePath = "tasks")
-  public class Task {
-    // fields, getters and setters
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">task</span><span class="delimiter">&quot;</span></span>, resourcePath = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+    <span class="comment">// fields, getters and setters</span>
   }</code></pre>
 </div>
 </div>
@@ -2048,9 +2051,9 @@ programmatically at runtime.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "tasks", pagingSpec = OffsetLimitPagingSpec.class)
-  public class Task {
-    // fields, getters and setters
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>, pagingSpec = OffsetLimitPagingSpec.class)
+  <span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+    <span class="comment">// fields, getters and setters</span>
   }</code></pre>
 </div>
 </div>
@@ -2064,14 +2067,14 @@ found at <a href="#pagination">Pagination</a> section.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>  @JsonApiResource(type = "task", subTypes = SpecialTask.class)
-  public class Task {
-    // fields, getters and setters
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">task</span><span class="delimiter">&quot;</span></span>, subTypes = SpecialTask.class)
+  <span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+    <span class="comment">// fields, getters and setters</span>
   }
 
-  @JsonApiResource(type = "specialTask", resourcePath = "task")
-  public class SpecialTask extends Task{
-    // fields, getters and setters
+  <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">specialTask</span><span class="delimiter">&quot;</span></span>, resourcePath = <span class="string"><span class="delimiter">&quot;</span><span class="content">task</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">public</span> <span class="type">class</span> <span class="class">SpecialTask</span> <span class="directive">extends</span> Task{
+    <span class="comment">// fields, getters and setters</span>
   }</code></pre>
 </div>
 </div>
@@ -2079,6 +2082,31 @@ found at <a href="#pagination">Pagination</a> section.</p>
 <p>In this case the <code>SpecialTask</code> extends <code>Task</code> but shares the same <code>resourcePath</code>, meaning <code>SpecialTask</code> does not bring along
 a repository implementation (see next chapter), but is served by the task repository. For a more information have a look at the
 <a href="#inheritance">[inheritance]</a> section.</p>
+</div>
+<div class="paragraph">
+<p>@JsonApiResource has properties to configure the allowed access modes to a resource:
+sortable, filterable, postable, readable, patchable and deletable. An example looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>,
+            postable = <span class="predefined-constant">false</span>, readable = <span class="predefined-constant">false</span>, patchable = <span class="predefined-constant">false</span>, deletable = <span class="predefined-constant">false</span>,
+            sortable = <span class="predefined-constant">false</span>, filterable = <span class="predefined-constant">false</span>
+    )
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">AccessDeniedTestResource</span> {
+
+        <span class="annotation">@JsonApiId</span>
+        <span class="directive">public</span> <span class="predefined-type">String</span> id;
+
+        <span class="directive">public</span> <span class="predefined-type">String</span> value;
+
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The properties match the ones from @JsonApiField and provide the base line for it.
+For example, if a resource does not allow filtering, none of its fields will either.
+If one of those properties is attempted to be violated, an error is thrown.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2092,12 +2120,12 @@ Each resource requires this annotation to be present on a field which type imple
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "tasks")
-public class Task {
-@JsonApiId
-private Long id;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+<span class="annotation">@JsonApiId</span>
+<span class="directive">private</span> <span class="predefined-type">Long</span> id;
 
-// fields, getters and setters
+<span class="comment">// fields, getters and setters</span>
 }</code></pre>
 </div>
 </div>
@@ -2113,20 +2141,20 @@ must be a valid resource. The next example showcases a bi-directional relationsh
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "tasks")
-public class Task {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
 
-    @JsonApiRelation
-    private Project project;
+    <span class="annotation">@JsonApiRelation</span>
+    <span class="directive">private</span> Project project;
 
     ...
 }
 
-@JsonApiResource(type = "tasks")
-public class Task {
+<span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
 
-    @JsonApiRelation(mappedBy="project")
-    private Set&lt;Task&gt; tasks;
+    <span class="annotation">@JsonApiRelation</span>(mappedBy=<span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> <span class="predefined-type">Set</span>&lt;Task&gt; tasks;
 
     ...
 }</code></pre>
@@ -2146,8 +2174,8 @@ multi-valued fields like <code>tasks</code> can only be obtained by issuing a qu
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiRelation(serialize = SerializeType.ONLY_ID)
-private Project project;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelation</span>(serialize = SerializeType.ONLY_ID)
+<span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2171,8 +2199,8 @@ in the corresponding <code>relationships.[name].data</code> section. Either <cod
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_ALWAYS)
-private Project project;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelation</span>(lookUp = LookupIncludeBehavior.AUTOMATICALLY_ALWAYS)
+<span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2246,39 +2274,39 @@ GET requests are forwarded to the opposite resource repository. For example,
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "task")
-public class Task {
-    @JsonApiId
-    public String id;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">task</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+    <span class="annotation">@JsonApiId</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> id;
 
-    @JsonApiRelation // not backed by repository
-    public Project project;
+    <span class="annotation">@JsonApiRelation</span> <span class="comment">// not backed by repository</span>
+    <span class="directive">public</span> Project project;
 
-    @JsonApiRelation // backed by repository
-    public List&lt;Task&gt; subTasks;
+    <span class="annotation">@JsonApiRelation</span> <span class="comment">// backed by repository</span>
+    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;Task&gt; subTasks;
 }
 
-@JsonApiResource(type = "project")
-public class Project {
-    @JsonApiId
-    public String id;
+<span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span> {
+    <span class="annotation">@JsonApiId</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> id;
 
-    @JsonApiRelation(mappedBy = "project")
-    public Set&lt;Task&gt; tasks;
+    <span class="annotation">@JsonApiRelation</span>(mappedBy = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="predefined-type">Set</span>&lt;Task&gt; tasks;
 
-    @JsonApiRelationId
-    public Project parentId;
+    <span class="annotation">@JsonApiRelationId</span>
+    <span class="directive">public</span> Project parentId;
 
-    @JsonApiRelation
-    public Project parent;
+    <span class="annotation">@JsonApiRelation</span>
+    <span class="directive">public</span> Project parent;
 }
 
-class SubTaskRepository extends OneRelationshipRepositoryBase {
-    @Override
-    public RelationshipMatcher getMatcher() {
-        RelationshipMatcher matcher = new RelationshipMatcher();
-        matcher.rule().field("subTasks").add();
-        return matcher;
+<span class="type">class</span> <span class="class">SubTaskRepository</span> <span class="directive">extends</span> OneRelationshipRepositoryBase {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> RelationshipMatcher getMatcher() {
+        RelationshipMatcher matcher = <span class="keyword">new</span> RelationshipMatcher();
+        matcher.rule().field(<span class="string"><span class="delimiter">&quot;</span><span class="content">subTasks</span><span class="delimiter">&quot;</span></span>).add();
+        <span class="keyword">return</span> matcher;
     }
     ...
 }</code></pre>
@@ -2363,32 +2391,32 @@ An example looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiResource(type = "schedules")
-public class Schedule {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">schedules</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Schedule</span> {
   ...
 
-  @JsonApiRelationId
-  private Long projectId;
+  <span class="annotation">@JsonApiRelationId</span>
+  <span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
 
-  @JsonApiRelation
-  private Project project;
+  <span class="annotation">@JsonApiRelation</span>
+  <span class="directive">private</span> Project project;
 
-  public Long getProjectId() {
-    return projectId;
+  <span class="directive">public</span> <span class="predefined-type">Long</span> getProjectId() {
+    <span class="keyword">return</span> projectId;
   }
 
-  public void setProjectId(Long projectId) {
-    this.projectId = projectId;
-    this.project = null;
+  <span class="directive">public</span> <span class="type">void</span> setProjectId(<span class="predefined-type">Long</span> projectId) {
+    <span class="local-variable">this</span>.projectId = projectId;
+    <span class="local-variable">this</span>.project = <span class="predefined-constant">null</span>;
   }
 
-  public Project getProject() {
-    return project;
+  <span class="directive">public</span> Project getProject() {
+    <span class="keyword">return</span> project;
   }
 
-  public void setProject(Project project) {
-    this.projectId = project != null ? project.getId() : null;
-    this.project = project;
+  <span class="directive">public</span> <span class="type">void</span> setProject(Project project) {
+    <span class="local-variable">this</span>.projectId = project != <span class="predefined-constant">null</span> ? project.getId() : <span class="predefined-constant">null</span>;
+    <span class="local-variable">this</span>.project = project;
   }
 }</code></pre>
 </div>
@@ -2407,11 +2435,11 @@ the pair those two objects automatically. Trailing <code>s</code> are ignored fo
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>@JsonApiRelationId
-private Long projectFk;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelationId</span>
+<span class="directive">private</span> <span class="predefined-type">Long</span> projectFk;
 
-@JsonApiRelation(idField = "projectFk")
-private Project project;</code></pre>
+<span class="annotation">@JsonApiRelation</span>(idField = <span class="string"><span class="delimiter">&quot;</span><span class="content">projectFk</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2445,27 +2473,27 @@ See <a href="http://jsonapi.org/format/#document-meta" class="bare">http://jsona
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "projects")
-	public class Project {
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">projects</span><span class="delimiter">&quot;</span></span>)
+        <span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span> {
 
-		...
+                ...
 
-		@JsonApiMetaInformation
-		private ProjectMeta meta;
+                <span class="annotation">@JsonApiMetaInformation</span>
+                <span class="directive">private</span> ProjectMeta meta;
 
-		public static class ProjectMeta implements MetaInformation {
+                <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">ProjectMeta</span> <span class="directive">implements</span> MetaInformation {
 
-			private String value;
+                        <span class="directive">private</span> <span class="predefined-type">String</span> value;
 
-			public String getValue() {
-				return value;
-			}
+                        <span class="directive">public</span> <span class="predefined-type">String</span> getValue() {
+                                <span class="keyword">return</span> value;
+                        }
 
-			public void setValue(String value) {
-				this.value = value;
-			}
-		}
-	}</code></pre>
+                        <span class="directive">public</span> <span class="type">void</span> setValue(<span class="predefined-type">String</span> value) {
+                                <span class="local-variable">this</span>.value = value;
+                        }
+                }
+        }</code></pre>
 </div>
 </div>
 </div>
@@ -2477,27 +2505,27 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "projects")
-	public class Project {
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">projects</span><span class="delimiter">&quot;</span></span>)
+        <span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span> {
 
-		...
+                ...
 
-		@JsonApiLinksInformation
-		private ProjectLinks links;
+                <span class="annotation">@JsonApiLinksInformation</span>
+                <span class="directive">private</span> ProjectLinks links;
 
-		public static class ProjectLinks implements LinksInformation {
+                <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">ProjectLinks</span> <span class="directive">implements</span> LinksInformation {
 
-			private String value;
+                        <span class="directive">private</span> <span class="predefined-type">String</span> value;
 
-			public String getValue() {
-				return value;
-			}
+                        <span class="directive">public</span> <span class="predefined-type">String</span> getValue() {
+                                <span class="keyword">return</span> value;
+                        }
 
-			public void setValue(String value) {
-				this.value = value;
-			}
-		}
-	}</code></pre>
+                        <span class="directive">public</span> <span class="type">void</span> setValue(<span class="predefined-type">String</span> value) {
+                                <span class="local-variable">this</span>.value = value;
+                        }
+                }
+        }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2529,20 +2557,20 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 <div class="sect2">
 <h3 id="_jsonapifield">4.7. JsonApiField</h3>
 <div class="paragraph">
-<p>Field or getter annotated with <code>JsonApiField</code> allows to define  the behavior of an individual attribute. Example:</p>
+<p>Field or getter annotated with <code>@JsonApiField</code> allows to define  the behavior of an individual attribute. Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>	@JsonApiResource(type = "projects")
-	public class Project {
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">projects</span><span class="delimiter">&quot;</span></span>)
+        <span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span> {
 
-		...
+                ...
 
-		@JsonApiField(postable = true, patchable = false)
-		private Long projectId;
+                <span class="annotation">@JsonApiField</span>(postable = <span class="predefined-constant">true</span>, patchable = <span class="predefined-constant">false</span>)
+                <span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
 
-		...
-	}</code></pre>
+                ...
+        }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2572,6 +2600,10 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 <p><code>patchStrategy</code> defines the behavior of value with PATCH request. It can be either <code>MERGE</code> if you want the value be merged with an original one or <code>SET</code> if you want the value be totaly replaced with a new one.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The same fields are available from <a href="#jsonApiResource">@JsonApiResource</a> to configure a default for all fields of that
+resource.</p>
 </div>
 <div class="paragraph">
 <p><a id="jackson_annotations"></a></p>
@@ -4747,8 +4779,8 @@ registered with <code>CrnkClient</code>:</p>
 <div class="listingblock">
 <div class="title">JsonApiActionResponseTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		String result = scheduleRepository.repositoryAction("hello");
-		Assert.assertEquals("repository action: hello", result);</code></pre>
+<pre class="CodeRay highlight"><code>        String result = scheduleRepository.repositoryAction("hello");
+        Assert.assertEquals("repository action: hello", result);</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -5313,7 +5345,69 @@ For more information see <a href="#repository_decoration">Repository Decoration<
 </ul>
 </div>
 <div class="paragraph">
-<p>In the future the <code>SecurityModule</code> may be enhanced to also support DAC.</p>
+<p>The <code>SecurityModule</code> comes with built-in support for DAC. An example looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">DataRoomFilterTest.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>Unresolved directive in security.adoc - include::../../../../crnk-security/src/test/java/io/crnk/security/DataRoomFilterTest.java[tags=docs]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>DataRoomFilter</code> can be passed to the <code>SecurityConfig</code>. It has to provide
+a <code>QuerySpec</code> of what the current caller is allowed to see. In the
+example here all callers are just allowed to see tasks named
+<code>foo</code>. Real-world scenarios access the user principal and roles to decide for
+a particular filter. The returned <code>QuerySpec</code> is applied to all repository operations: <code>GET</code>, <code>PATCH</code>, <code>POST</code> and
+<code>DELETE</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Descripton</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Added to the caller <code>QuerySpec</code> to filter by both caller and DataRoom filters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifies that the created resources matches with DataRoom filter. Checks are
+  performed in memory with <code>QuerySpec.apply</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PATCH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Equivalent to <code>POST</code> but further verifiers that the caller has access to the existing,
+  unchanged resource. Implementors may further those to make involved fields
+  immutable with <code>@JsonApiField(patchable=false)</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifies that deleted resources match DataRoom filtering by querying them before deletion.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+When accessing relationship repositories, only one side is checked
+  for performance reasons. It is assumed that <code>DataRoomFilter</code> applies proper filters to
+  both sides of a relationship. For <code>GET</code> it is the target side of the relationship
+  (the returned resources), for <code>PATCH</code>, <code>POST</code> and <code>DELETE</code> the modified source side.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -7998,7 +8092,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-14 16:25:10 UTC
+Last updated 2019-04-24 16:27:55 UTC
 </div>
 </div>
 </body>
