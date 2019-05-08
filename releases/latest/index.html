@@ -44,7 +44,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 3.0.20190506175355-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
+      <h3>Latest</h3>      <p>Version: 3.0.20190508074703-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
 have been many incremental improvements
 to the code base over the past year. In particular the relationship handling has been automated
 in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of the
@@ -104,6 +104,10 @@ While being a major release, changes required should be minimal (see below).
     </li>
     <li>New defaults for @JsonApiRelation.lookup and @JsonApiRelation.repositoryBehavior should
         allow to eliminate a large part of the custom configuration. For more information see below.
+    </li>
+    <li>
+        The ReadOnlyResourceRepositoryBase and ReadOnlyRelationshipRepositoryBase now return 405 Method Not Allowed
+        status for all of the write operations
     </li>
     <li>
         crnk-jpa has been renamed to crnk-data-jpa and the Java package updated accordingly.
