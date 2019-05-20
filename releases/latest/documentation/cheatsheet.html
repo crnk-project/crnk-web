@@ -712,7 +712,7 @@ use <a href="http://www.crnk.io/releases/latest/documentation/#_nested_resources
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">CrnkClient client = <span class="keyword">new</span> CrnkClient(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span>);
-ResourceRepositoryV2&lt;Task, <span class="predefined-type">Serializable</span>&gt; taskRepo = client.getRepositoryForType(Task.class);
+ResourceRepository&lt;Task, <span class="predefined-type">Serializable</span>&gt; taskRepo = client.getRepositoryForType(Task.class);
 QuerySpec querySpec = <span class="keyword">new</span> QuerySpec(Task.class);
 querySpec.addFilter(
   <span class="keyword">new</span> FilterSpec(PathSpec.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">task.assignee.name</span><span class="delimiter">&quot;</span></span>), FilterOperator.NEQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">Joe</span><span class="delimiter">&quot;</span></span>)
@@ -732,16 +732,14 @@ ResourceList&lt;Task&gt; list = taskRepo.findAll(querySpec);</code></pre>
 </div>
 <div class="paragraph">
 <p>The subsequent example establishes a relationship to <code>Project</code> with the <code>project</code> field. It is backed by a primitive
-relationship identifier <code>projectId</code>. <code>projectId</code> is always written to the response (<code>SerializeType.ONLY_ID</code>). The <code>project</code> relationship
-is looked up in the project repository with <code>projectId</code> if an inclusion has been requested and the task repository did not initialize <code>project</code>
-(<code>LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL</code>):</p>
+relationship identifier <code>projectId</code>. <code>projectId</code> is always written to the response (<code>SerializeType.ONLY_ID</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelationId</span>
 <span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
 
-<span class="annotation">@JsonApiRelation</span>(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
+<span class="annotation">@JsonApiRelation</span>(serialize = SerializeType.ONLY_ID)
 <span class="directive">private</span> Project project;</code></pre>
 </div>
 </div>
@@ -760,16 +758,10 @@ is looked up in the project repository with <code>projectId</code> if an inclusi
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span>{
-        <span class="annotation">@JsonApiRelation</span>(
-                lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, opposite = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>,
-                repositoryBehavior = RelationshipRepositoryBehavior.FORWARD_OPPOSITE)
+        <span class="annotation">@JsonApiRelation</span>(mappedBy = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
         <span class="directive">private</span> <span class="predefined-type">List</span>&lt;Tasks&gt; tasks;
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>If neither a <code>RelationshipRepositoryBehavior</code> nor <code>@JsonApiRelationId</code> is applicable, <code>RelationshipRepositoryV2</code> or rather  <code>BulkRelationshipRepositoryV2</code>
-can implement arbitrary custom logic to lookup relationships.</p>
 </div>
 </div>
 </div>
@@ -991,7 +983,7 @@ if found on the classpath and <code>SecurityConfigurer</code> allows its customi
 <div class="ulist">
 <ul>
 <li>
-<p>Use crnk-jpa to access JPA entities.</p>
+<p>Use crnk-data-jpa to access JPA entities.</p>
 </li>
 <li>
 <p>Use crnk-activity to access Activiti workflow and tasks.</p>
@@ -1009,7 +1001,7 @@ if found on the classpath and <code>SecurityConfigurer</code> allows its customi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-14 06:20:15 UTC
+Last updated 2019-05-20 05:31:19 UTC
 </div>
 </div>
 </body>
