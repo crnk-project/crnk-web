@@ -44,7 +44,7 @@
 
 <div class="section">
   <div class="section-content">
-      <h3>Latest</h3>      <p>Version: 3.0.20190520053000-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
+      <h3>Latest</h3>      <p>Version: 3.0.20190521052712-BETA</p>      <p><a href='documentation/'>Documentation</a> (<a href='crnk.pdf'>pdf</a>)</p>      With this release the first version of Crnk 3.x is released. There
 have been many incremental improvements
 to the code base over the past year. In particular the relationship handling has been automated
 in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of the
@@ -492,7 +492,7 @@ With
 
 <pre class="prettyprint">
 SecurityConfig.setExposeRepositories(true)
-<pre class="prettyprint">
+</pre>
 
 the SecurityModule sets up repositories to make its internal rules available from the REST API:
 
@@ -500,6 +500,19 @@ the SecurityModule sets up repositories to make its internal rules available fro
   <li>&lt;contextPath&gt;/security/callerPermission</li>
     <li>&lt;contextPath&gt;/security/role</li>
 </ul>
+
+
+
+<h4>Support for GROUP operator by facets</h4>
+
+The FacetModule gained support for the GROUP operator:
+
+<pre class="prettyprint">
+http://127.0.0.1:8080/api/facet?filter[values][GROUP]=priority,name
+</pre>
+
+It works equivalent to SQL GROUP BY queries. In the example a facet count is computed for
+every pair of priority and name attribute.
 
   </div>
 </div>

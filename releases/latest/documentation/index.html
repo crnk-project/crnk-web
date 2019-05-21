@@ -6858,7 +6858,34 @@ the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap">10.5.4. Roadmap</h4>
+<h4 id="_grouping">10.5.4. Grouping</h4>
+<div class="paragraph">
+<p>To compute facets separately for each label of a particular facet, use the <code>GROUP</code> operator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[values][GROUP]=priority,name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It works equivalent to SQL <code>GROUP BY</code> queries. In the example a count is computed for every pair of <code>priority</code> and <code>name</code>
+and returned as facet resource.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+the GROUP operator needs for further performance tuning.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_roadmap">10.5.5. Roadmap</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -8109,7 +8136,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-20 05:31:19 UTC
+Last updated 2019-05-21 05:28:27 UTC
 </div>
 </div>
 </body>
