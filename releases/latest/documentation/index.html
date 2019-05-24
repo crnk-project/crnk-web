@@ -5205,6 +5205,12 @@ for the current user:</p>
 public interface SecurityProvider {
 
 	boolean isUserInRole(String role);
+
+	/**
+	 * @return true if the user has been logged in. If not, a {@link io.crnk.core.exception.UnauthorizedException} rather than
+	 * {@link io.crnk.core.exception.ForbiddenException} is  thrown.
+	 */
+	boolean isAuthenticated();
 }</code></pre>
 </div>
 </div>
@@ -5227,21 +5233,21 @@ A setup can looks as follows:</p>
 <div class="listingblock">
 <div class="title">SecurityModuleIntTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>            Builder builder = SecurityConfig.builder();
-            builder.permitRole("allRole", ResourcePermission.ALL);
-            builder.permitRole("getRole", ResourcePermission.GET);
-            builder.permitRole("patchRole", ResourcePermission.PATCH);
-            builder.permitRole("postRole", ResourcePermission.POST);
-            builder.permitRole("deleteRole", ResourcePermission.DELETE);
-            builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
-            builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
-            builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
-            builder.permitAll(ResourcePermission.GET);
-            builder.permitAll(Project.class, ResourcePermission.POST);
-            module = SecurityModule.newServerModule(builder.build());
+<pre class="CodeRay highlight"><code>			Builder builder = SecurityConfig.builder();
+			builder.permitRole("allRole", ResourcePermission.ALL);
+			builder.permitRole("getRole", ResourcePermission.GET);
+			builder.permitRole("patchRole", ResourcePermission.PATCH);
+			builder.permitRole("postRole", ResourcePermission.POST);
+			builder.permitRole("deleteRole", ResourcePermission.DELETE);
+			builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
+			builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
+			builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
+			builder.permitAll(ResourcePermission.GET);
+			builder.permitAll(Project.class, ResourcePermission.POST);
+			module = SecurityModule.newServerModule(builder.build());
 
-            CrnkFeature feature = new CrnkFeature();
-            feature.addModule(module);</code></pre>
+			CrnkFeature feature = new CrnkFeature();
+			feature.addModule(module);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8136,7 +8142,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-22 06:55:51 UTC
+Last updated 2019-05-24 13:17:20 UTC
 </div>
 </div>
 </body>
