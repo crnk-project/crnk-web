@@ -7455,7 +7455,9 @@ transaction spanning all requests. This looks as follows:</p>
 <div class="listingblock">
 <div class="title">AbstractOperationsTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>			operationsModule.addFilter(new TransactionOperationFilter());</code></pre>
+<pre class="CodeRay highlight"><code>			if (transactional) {
+				operationsModule.addFilter(new TransactionOperationFilter());
+			}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8142,7 +8144,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-06-13 13:54:47 UTC
+Last updated 2019-06-26 09:49:48 UTC
 </div>
 </div>
 </body>
