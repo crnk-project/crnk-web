@@ -543,13 +543,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_discovery_with_cdi">3.10. Discovery with CDI</a></li>
 <li><a href="#_discovery_with_guice">3.11. Discovery with Guice</a></li>
 <li><a href="#_discovery_with_spring">3.12. Discovery with Spring</a></li>
-<li><a href="#_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</a></li>
-<li><a href="#_no_discovery">3.14. No Discovery</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</a></li>
-<li><a href="#_crnkboot">3.16. CrnkBoot</a></li>
-<li><a href="#_properties">3.17. Properties</a></li>
-<li><a href="#_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</a></li>
-<li><a href="#_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</a></li>
+<li><a href="#_no_discovery">3.13. No Discovery</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</a></li>
+<li><a href="#_crnkboot">3.15. CrnkBoot</a></li>
+<li><a href="#_properties">3.16. Properties</a></li>
+<li><a href="#_serving_directory_listings_with_the_home_module">3.17. Serving Directory Listings with the Home Module</a></li>
+<li><a href="#_setting_up_the_crnk_ui">3.18. Setting up the Crnk UI</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -1166,40 +1165,29 @@ annotation can be added, for example, to the class:</p>
 <div class="listingblock">
 <div class="title">JsonApiResponseFilterTestBase.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>	@ApplicationPath("/")
-	class TestApplication extends ResourceConfig {
+<pre class="CodeRay highlight"><code>    @ApplicationPath("/")
+    class TestApplication extends ResourceConfig {
 
-		TestApplication(JsonApiResponseFilterTestBase instance, boolean enableNullResponse) {
-			instance.setEnableNullResponse(enableNullResponse);
+        TestApplication(JsonApiResponseFilterTestBase instance, boolean enableNullResponse) {
+            instance.setEnableNullResponse(enableNullResponse);
 
-			property(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "io.crnk.rs.resource");
-			property(CrnkProperties.NULL_DATA_RESPONSE_ENABLED, Boolean.toString(enableNullResponse));
+            property(CrnkProperties.NULL_DATA_RESPONSE_ENABLED, Boolean.toString(enableNullResponse));
 
-			CrnkFeature feature = new CrnkFeature();
-			feature.addModule(new TestModule());
+            CrnkFeature feature = new CrnkFeature();
+            feature.addModule(new TestModule());
 
-			register(new JsonApiResponseFilter(feature));
-			register(new JsonapiExceptionMapperBridge(feature));
-			register(new JacksonFeature());
+            register(new JsonApiResponseFilter(feature));
+            register(new JsonapiExceptionMapperBridge(feature));
+            register(new JacksonFeature());
 
-			register(feature);
-		}
-	}</code></pre>
+            register(feature);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
+<p>Note that  <code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
 as JSON:API responses.</p>
-</li>
-<li>
-<p>Make use of proper service discovery instead of <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> in real applications.</p>
-</li>
-</ul>
 </div>
 </div>
 <div class="sect3">
@@ -1598,56 +1586,7 @@ to discover beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Warning</div>
-</td>
-<td class="content">
-This mechanism is considered to be rather deprecated and a lightweight dependency injection framework like guice or
-the setup of manual modules is recommended instead.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>If no dependency injection framework is used, Crnk can also discover beans on its own. For this purpose,
-the <code>org.reflections:reflections</code> library has to be added to the classpath and the
-<code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> be defined. In JAX-RS this may look like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>@ApplicationPath("/")
-	public class MyApplication extends Application {
-
-		@Override
-        public Set&lt;Object&gt; getSingletons() {
-            CrnkFeature crnkFeature = new CrnkFeature();
-            crnkFeature.getBoot().setServiceLocator(...);
-            return Collections.singleton((Object)crnkFeature);
-        }
-
-		@Override
-        public Map&lt;String, Object&gt; getProperties() {
-            Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
-            map.put(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.myapplication.model")
-            return map;
-        }
-	}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>A <code>JsonServiceLocator</code> service locator can be provided to control the instatiation of object. By default the default
-constructor will be used. The <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> property is passed to define which package
-should be searched for beans. Multiple packages can be passed by specifying a comma separated string
-of packages i.e. com.company.service.dto,com.company.service.repository. It will pick up any public non-abstract
-class that makes use of Crnk interfaces, like repositories, exception mappers and modules.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_no_discovery">3.14. No Discovery</h3>
+<h3 id="_no_discovery">3.13. No Discovery</h3>
 <div class="paragraph">
 <p>It is also possible to make use of no discovery mechanism at all. In this case it is still possible to add repositories
 and other features through modules. A simple example looks like:</p>
@@ -1669,7 +1608,7 @@ and other features through modules. A simple example looks like:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Application can bring along there own implementation of <code>ServiceDiscovery</code>. For more information
 see <a href="#customdiscovery">here</a>.</p>
@@ -1679,7 +1618,7 @@ see <a href="#customdiscovery">here</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crnkboot">3.16. CrnkBoot</h3>
+<h3 id="_crnkboot">3.15. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
 Crnk. Every integration will provide access to it:</p>
@@ -1769,7 +1708,7 @@ and just omitting to specify pagination parameters.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_properties">3.17. Properties</h3>
+<h3 id="_properties">3.16. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -1866,7 +1805,7 @@ It likely will be enabled in Crnk 3 by default.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</h3>
+<h3 id="_serving_directory_listings_with_the_home_module">3.17. Serving Directory Listings with the Home Module</h3>
 <div class="paragraph">
 <p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
 directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
@@ -1920,7 +1859,7 @@ links node holds all links to child directories and repositories. And a JSON HOM
 </div>
 </div>
 <div class="sect2">
-<h3 id="_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</h3>
+<h3 id="_setting_up_the_crnk_ui">3.18. Setting up the Crnk UI</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2089,18 +2028,18 @@ sortable, filterable, postable, readable, patchable and deletable. An example lo
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">        <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>,
-                        postable = <span class="predefined-constant">false</span>, readable = <span class="predefined-constant">false</span>, patchable = <span class="predefined-constant">false</span>, deletable = <span class="predefined-constant">false</span>,
-                        sortable = <span class="predefined-constant">false</span>, filterable = <span class="predefined-constant">false</span>
-        )
-        <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">AccessDeniedTestResource</span> {
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>,
+            postable = <span class="predefined-constant">false</span>, readable = <span class="predefined-constant">false</span>, patchable = <span class="predefined-constant">false</span>, deletable = <span class="predefined-constant">false</span>,
+            sortable = <span class="predefined-constant">false</span>, filterable = <span class="predefined-constant">false</span>
+    )
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">AccessDeniedTestResource</span> {
 
-                <span class="annotation">@JsonApiId</span>
-                <span class="directive">public</span> <span class="predefined-type">String</span> id;
+        <span class="annotation">@JsonApiId</span>
+        <span class="directive">public</span> <span class="predefined-type">String</span> id;
 
-                <span class="directive">public</span> <span class="predefined-type">String</span> value;
+        <span class="directive">public</span> <span class="predefined-type">String</span> value;
 
-        }</code></pre>
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5233,21 +5172,22 @@ A setup can looks as follows:</p>
 <div class="listingblock">
 <div class="title">SecurityModuleIntTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>			Builder builder = SecurityConfig.builder();
-			builder.permitRole("allRole", ResourcePermission.ALL);
-			builder.permitRole("getRole", ResourcePermission.GET);
-			builder.permitRole("patchRole", ResourcePermission.PATCH);
-			builder.permitRole("postRole", ResourcePermission.POST);
-			builder.permitRole("deleteRole", ResourcePermission.DELETE);
-			builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
-			builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
-			builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
-			builder.permitAll(ResourcePermission.GET);
-			builder.permitAll(Project.class, ResourcePermission.POST);
-			module = SecurityModule.newServerModule(builder.build());
+<pre class="CodeRay highlight"><code>            Builder builder = SecurityConfig.builder();
+            builder.permitRole("allRole", ResourcePermission.ALL);
+            builder.permitRole("getRole", ResourcePermission.GET);
+            builder.permitRole("patchRole", ResourcePermission.PATCH);
+            builder.permitRole("postRole", ResourcePermission.POST);
+            builder.permitRole("deleteRole", ResourcePermission.DELETE);
+            builder.permitRole("taskRole", Task.class, ResourcePermission.ALL);
+            builder.permitRole("taskReadRole", Task.class, ResourcePermission.GET);
+            builder.permitRole("projectRole", Project.class, ResourcePermission.ALL);
+            builder.permitAll(ResourcePermission.GET);
+            builder.permitAll(Project.class, ResourcePermission.POST);
+            module = SecurityModule.newServerModule(builder.build());
 
-			CrnkFeature feature = new CrnkFeature();
-			feature.addModule(module);</code></pre>
+            CrnkFeature feature = new CrnkFeature();
+            feature.addModule(module);
+            feature.addModule(testModule);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6498,24 +6438,24 @@ tasks, you may introduce multiple such relationships.</p>
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-                ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
+        ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
 
-                ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
-                terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
+        ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
+        terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
 
-                ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-                processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
-                processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
-                processConfig.addTaskRelationship(
-                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
-                );
-                TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-                taskConfig.historic(HistoricApproveTask.class);
-                taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
-                taskConfig.setForm(ApproveForm.class);
-                <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
-        }</code></pre>
+        ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
+        processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
+        processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
+        processConfig.addTaskRelationship(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
+        );
+        TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
+        taskConfig.historic(HistoricApproveTask.class);
+        taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
+        taskConfig.setForm(ApproveForm.class);
+        <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
+    }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -6653,22 +6593,22 @@ changes. This means the regular <code>ScheduleRepository</code> implementation w
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-                FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
-                                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
-                );
-                <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
+        FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
+                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
+        );
+        <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
 
-                SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
-                module.addRepositoryDecoratorFactory(
-                                ApprovalRepositoryDecorator.createFactory(approvalManager)
-                );
-                module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
-                                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
-                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
-                );
-                <span class="keyword">return</span> module;
-        }</code></pre>
+        SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
+        module.addRepositoryDecoratorFactory(
+                ApprovalRepositoryDecorator.createFactory(approvalManager)
+        );
+        module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
+                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
+        );
+        <span class="keyword">return</span> module;
+    }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -7510,9 +7450,9 @@ transaction spanning all requests. This looks as follows:</p>
 <div class="listingblock">
 <div class="title">AbstractOperationsTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>			if (transactional) {
-				operationsModule.addFilter(new TransactionOperationFilter());
-			}</code></pre>
+<pre class="CodeRay highlight"><code>            if (transactional) {
+                operationsModule.addFilter(new TransactionOperationFilter());
+            }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8063,45 +8003,45 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 <div class="content">
 <pre class="CodeRay highlight"><code>public class DynamicModule implements InitializingModule {
 
-	private ModuleContext context;
+    private ModuleContext context;
 
-	@Override
-	public String getModuleName() {
-		return "dynamic";
-	}
+    @Override
+    public String getModuleName() {
+        return "dynamic";
+    }
 
-	@Override
-	public void setupModule(ModuleContext context) {
-		this.context = context;
-	}
+    @Override
+    public void setupModule(ModuleContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void init() {
-		for (int i = 0; i &lt; 2; i++) {
-			RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
+    @Override
+    public void init() {
+        for (int i = 0; i &lt; 2; i++) {
+            RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
 
-			String resourceType = "dynamic" + i;
-			RegistryEntryBuilder.ResourceRepositoryEntryBuilder resourceRepository = builder.resourceRepository();
-			resourceRepository.instance(new DynamicResourceRepository(resourceType));
+            String resourceType = "dynamic" + i;
+            RegistryEntryBuilder.ResourceRepositoryEntryBuilder resourceRepository = builder.resourceRepository();
+            resourceRepository.instance(new DynamicResourceRepository(resourceType));
 
-			RegistryEntryBuilder.RelationshipRepositoryEntryBuilder parentRepository = builder.relationshipRepositoryForField("parent");
-			parentRepository.instance(new DynamicRelationshipRepository(resourceType));
-			RegistryEntryBuilder.RelationshipRepositoryEntryBuilder childrenRepository = builder.relationshipRepositoryForField("children");
-			childrenRepository.instance(new DynamicRelationshipRepository(resourceType));
+            RegistryEntryBuilder.RelationshipRepositoryEntryBuilder parentRepository = builder.relationshipRepositoryForField("parent");
+            parentRepository.instance(new DynamicRelationshipRepository(resourceType));
+            RegistryEntryBuilder.RelationshipRepositoryEntryBuilder childrenRepository = builder.relationshipRepositoryForField("children");
+            childrenRepository.instance(new DynamicRelationshipRepository(resourceType));
 
-			InformationBuilder.ResourceInformationBuilder resource = builder.resource();
-			resource.resourceType(resourceType);
-			resource.resourceClass(Resource.class);
-			resource.addField("id", ResourceFieldType.ID, String.class);
-			resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
-			resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType(resourceType)
-					.oppositeName("children");
-			resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType(resourceType)
-					.oppositeName("parent");
+            InformationBuilder.ResourceInformationBuilder resource = builder.resource();
+            resource.resourceType(resourceType);
+            resource.implementationType(Resource.class);
+            resource.addField("id", ResourceFieldType.ID, String.class);
+            resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
+            resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType(resourceType)
+                    .oppositeName("children");
+            resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType(resourceType)
+                    .oppositeName("parent");
 
-			context.addRegistryEntry(builder.build());
-		}
-	}
+            context.addRegistryEntry(builder.build());
+        }
+    }
 }</code></pre>
 </div>
 </div>
@@ -8199,7 +8139,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-05 07:54:02 UTC
+Last updated 2019-07-05 17:33:53 UTC
 </div>
 </div>
 </body>
