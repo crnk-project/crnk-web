@@ -5143,13 +5143,13 @@ for the current user:</p>
 
 public interface SecurityProvider {
 
-	boolean isUserInRole(String role);
+    boolean isUserInRole(String role, SecurityProviderContext context);
 
-	/**
-	 * @return true if the user has been logged in. If not, a {@link io.crnk.core.exception.UnauthorizedException} rather than
-	 * {@link io.crnk.core.exception.ForbiddenException} is  thrown.
-	 */
-	boolean isAuthenticated();
+    /**
+     * @return true if the user has been logged in. If not, a {@link io.crnk.core.exception.UnauthorizedException} rather than
+     * {@link io.crnk.core.exception.ForbiddenException} is  thrown.
+     */
+    boolean isAuthenticated(SecurityProviderContext context);
 }</code></pre>
 </div>
 </div>
@@ -5248,8 +5248,8 @@ provided by the Crnk engine:</p>
 <div class="title">ResourceFilter.java</div>
 <div class="content">
 <pre class="CodeRay highlight"><code>public interface ResourceFilter {
-	FilterBehavior filterResource(ResourceInformation resourceInformation, HttpMethod method);
-	FilterBehavior filterField(ResourceField field, HttpMethod method);
+	FilterBehavior filterResource(ResourceFilterContext filterContext, ResourceInformation resourceInformation, HttpMethod method);
+	FilterBehavior filterField(ResourceFilterContext filterContext, ResourceField field, HttpMethod method);
 }</code></pre>
 </div>
 </div>
@@ -8139,7 +8139,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 17:19:48 UTC
+Last updated 2019-07-09 18:42:45 UTC
 </div>
 </div>
 </body>
