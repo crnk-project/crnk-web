@@ -568,16 +568,22 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_resourcerepository">5.1. ResourceRepository</a></li>
 <li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a></li>
-<li><a href="#_relationship_repositories">5.3. Relationship Repositories</a></li>
-<li><a href="#_resourcelist">5.4. ResourceList</a></li>
-<li><a href="#_error_handling">5.5. Error Handling</a></li>
-<li><a href="#_meta_information">5.6. Meta Information</a></li>
-<li><a href="#_links_information">5.7. Links Information</a></li>
-<li><a href="#_inheritance">5.8. Inheritance</a></li>
-<li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
-<li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
-<li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
-<li><a href="#_jsonapiexposed">5.12. @JsonApiExposed</a></li>
+<li><a href="#_basic_filtering">5.3. Basic Filtering</a></li>
+<li><a href="#_nested_filtering">5.4. Nested Filtering</a></li>
+<li><a href="#_sorting">5.5. Sorting</a></li>
+<li><a href="#_pagination">5.6. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.7. Sparse Fieldsets</a></li>
+<li><a href="#_url_mapping">5.8. URL Mapping</a></li>
+<li><a href="#_relationship_repositories">5.9. Relationship Repositories</a></li>
+<li><a href="#_resourcelist">5.10. ResourceList</a></li>
+<li><a href="#_error_handling">5.11. Error Handling</a></li>
+<li><a href="#_meta_information">5.12. Meta Information</a></li>
+<li><a href="#_links_information">5.13. Links Information</a></li>
+<li><a href="#_inheritance">5.14. Inheritance</a></li>
+<li><a href="#_payload_size_optimizations">5.15. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.16. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.17. ResourceFieldContributor</a></li>
+<li><a href="#_jsonapiexposed">5.18. @JsonApiExposed</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -3076,8 +3082,6 @@ is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a> that 
 <div class="paragraph">
 <p>For example showing its use URLs also have a look at the <a href="#resource_repository">ResourceRepository</a> section.</p>
 </div>
-<div class="sect3">
-<h4 id="_api">5.2.1. API</h4>
 <div class="paragraph">
 <p>The QuerySpec API looks like (further setters available as well):</p>
 </div>
@@ -3140,8 +3144,8 @@ the implementation of a repository as simple as possible.</p>
 <p><a id="filtering"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_basic_filtering">5.2.2. Basic Filtering</h4>
+<div class="sect2">
+<h3 id="_basic_filtering">5.3. Basic Filtering</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3302,8 +3306,8 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 <p><a id="nested_filtering"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_nested_filtering">5.2.3. Nested Filtering</h4>
+<div class="sect2">
+<h3 id="_nested_filtering">5.4. Nested Filtering</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3409,8 +3413,8 @@ attribute by the specified value or to setup nested attributes.</p>
 <p><a id="sorting"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_sorting">5.2.4. Sorting</h4>
+<div class="sect2">
+<h3 id="_sorting">5.5. Sorting</h3>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
 </div>
@@ -3441,8 +3445,8 @@ SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.D
 <p><a id="pagination"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_pagination">5.2.5. Pagination</h4>
+<div class="sect2">
+<h3 id="_pagination">5.6. Pagination</h3>
 <div class="sect4">
 <h5 id="_offsetlimit_paging">Offset/Limit Paging</h5>
 <div class="paragraph">
@@ -3455,8 +3459,8 @@ SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.D
 <p>The parameters are then available with <code>QuerySpec.getPaging(type)</code> or the shortcuts <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_numbersize_paging">Number/Size Paging</h5>
+<div class="sect3">
+<h4 id="_numbersize_paging">5.6.2. Number/Size Paging</h4>
 <div class="paragraph">
 <p>Support for number/size-based paging can be enabled by registering the <code>NumberSizePagingBehavior</code> in one of two ways:</p>
 </div>
@@ -3482,8 +3486,8 @@ a repository has been implemented with offset/limit paging, it works equally wel
 The conversion takes place automatically when invoking <code>QuerySpec.getPaging(desiredPagingType)</code>.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_pagination_links">Pagination Links</h5>
+<div class="sect3">
+<h4 id="_pagination_links">5.6.3. Pagination Links</h4>
 <div class="paragraph">
 <p>JSON:API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
 The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
@@ -3515,8 +3519,8 @@ determine whether more resources are available rather than counting all resource
 This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_custom_strategies">Custom strategies</h5>
+<div class="sect3">
+<h4 id="_custom_strategies">5.6.4. Custom strategies</h4>
 <div class="paragraph">
 <p><code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> and <code>NumberSizePagingBehavior</code> and <code>NumberSizePagingSpec</code>
 are two implementations of <code>PagingBehavior</code> and <code>PagingSpec</code>. Applications are free to add further implementations
@@ -3573,8 +3577,8 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_sparse_fieldsets">5.2.6. Sparse Fieldsets</h4>
+<div class="sect2">
+<h3 id="_sparse_fieldsets">5.7. Sparse Fieldsets</h3>
 <div class="paragraph">
 <p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter:</p>
 </div>
@@ -3584,9 +3588,8 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 <div class="paragraph">
 <p><a id="inclusion"></a></p>
 </div>
-</div>
 <div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.2.7. Inclusion of Related Resources</h4>
+<h4 id="_inclusion_of_related_resources">5.7.1. Inclusion of Related Resources</h4>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing an <code>include</code> parameter. Examples:</p>
 </div>
@@ -3629,8 +3632,9 @@ The QuerySpec for a particular resource type can be obtained with <code>QuerySpe
 <p><a id="urlmapper"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_url_mapping">5.2.8. URL Mapping</h4>
+</div>
+<div class="sect2">
+<h3 id="_url_mapping">5.8. URL Mapping</h3>
 <div class="paragraph">
 <p>The mapping of request parameters to QuerySpec and back is implemented by <code>QuerySpecUrlMapper</code>.
 With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON:API
@@ -3695,9 +3699,8 @@ Sets the default <code>FilterOperator</code>. See <a href="#filtering">[filterin
 <p><a id="relationshipRepository"></a></p>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_relationship_repositories">5.3. Relationship Repositories</h3>
+<h3 id="_relationship_repositories">5.9. Relationship Repositories</h3>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -3760,7 +3763,7 @@ by the same repository. The <code>findOneRelations</code> and <code>findManyRela
 class through <code>querySpec.getResourceClass</code>, whereas the other methods directly obtain a <code>source</code> instance.</p>
 </div>
 <div class="sect3">
-<h4 id="_example">5.3.1. Example</h4>
+<h4 id="_example">5.9.1. Example</h4>
 <div class="listingblock">
 <div class="title">HistoryRelationshipRepository</div>
 <div class="content">
@@ -3792,7 +3795,7 @@ public class HistoryRelationshipRepository extends ManyRelationshipRepositoryBas
 </div>
 </div>
 <div class="sect3">
-<h4 id="_relationshipmatcher">5.3.2. RelationshipMatcher</h4>
+<h4 id="_relationshipmatcher">5.9.2. RelationshipMatcher</h4>
 <div class="paragraph">
 <p>With <code>RelationshipRepository.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
 serving. Rules can look like:</p>
@@ -3813,7 +3816,7 @@ as done in the example from the previous section.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_self_and_related_links">5.3.3. Self and Related Links</h4>
+<h4 id="_self_and_related_links">5.9.3. Self and Related Links</h4>
 <div class="paragraph">
 <p>The JSON:API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
 mandates two relationship links:</p>
@@ -3853,7 +3856,7 @@ the <code>includedFields</code> property.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</h4>
+<h4 id="_forwardingrelationshiprepository">5.9.4. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3911,7 +3914,7 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcelist">5.4. ResourceList</h3>
+<h3 id="_resourcelist">5.10. ResourceList</h3>
 <div class="paragraph">
 <p>ResourceRepository and RelationshipRepository return lists of type ResourceList. The ResourceList can carry, next
 to the actual resources, also meta and links information:</p>
@@ -3977,13 +3980,13 @@ and used by both servers and clients:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling">5.5. Error Handling</h3>
+<h3 id="_error_handling">5.11. Error Handling</h3>
 <div class="paragraph">
 <p>Processing errors in Crnk can be handled by throwing an exception and providing
 a corresponding exception mapper which defines mapping to a proper JSON:API error response.</p>
 </div>
 <div class="sect3">
-<h4 id="_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</h4>
+<h4 id="_throwing_an_exception">5.11.1. Throwing an exception&#8230;&#8203;</h4>
 <div class="paragraph">
 <p>Here is an example of throwing an Exception in the code:</p>
 </div>
@@ -4021,7 +4024,7 @@ a corresponding exception mapper which defines mapping to a proper JSON:API erro
 </div>
 </div>
 <div class="sect3">
-<h4 id="_and_mapping_it_to_jsonapi_response">5.5.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
+<h4 id="_and_mapping_it_to_jsonapi_response">5.11.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
 <div class="paragraph">
 <p>Class responsible for mapping the exception should:</p>
 </div>
@@ -4093,7 +4096,7 @@ care of JSR-303 bean validation exception mapping.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_information">5.6. Meta Information</h3>
+<h3 id="_meta_information">5.12. Meta Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4118,7 +4121,7 @@ It contains a single method <code>MetaInformation getMetaInformation(Iterable&lt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_links_information">5.7. Links Information</h3>
+<h3 id="_links_information">5.13. Links Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4146,12 +4149,12 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 </div>
 </div>
 <div class="sect2">
-<h3 id="_inheritance">5.8. Inheritance</h3>
+<h3 id="_inheritance">5.14. Inheritance</h3>
 <div class="paragraph">
 <p>There are two different kinds of inheritance supported:</p>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</h4>
+<h4 id="_inheritance_with_a_repository_per_type">5.14.1. Inheritance with a repository per type</h4>
 <div class="paragraph">
 <p>Each subtype is served by its own resource repository and each repository has its own URL.</p>
 </div>
@@ -4174,7 +4177,7 @@ also return resources of subtypes if they match the specified id or filter param
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</h4>
+<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.14.2. Inheritance with a single repository per type hierarchy</h4>
 <div class="paragraph">
 <p>In this case all resources share a repository implementation and URL (except for the identifier part). An example may look like:</p>
 </div>
@@ -4199,7 +4202,7 @@ a look at <code>InheritanceWithoutSubtypeRepositoryClientTest</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_payload_size_optimizations">5.9. Payload Size Optimizations</h3>
+<h3 id="_payload_size_optimizations">5.15. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
@@ -4210,7 +4213,7 @@ of those links is omitted. Further relationships without data are completely omi
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repository_decoration">5.10. Repository Decoration</h3>
+<h3 id="_repository_decoration">5.16. Repository Decoration</h3>
 <div class="paragraph">
 <p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
 </div>
@@ -4263,7 +4266,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.11. ResourceFieldContributor</h3>
+<h3 id="_resourcefieldcontributor">5.17. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-data-jpa and
@@ -4336,7 +4339,7 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsonapiexposed">5.12. @JsonApiExposed</h3>
+<h3 id="_jsonapiexposed">5.18. @JsonApiExposed</h3>
 <div class="paragraph">
 <p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
 externally on the JSON:API endpoint. There are different use cases for this:</p>
@@ -5373,7 +5376,7 @@ will fill-in the <code>ResourcePermission</code> for the current request.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_api_2">9.5.2. API</h4>
+<h4 id="_api">9.5.2. API</h4>
 <div class="paragraph">
 <p><code>SecurityModule.setExposeRepositories(true)</code> sets up repositories accessible through the
 <code>&lt;contextPath&gt;/security/</code> path. Currently supported are:</p>
@@ -8139,7 +8142,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-12 10:35:56 UTC
+Last updated 2019-07-14 05:17:29 UTC
 </div>
 </div>
 </body>
