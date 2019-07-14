@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
@@ -95,10 +98,65 @@
                 </div>
             </div>
         </div>
-
-
     </div>
+</div>
 
+<br>
+<br>
+<div class="section breaking">
+    <div class="section-content breaking">
+
+        <i class="material-icons">
+            info
+        </i>
+
+        <p>
+            <b>14. July 2019</b>: With 3.0.20190714142556 there is <a href="http://www.crnk.io/releases/v3.0/">new
+            major release</a> available!
+            There have been many incremental improvements to the code base over the past year.
+            3.0 has taken the features and learnings from this time and improves upon some of the
+            configuration defaults to make better use of the newer features. This in turn allows, for exampple,
+            to setup resources and relationships more simply, more quickly and with fewer lines of code. A variety of new features complement
+            this release.
+        </p>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <div class="row">
+
+            <div class="col-xs-6 col-md-6 part">
+                <div class="image">
+                    <img src="images/demo_app.png" style="width: 600px; height: auto">
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-6 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
+                    <span class="highlight">All batteries included</span>:
+                    Crnk will take care of everything else from low-level REST protocol details
+                    to resource linking and error handling. Default implementations will let you:
+
+                    <ul style="padding-top: 20px">
+                        <li>Efficiently expose relational databases with JPA.</li>
+                        <li>Automatically validate incoming data with JSR-303.</li>
+                        <li>Browse in-memory data structures with sorting, filtering and paging like
+                            any other data source.
+                        </li>
+                        <li>
+                            Let built-in facetted search functionality give you an overview of your data.
+                        </li>
+                    </ul>
+
+                    Application as depicted in the screenshot are implemented with virtually
+                    no backend code.
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -107,17 +165,51 @@
         <div class="row">
 
             <div class="col-xs-6 col-md-4 part">
-                <div class="content">
-                    Crnk is a <span class="highlight">native resource-oriented rest library</span>
-                    where resources and relationships are first class citizens
-                    and not just path mappings on methods. This simplifies development and opens up many, powerful
-                    new
-                    possibilities.
+                <div class="image">
+                    <img src="images/resource.png"  style="width: 350px; height: auto">
                 </div>
             </div>
 
-            <div class="col-xs-6 col-md-4 part">
-                <div class="content">
+            <div class="col-xs-6 col-md-8 part">
+                <div class="content" style="padding-right: 100px; padding-top: 25px">
+                    Crnk is a <span class="highlight">native resource-oriented rest library</span>
+                    where resources and relationships are first class citizens
+                    and not just path mappings on methods.
+                    <span class="highlight">Model your application as resources
+                    and relationships</span> and implement the repositories to access them.
+                    This simplifies development and opens up many, powerful
+                    new possibilities:
+
+                    <ul style="padding-top: 20px">
+                        <li>Fully transparent, automated HATEOAS setup.</li>
+                        <li>Fetch complex object graphs with the inclusion of relationships to
+                            perform well even with mobile connections.
+                        </li>
+                        <li>
+                            Let your API evolve with the introduction of new attributes and relationship
+                            and have it discoverable. Stop handing out RPC-style APIs where every further
+                            added, isolated service makes the system less understandable.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <div class="row">
+
+            <div class="col-xs-6 col-md-5 part">
+                <div class="image">
+                    <img src="images/discover.png" style="width: 500px; height: auto">
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-7 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
                     Crnk <span class="highlight">follows the <a href="http://jsonapi.org/">JSON:API</a>
                     specification and recommendations</span> in Java to facilitate building RESTful applications.
                     To quote the specification:
@@ -126,43 +218,135 @@
                             generalized tooling, and <span
                                     class="highlight">focus on what matters: your application</span>.</i>
                     </p>
+
+                    Applications gain a rich, discoverable REST API with
+                    sorting, filtering, paging, object graphs, HATEOAS and more.
+
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <div class="row">
+
+            <div class="col-xs-6 col-md-5 part">
+                <div class="image">
+                    <img src="images/tracing.png" style="width: 500px; height: auto">
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-7 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
+
+                    A <span class="highlight">module mechanism</span> allows to dynamically add interceptors,
+                    repositories, filters, security providers and more and provides the basics for many different
+                    extensions. This is used, for example, to integrate with
+                    <a href="https://opentracing.io/">OpenTracing</a> as depicted
+                    in the screenshot.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <div class="row">
+
+            <div class="col-xs-6 col-md-5 part">
+                <div class="image">
+                    <img src="images/asciidoc_example.png" style="width: 500; height: auto">
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-7 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
+
+                    Crnk <span class="highlight">takes an implementation and example-driven approach</span>
+                    where curl or a simple browser is sufficient to navigate the API. Complex modelling as in
+                    SOAP, gRPC, GraphQL and Swagger is not necessary and does not stand in between implementation
+                    and developer. It is still possible to access meta and presentation models at compile and runtime to
+                    learn
+                    about the system.
+                    <p>
+                        On this basis a generator can create derived artifacts like Typescript stubs and Asciidoc
+                        documentation. The Asciidoc documentation presents the resource model and shows verified API
+                        calls
+                        extracted from running test cases. A cluttering of documentation-related annotations is not
+                        necessary.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section">
+    <div class="section-content">
+        <div class="row">
 
             <div class="col-xs-6 col-md-4 part">
-                <div class="content">
-                    All batteries included: <span class="highlight">model your application as resources
-                    and relationships</span> and implement the repositories to access them. Crnk will take care of
-                    everything else from low-level REST protocol details to resource linking and error handling.
-                    In the progress, the application gains a rich, discoverable API with sorting, filtering, paging,
-                    HATEOAS and more.
+                <div class="image">
+                    <i class="material-icons section-icon" style="font-size: 200px; color: 154854">
+                        security
+                    </i>
                 </div>
             </div>
 
+            <div class="col-xs-6 col-md-8 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
+
+                    The <span class="highlight">resource-oriented nature allows for authorization mechanisms</span>
+                    that go well beyond traditional REST endpoints:
+
+                    <ul style="padding-top: 20px">
+                        <li>Limit access to resource types and fields. Crnk will take care of protecting
+                            everything from the basic endpoints to their relationships and request parameters.
+                        </li>
+                        <li>Add dataroom protection to limit the number of resources a user can see.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>
 
 
-<div class="section breaking">
-    <div class="section-content breaking">
-        14. April 2019:
-        <p>
-            <a href="http://www.crnk.io/releases/v3.0/">
-                With 3.0.20190414162254-BETA a first beta of the next major version is available! There
-                have been many incremental improvements
-                to the code base over the past year. In particular the relationship handling has been automated
-                in a number of ways. 3.0 has taken the features and learnings from this time and improves upon some of
-                the
-                configuration defaults. This in turn allows to setup resources and relationships
-                more simply, more quickly and with fewer lines of code. A variety of new features complement the
-                release,
-                most notably the generation of Asciidoc documentation and a type-safe query API.
-                Please provide feedback. Further beta releases will bring more refinement.</a>
-        </p>
+<div class="section">
+    <div class="section-content">
+        <div class="row">
+
+            <div class="col-xs-6 col-md-4 part">
+                <div class="image">
+                    <i class="material-icons section-icon" style="font-size: 200px; color: 154854">
+                        games
+                    </i>
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-8 part">
+                <div class="content" style="padding-right: 100px; padding-top: 50px">
+
+                    Crnk is <span class="highlight">lightweight, modular and almost dependency-free</span>.
+                    It is a library that integrates well with basically everything from
+                    Spring Boot, Vert.x, JAX-RS, servlets and others. Its footprint allows to build
+                    everything from  traditional services to serverless applications.
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+<br>
+<br>
+<br>
+<br>
 
 
 <div class="section">
@@ -346,6 +530,11 @@ public class ProjectRepositoryImpl extends ResourceRepositoryBase&lt;Project, Lo
                     e.preventDefault()
                     $(this).tab('show')
                 })
+
+
+
+
+
 
 
 

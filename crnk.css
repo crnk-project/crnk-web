@@ -95,25 +95,45 @@ h4 {
 }
 
 .section-content {
-    background: #F8F8F8;
+    background: WHITE;
     padding: 10px;
 }
 
+
+.section-content .image {
+    text-align: center
+}
+
+.section-content img, .section-content .section-icon {
+    padding: 20px;
+     margin-top: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+}
+
+
+
+.breaking .material-icons{
+    font-size: 60px;
+    color: 154854;
+    float: left;
+    margin-top: 0px;
+    margin-right: 15px;
+    padding-top: 3px;
+}
+
 .breaking {
-    background: linear-gradient(to right, #113844, #154854);
+    background: WHITE; // linear-gradient(to right, #113844, #154854);
     margin: 0;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    color: #F8F8F8;
+   # color: #F8F8F8;
 }
 
 .breaking a {
-    color: WHITE;
     decoration: none
 }
 
 .breaking a:hover {
-    color: WHITE;
     decoration: underline
 }
 
