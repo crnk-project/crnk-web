@@ -543,13 +543,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_discovery_with_cdi">3.10. Discovery with CDI</a></li>
 <li><a href="#_discovery_with_guice">3.11. Discovery with Guice</a></li>
 <li><a href="#_discovery_with_spring">3.12. Discovery with Spring</a></li>
-<li><a href="#_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</a></li>
-<li><a href="#_no_discovery">3.14. No Discovery</a></li>
-<li><a href="#_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</a></li>
-<li><a href="#_crnkboot">3.16. CrnkBoot</a></li>
-<li><a href="#_properties">3.17. Properties</a></li>
-<li><a href="#_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</a></li>
-<li><a href="#_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</a></li>
+<li><a href="#_no_discovery">3.13. No Discovery</a></li>
+<li><a href="#_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</a></li>
+<li><a href="#_crnkboot">3.15. CrnkBoot</a></li>
+<li><a href="#_properties">3.16. Properties</a></li>
+<li><a href="#_serving_directory_listings_with_the_home_module">3.17. Serving Directory Listings with the Home Module</a></li>
+<li><a href="#_setting_up_the_crnk_ui">3.18. Setting up the Crnk UI</a></li>
 </ul>
 </li>
 <li><a href="#_resource">4. Resource</a>
@@ -569,16 +568,22 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_resourcerepository">5.1. ResourceRepository</a></li>
 <li><a href="#_query_parameters_with_queryspec">5.2. Query parameters with QuerySpec</a></li>
-<li><a href="#_relationship_repositories">5.3. Relationship Repositories</a></li>
-<li><a href="#_resourcelist">5.4. ResourceList</a></li>
-<li><a href="#_error_handling">5.5. Error Handling</a></li>
-<li><a href="#_meta_information">5.6. Meta Information</a></li>
-<li><a href="#_links_information">5.7. Links Information</a></li>
-<li><a href="#_inheritance">5.8. Inheritance</a></li>
-<li><a href="#_payload_size_optimizations">5.9. Payload Size Optimizations</a></li>
-<li><a href="#_repository_decoration">5.10. Repository Decoration</a></li>
-<li><a href="#_resourcefieldcontributor">5.11. ResourceFieldContributor</a></li>
-<li><a href="#_jsonapiexposed">5.12. @JsonApiExposed</a></li>
+<li><a href="#_basic_filtering">5.3. Basic Filtering</a></li>
+<li><a href="#_nested_filtering">5.4. Nested Filtering</a></li>
+<li><a href="#_sorting">5.5. Sorting</a></li>
+<li><a href="#_pagination">5.6. Pagination</a></li>
+<li><a href="#_sparse_fieldsets">5.7. Sparse Fieldsets</a></li>
+<li><a href="#_url_mapping">5.8. URL Mapping</a></li>
+<li><a href="#_relationship_repositories">5.9. Relationship Repositories</a></li>
+<li><a href="#_resourcelist">5.10. ResourceList</a></li>
+<li><a href="#_error_handling">5.11. Error Handling</a></li>
+<li><a href="#_meta_information">5.12. Meta Information</a></li>
+<li><a href="#_links_information">5.13. Links Information</a></li>
+<li><a href="#_inheritance">5.14. Inheritance</a></li>
+<li><a href="#_payload_size_optimizations">5.15. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.16. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.17. ResourceFieldContributor</a></li>
+<li><a href="#_jsonapiexposed">5.18. @JsonApiExposed</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -1133,7 +1138,7 @@ up automatically and do not manual registration.</p>
 <p>In many cases Crnk repositories are used along regular JAX-RS services. In such scenarios it can be worthwhile
 if Crnk repositories and JAX-RS services make use of the same exception handling and response format. To make
 use of the JSON:API resp. Crnk exception handling in JAX-RS services, one can add the
-<strong>JsonapiExceptionMapperBridge</strong> to the JAX-RS application. The constructor of <code>JsonapiExceptionMapperBridge</code>
+<strong>ExceptionMapperBridge</strong> to the JAX-RS application. The constructor of <code>ExceptionMapperBridge</code>
 takes <code>CrnkFeature</code> as parameter.</p>
 </div>
 <div class="paragraph">
@@ -1143,7 +1148,7 @@ takes <code>CrnkFeature</code> as parameter.</p>
 <div class="sect3">
 <h4 id="_use_jsonapi_format_with_jax_rs_services">3.5.3. Use JSON:API format with JAX-RS services</h4>
 <div class="paragraph">
-<p>Similar to <code>JsonapiExceptionMapperBridge</code> in the previous section, it is possible for JAX-RS services to return
+<p>Similar to <code>ExceptionMapperBridge</code> in the previous section, it is possible for JAX-RS services to return
 resources in JSON:API format with <strong>JsonApiResponseFilter</strong>. <code>JsonApiResponseFilter</code> wraps primitive
 responses with a <code>data</code> object; resource objects with <code>data</code> and <code>included</code> objects.
 The constructor of <code>JsonApiResponseFilter</code> takes <code>CrnkFeature</code> as parameter.</p>
@@ -1166,40 +1171,29 @@ annotation can be added, for example, to the class:</p>
 <div class="listingblock">
 <div class="title">JsonApiResponseFilterTestBase.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>	@ApplicationPath("/")
-	class TestApplication extends ResourceConfig {
+<pre class="CodeRay highlight"><code>    @ApplicationPath("/")
+    class TestApplication extends ResourceConfig {
 
-		TestApplication(JsonApiResponseFilterTestBase instance, boolean enableNullResponse) {
-			instance.setEnableNullResponse(enableNullResponse);
+        TestApplication(JsonApiResponseFilterTestBase instance, boolean enableNullResponse) {
+            instance.setEnableNullResponse(enableNullResponse);
 
-			property(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "io.crnk.rs.resource");
-			property(CrnkProperties.NULL_DATA_RESPONSE_ENABLED, Boolean.toString(enableNullResponse));
+            property(CrnkProperties.NULL_DATA_RESPONSE_ENABLED, Boolean.toString(enableNullResponse));
 
-			CrnkFeature feature = new CrnkFeature();
-			feature.addModule(new TestModule());
+            CrnkFeature feature = new CrnkFeature();
+            feature.addModule(new TestModule());
 
-			register(new JsonApiResponseFilter(feature));
-			register(new JsonapiExceptionMapperBridge(feature));
-			register(new JacksonFeature());
+            register(new JsonApiResponseFilter(feature));
+            register(new JsonapiExceptionMapperBridge(feature));
+            register(new JacksonFeature());
 
-			register(feature);
-		}
-	}</code></pre>
+            register(feature);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
+<p>Note that  <code>CrnkProperties.NULL_DATA_RESPONSE_ENABLED</code> determines whether null responses should be wrapped
 as JSON:API responses.</p>
-</li>
-<li>
-<p>Make use of proper service discovery instead of <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> in real applications.</p>
-</li>
-</ul>
 </div>
 </div>
 <div class="sect3">
@@ -1598,56 +1592,7 @@ to discover beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_discovery_without_a_dependency_injection_framework">3.13. Discovery without a dependency injection framework</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Warning</div>
-</td>
-<td class="content">
-This mechanism is considered to be rather deprecated and a lightweight dependency injection framework like guice or
-the setup of manual modules is recommended instead.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>If no dependency injection framework is used, Crnk can also discover beans on its own. For this purpose,
-the <code>org.reflections:reflections</code> library has to be added to the classpath and the
-<code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> be defined. In JAX-RS this may look like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>@ApplicationPath("/")
-	public class MyApplication extends Application {
-
-		@Override
-        public Set&lt;Object&gt; getSingletons() {
-            CrnkFeature crnkFeature = new CrnkFeature();
-            crnkFeature.getBoot().setServiceLocator(...);
-            return Collections.singleton((Object)crnkFeature);
-        }
-
-		@Override
-        public Map&lt;String, Object&gt; getProperties() {
-            Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
-            map.put(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.myapplication.model")
-            return map;
-        }
-	}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>A <code>JsonServiceLocator</code> service locator can be provided to control the instatiation of object. By default the default
-constructor will be used. The <code>CrnkProperties.RESOURCE_SEARCH_PACKAGE</code> property is passed to define which package
-should be searched for beans. Multiple packages can be passed by specifying a comma separated string
-of packages i.e. com.company.service.dto,com.company.service.repository. It will pick up any public non-abstract
-class that makes use of Crnk interfaces, like repositories, exception mappers and modules.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_no_discovery">3.14. No Discovery</h3>
+<h3 id="_no_discovery">3.13. No Discovery</h3>
 <div class="paragraph">
 <p>It is also possible to make use of no discovery mechanism at all. In this case it is still possible to add repositories
 and other features through modules. A simple example looks like:</p>
@@ -1669,7 +1614,7 @@ and other features through modules. A simple example looks like:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_implement_a_custom_discovery_mechanism">3.15. Implement a custom discovery mechanism</h3>
+<h3 id="_implement_a_custom_discovery_mechanism">3.14. Implement a custom discovery mechanism</h3>
 <div class="paragraph">
 <p>Application can bring along there own implementation of <code>ServiceDiscovery</code>. For more information
 see <a href="#customdiscovery">here</a>.</p>
@@ -1679,7 +1624,7 @@ see <a href="#customdiscovery">here</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crnkboot">3.16. CrnkBoot</h3>
+<h3 id="_crnkboot">3.15. CrnkBoot</h3>
 <div class="paragraph">
 <p><code>CrnkBoot</code> is a class shared among all the different integrations that takes care of setting up and starting
 Crnk. Every integration will provide access to it:</p>
@@ -1769,7 +1714,7 @@ and just omitting to specify pagination parameters.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_properties">3.17. Properties</h3>
+<h3 id="_properties">3.16. Properties</h3>
 <div class="paragraph">
 <p>Any of the integrations allows API access to customize Crnk. There are also a number of configuration flags
 provided by <code>CrnkProperties</code>:</p>
@@ -1866,7 +1811,7 @@ It likely will be enabled in Crnk 3 by default.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_serving_directory_listings_with_the_home_module">3.18. Serving Directory Listings with the Home Module</h3>
+<h3 id="_serving_directory_listings_with_the_home_module">3.17. Serving Directory Listings with the Home Module</h3>
 <div class="paragraph">
 <p>The <code>HomeModule</code> provides a listing of available resources in each directory (such as the root <code>/api/</code>). Note that
 directory paths always end with a '/' and the <code>HomeModule</code> will process the request if there is no resource or
@@ -1920,7 +1865,7 @@ links node holds all links to child directories and repositories. And a JSON HOM
 </div>
 </div>
 <div class="sect2">
-<h3 id="_setting_up_the_crnk_ui">3.19. Setting up the Crnk UI</h3>
+<h3 id="_setting_up_the_crnk_ui">3.18. Setting up the Crnk UI</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3137,8 +3082,6 @@ is implemented by <a href="#urlmapper"><code>QuerySpecUrlMapper</code></a> that 
 <div class="paragraph">
 <p>For example showing its use URLs also have a look at the <a href="#resource_repository">ResourceRepository</a> section.</p>
 </div>
-<div class="sect3">
-<h4 id="_api">5.2.1. API</h4>
 <div class="paragraph">
 <p>The QuerySpec API looks like (further setters available as well):</p>
 </div>
@@ -3201,8 +3144,8 @@ the implementation of a repository as simple as possible.</p>
 <p><a id="filtering"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_basic_filtering">5.2.2. Basic Filtering</h4>
+<div class="sect2">
+<h3 id="_basic_filtering">5.3. Basic Filtering</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3363,8 +3306,8 @@ For more information see  <a href="#urlmapper"><code>QuerySpecUrlMapper</code></
 <p><a id="nested_filtering"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_nested_filtering">5.2.3. Nested Filtering</h4>
+<div class="sect2">
+<h3 id="_nested_filtering">5.4. Nested Filtering</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3470,8 +3413,8 @@ attribute by the specified value or to setup nested attributes.</p>
 <p><a id="sorting"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_sorting">5.2.4. Sorting</h4>
+<div class="sect2">
+<h3 id="_sorting">5.5. Sorting</h3>
 <div class="paragraph">
 <p>Sorting information for the resources can be achieved by providing <code>sort</code> parameter.</p>
 </div>
@@ -3502,8 +3445,8 @@ SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.D
 <p><a id="pagination"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_pagination">5.2.5. Pagination</h4>
+<div class="sect2">
+<h3 id="_pagination">5.6. Pagination</h3>
 <div class="sect4">
 <h5 id="_offsetlimit_paging">Offset/Limit Paging</h5>
 <div class="paragraph">
@@ -3516,8 +3459,8 @@ SortSpec sortSpec = new SortSpec(PathSpec.of("person.address.city"), Direction.D
 <p>The parameters are then available with <code>QuerySpec.getPaging(type)</code> or the shortcuts <code>QuerySpec.getLimit</code> and <code>QuerySpec.getOffset</code>.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_numbersize_paging">Number/Size Paging</h5>
+<div class="sect3">
+<h4 id="_numbersize_paging">5.6.2. Number/Size Paging</h4>
 <div class="paragraph">
 <p>Support for number/size-based paging can be enabled by registering the <code>NumberSizePagingBehavior</code> in one of two ways:</p>
 </div>
@@ -3543,8 +3486,8 @@ a repository has been implemented with offset/limit paging, it works equally wel
 The conversion takes place automatically when invoking <code>QuerySpec.getPaging(desiredPagingType)</code>.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_pagination_links">Pagination Links</h5>
+<div class="sect3">
+<h4 id="_pagination_links">5.6.3. Pagination Links</h4>
 <div class="paragraph">
 <p>JSON:API specifies <code>first</code>, <code>previous</code>, <code>next</code> and <code>last</code> links (see <a href="http://jsonapi.org/format/#fetching-pagination" class="bare">http://jsonapi.org/format/#fetching-pagination</a>).
 The <code>PagedLinksInformation</code> interface provides a Java representation of those links that can be implemented and returned
@@ -3576,8 +3519,8 @@ determine whether more resources are available rather than counting all resource
 This is typically achieved by querying <code>limit + 1</code> resources.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_custom_strategies">Custom strategies</h5>
+<div class="sect3">
+<h4 id="_custom_strategies">5.6.4. Custom strategies</h4>
 <div class="paragraph">
 <p><code>OffsetLimitPagingBehavior</code> and <code>OffsetLimitPagingSpec</code> and <code>NumberSizePagingBehavior</code> and <code>NumberSizePagingSpec</code>
 are two implementations of <code>PagingBehavior</code> and <code>PagingSpec</code>. Applications are free to add further implementations
@@ -3634,8 +3577,8 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_sparse_fieldsets">5.2.6. Sparse Fieldsets</h4>
+<div class="sect2">
+<h3 id="_sparse_fieldsets">5.7. Sparse Fieldsets</h3>
 <div class="paragraph">
 <p>Information about fields to include in the response can be achieved by providing <code>fields</code> parameter:</p>
 </div>
@@ -3645,9 +3588,8 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 <div class="paragraph">
 <p><a id="inclusion"></a></p>
 </div>
-</div>
 <div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.2.7. Inclusion of Related Resources</h4>
+<h4 id="_inclusion_of_related_resources">5.7.1. Inclusion of Related Resources</h4>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing an <code>include</code> parameter. Examples:</p>
 </div>
@@ -3690,8 +3632,9 @@ The QuerySpec for a particular resource type can be obtained with <code>QuerySpe
 <p><a id="urlmapper"></a></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_url_mapping">5.2.8. URL Mapping</h4>
+</div>
+<div class="sect2">
+<h3 id="_url_mapping">5.8. URL Mapping</h3>
 <div class="paragraph">
 <p>The mapping of request parameters to QuerySpec and back is implemented by <code>QuerySpecUrlMapper</code>.
 With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON:API
@@ -3756,9 +3699,8 @@ Sets the default <code>FilterOperator</code>. See <a href="#filtering">[filterin
 <p><a id="relationshipRepository"></a></p>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_relationship_repositories">5.3. Relationship Repositories</h3>
+<h3 id="_relationship_repositories">5.9. Relationship Repositories</h3>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -3821,7 +3763,7 @@ by the same repository. The <code>findOneRelations</code> and <code>findManyRela
 class through <code>querySpec.getResourceClass</code>, whereas the other methods directly obtain a <code>source</code> instance.</p>
 </div>
 <div class="sect3">
-<h4 id="_example">5.3.1. Example</h4>
+<h4 id="_example">5.9.1. Example</h4>
 <div class="listingblock">
 <div class="title">HistoryRelationshipRepository</div>
 <div class="content">
@@ -3853,7 +3795,7 @@ public class HistoryRelationshipRepository extends ManyRelationshipRepositoryBas
 </div>
 </div>
 <div class="sect3">
-<h4 id="_relationshipmatcher">5.3.2. RelationshipMatcher</h4>
+<h4 id="_relationshipmatcher">5.9.2. RelationshipMatcher</h4>
 <div class="paragraph">
 <p>With <code>RelationshipRepository.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
 serving. Rules can look like:</p>
@@ -3874,7 +3816,7 @@ as done in the example from the previous section.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_self_and_related_links">5.3.3. Self and Related Links</h4>
+<h4 id="_self_and_related_links">5.9.3. Self and Related Links</h4>
 <div class="paragraph">
 <p>The JSON:API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
 mandates two relationship links:</p>
@@ -3914,7 +3856,7 @@ the <code>includedFields</code> property.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.3.4. ForwardingRelationshipRepository</h4>
+<h4 id="_forwardingrelationshiprepository">5.9.4. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3972,7 +3914,7 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcelist">5.4. ResourceList</h3>
+<h3 id="_resourcelist">5.10. ResourceList</h3>
 <div class="paragraph">
 <p>ResourceRepository and RelationshipRepository return lists of type ResourceList. The ResourceList can carry, next
 to the actual resources, also meta and links information:</p>
@@ -4038,13 +3980,13 @@ and used by both servers and clients:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling">5.5. Error Handling</h3>
+<h3 id="_error_handling">5.11. Error Handling</h3>
 <div class="paragraph">
 <p>Processing errors in Crnk can be handled by throwing an exception and providing
 a corresponding exception mapper which defines mapping to a proper JSON:API error response.</p>
 </div>
 <div class="sect3">
-<h4 id="_throwing_an_exception">5.5.1. Throwing an exception&#8230;&#8203;</h4>
+<h4 id="_throwing_an_exception">5.11.1. Throwing an exception&#8230;&#8203;</h4>
 <div class="paragraph">
 <p>Here is an example of throwing an Exception in the code:</p>
 </div>
@@ -4082,7 +4024,7 @@ a corresponding exception mapper which defines mapping to a proper JSON:API erro
 </div>
 </div>
 <div class="sect3">
-<h4 id="_and_mapping_it_to_jsonapi_response">5.5.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
+<h4 id="_and_mapping_it_to_jsonapi_response">5.11.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
 <div class="paragraph">
 <p>Class responsible for mapping the exception should:</p>
 </div>
@@ -4154,7 +4096,7 @@ care of JSR-303 bean validation exception mapping.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_information">5.6. Meta Information</h3>
+<h3 id="_meta_information">5.12. Meta Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4179,7 +4121,7 @@ It contains a single method <code>MetaInformation getMetaInformation(Iterable&lt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_links_information">5.7. Links Information</h3>
+<h3 id="_links_information">5.13. Links Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4207,12 +4149,12 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 </div>
 </div>
 <div class="sect2">
-<h3 id="_inheritance">5.8. Inheritance</h3>
+<h3 id="_inheritance">5.14. Inheritance</h3>
 <div class="paragraph">
 <p>There are two different kinds of inheritance supported:</p>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_repository_per_type">5.8.1. Inheritance with a repository per type</h4>
+<h4 id="_inheritance_with_a_repository_per_type">5.14.1. Inheritance with a repository per type</h4>
 <div class="paragraph">
 <p>Each subtype is served by its own resource repository and each repository has its own URL.</p>
 </div>
@@ -4235,7 +4177,7 @@ also return resources of subtypes if they match the specified id or filter param
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.8.2. Inheritance with a single repository per type hierarchy</h4>
+<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.14.2. Inheritance with a single repository per type hierarchy</h4>
 <div class="paragraph">
 <p>In this case all resources share a repository implementation and URL (except for the identifier part). An example may look like:</p>
 </div>
@@ -4260,7 +4202,7 @@ a look at <code>InheritanceWithoutSubtypeRepositoryClientTest</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_payload_size_optimizations">5.9. Payload Size Optimizations</h3>
+<h3 id="_payload_size_optimizations">5.15. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
@@ -4271,7 +4213,7 @@ of those links is omitted. Further relationships without data are completely omi
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repository_decoration">5.10. Repository Decoration</h3>
+<h3 id="_repository_decoration">5.16. Repository Decoration</h3>
 <div class="paragraph">
 <p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
 </div>
@@ -4324,7 +4266,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.11. ResourceFieldContributor</h3>
+<h3 id="_resourcefieldcontributor">5.17. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-data-jpa and
@@ -4397,7 +4339,7 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsonapiexposed">5.12. @JsonApiExposed</h3>
+<h3 id="_jsonapiexposed">5.18. @JsonApiExposed</h3>
 <div class="paragraph">
 <p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
 externally on the JSON:API endpoint. There are different use cases for this:</p>
@@ -5204,7 +5146,13 @@ for the current user:</p>
 
 public interface SecurityProvider {
 
-	boolean isUserInRole(String role);
+    boolean isUserInRole(String role, SecurityProviderContext context);
+
+    /**
+     * @return true if the user has been logged in. If not, a {@link io.crnk.core.exception.UnauthorizedException} rather than
+     * {@link io.crnk.core.exception.ForbiddenException} is  thrown.
+     */
+    boolean isAuthenticated(SecurityProviderContext context);
 }</code></pre>
 </div>
 </div>
@@ -5241,7 +5189,8 @@ A setup can looks as follows:</p>
             module = SecurityModule.newServerModule(builder.build());
 
             CrnkFeature feature = new CrnkFeature();
-            feature.addModule(module);</code></pre>
+            feature.addModule(module);
+            feature.addModule(testModule);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5302,8 +5251,8 @@ provided by the Crnk engine:</p>
 <div class="title">ResourceFilter.java</div>
 <div class="content">
 <pre class="CodeRay highlight"><code>public interface ResourceFilter {
-	FilterBehavior filterResource(ResourceInformation resourceInformation, HttpMethod method);
-	FilterBehavior filterField(ResourceField field, HttpMethod method);
+	FilterBehavior filterResource(ResourceFilterContext filterContext, ResourceInformation resourceInformation, HttpMethod method);
+	FilterBehavior filterField(ResourceFilterContext filterContext, ResourceField field, HttpMethod method);
 }</code></pre>
 </div>
 </div>
@@ -5427,7 +5376,24 @@ will fill-in the <code>ResourcePermission</code> for the current request.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_home_and_meta_module">9.5.2. Home and Meta Module</h4>
+<h4 id="_api">9.5.2. API</h4>
+<div class="paragraph">
+<p><code>SecurityModule.setExposeRepositories(true)</code> sets up repositories accessible through the
+<code>&lt;contextPath&gt;/security/</code> path. Currently supported are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;contextPath&gt;/security/role</code> to gain access to all configure roles.</p>
+</li>
+<li>
+<p><code>&lt;contextPath&gt;/security/callerPermission</code> to gain access to all permissions of the current caller.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_home_and_meta_module">9.5.3. Home and Meta Module</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -6475,24 +6441,24 @@ tasks, you may introduce multiple such relationships.</p>
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-                ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
+        ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
 
-                ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
-                terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
+        ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
+        terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
 
-                ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-                processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
-                processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
-                processConfig.addTaskRelationship(
-                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
-                );
-                TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-                taskConfig.historic(HistoricApproveTask.class);
-                taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
-                taskConfig.setForm(ApproveForm.class);
-                <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
-        }</code></pre>
+        ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
+        processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
+        processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
+        processConfig.addTaskRelationship(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
+        );
+        TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
+        taskConfig.historic(HistoricApproveTask.class);
+        taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
+        taskConfig.setForm(ApproveForm.class);
+        <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
+    }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -6630,22 +6596,22 @@ changes. This means the regular <code>ScheduleRepository</code> implementation w
 <div class="listingblock">
 <div class="title">ApprovalTestApplication.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">        <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-                FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
-                                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
-                );
-                <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
+        FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
+                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
+        );
+        <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
 
-                SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
-                module.addRepositoryDecoratorFactory(
-                                ApprovalRepositoryDecorator.createFactory(approvalManager)
-                );
-                module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
-                                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
-                                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
-                );
-                <span class="keyword">return</span> module;
-        }</code></pre>
+        SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
+        module.addRepositoryDecoratorFactory(
+                ApprovalRepositoryDecorator.createFactory(approvalManager)
+        );
+        module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
+                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
+        );
+        <span class="keyword">return</span> module;
+    }</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -6841,7 +6807,34 @@ the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap">10.5.4. Roadmap</h4>
+<h4 id="_grouping">10.5.4. Grouping</h4>
+<div class="paragraph">
+<p>To compute facets separately for each label of a particular facet, use the <code>GROUP</code> operator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://127.0.0.1:8080/api/facet?filter[values][GROUP]=priority,name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It works equivalent to SQL <code>GROUP BY</code> queries. In the example a count is computed for every pair of <code>priority</code> and <code>name</code>
+and returned as facet resource.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+the GROUP operator needs for further performance tuning.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_roadmap">10.5.5. Roadmap</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -7276,12 +7269,15 @@ import io.crnk.core.boot.CrnkBoot;
 import io.crnk.core.queryspec.FilterOperator;
 import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
+import io.crnk.core.repository.ManyRelationshipRepository;
+import io.crnk.core.repository.OneRelationshipRepository;
 import io.crnk.core.repository.ResourceRepository;
 import io.crnk.core.resource.list.ResourceList;
 import io.crnk.format.plainjson.PlainJsonFormatModule;
 import io.crnk.gen.asciidoc.capture.AsciidocCaptureConfig;
 import io.crnk.gen.asciidoc.capture.AsciidocCaptureModule;
 import io.crnk.test.mock.TestModule;
+import io.crnk.test.mock.models.Project;
 import io.crnk.test.mock.models.Task;
 import io.crnk.test.mock.models.TaskStatus;
 import org.junit.Assert;
@@ -7289,10 +7285,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class AsciiDocCaptureTest {
 
-    private ResourceRepository&lt;Task, Long&gt; repository;
+    private ResourceRepository&lt;Task, Long&gt; taskRepository;
+    private ResourceRepository&lt;Project, Long&gt; projectRepository;
+
+    private OneRelationshipRepository&lt;Task, Long, Project, Long&gt; taskToProjectOneRelationRepository;
+    private ManyRelationshipRepository&lt;Task, Long, Project, Long&gt; taskToProjectManyRelationRepository;
 
     private AsciidocCaptureModule asciidoc;
 
@@ -7302,7 +7304,10 @@ public class AsciiDocCaptureTest {
 
         asciidoc = setupAsciidoc();
         CrnkClient client = setupClient(boot, asciidoc);
-        repository = client.getRepositoryForType(Task.class);
+        taskRepository = client.getRepositoryForType(Task.class);
+        projectRepository = client.getRepositoryForType(Project.class);
+        taskToProjectOneRelationRepository = client.getOneRepositoryForType(Task.class, Project.class);
+        taskToProjectManyRelationRepository = client.getManyRepositoryForType(Task.class, Project.class);
     }
 
     private CrnkClient setupClient(CrnkBoot boot, AsciidocCaptureModule module) {
@@ -7337,20 +7342,63 @@ public class AsciiDocCaptureTest {
         newTask.setName("Favorite Task");
         newTask.setStatus(TaskStatus.OPEN);
 
-        Task createdTask = asciidoc.capture("Create new Task").call(() -&gt; repository.create(newTask));
+        Task createdTask = asciidoc.capture("Create new Task").call(() -&gt; taskRepository.create(newTask));
 
         QuerySpec querySpec = new QuerySpec(Task.class);
         querySpec.addFilter(PathSpec.of("name").filter(FilterOperator.EQ, "Favorite Task"));
         querySpec.setOffset(0);
         querySpec.setLimit(5L);
-        ResourceList&lt;Task&gt; list = asciidoc.capture("Find Task by Name").call(() -&gt; repository.findAll(querySpec));
+        ResourceList&lt;Task&gt; list = asciidoc.capture("Find Task by Name").call(() -&gt; taskRepository.findAll(querySpec));
         Assert.assertNotEquals(0, list.size());
 
         createdTask.setName("Updated Task");
-        asciidoc.capture("Update a Task").call(() -&gt; repository.save(createdTask));
+        asciidoc.capture("Update a Task").call(() -&gt; taskRepository.save(createdTask));
 
-        asciidoc.capture("Delete a Task").call(() -&gt; repository.delete(createdTask.getId()));
+        asciidoc.capture("Delete a Task").call(() -&gt; taskRepository.delete(createdTask.getId()));
     }
+
+	@Test
+	public void checkOneRelationRepositoryAccess() {
+		Task newTask = new Task();
+		newTask.setName("Favorite Task");
+		newTask.setStatus(TaskStatus.OPEN);
+		Task createdTask = taskRepository.create(newTask);
+
+		Project newProject = new Project();
+		newProject.setName("Favorite Project");
+		newProject.setDescription("It's just for test");
+		Project createdProject = projectRepository.create(newProject);
+
+		asciidoc.capture("Link Project and Task").call(() -&gt; taskToProjectOneRelationRepository.setRelation(createdTask, createdProject.getId(), "project"));
+
+		asciidoc.capture("Find Project by Task").call(() -&gt; taskToProjectOneRelationRepository.findOneRelations(Collections.singleton(createdTask.getId()), "project", new QuerySpec(Task.class)));
+
+		asciidoc.capture("Delete Project from Task").call(() -&gt; taskToProjectOneRelationRepository.setRelation(createdTask, null, "project"));
+	}
+
+	@Test
+	public void checkManyRelationRepositoryAccess() {
+		Task newTask = new Task();
+		newTask.setName("Favorite Task");
+		newTask.setStatus(TaskStatus.OPEN);
+		Task createdTask = taskRepository.create(newTask);
+
+		Project firstNewProject = new Project();
+		firstNewProject.setName("First Favorite Project");
+		firstNewProject.setDescription("It's just for test");
+		Project firstCreatedProject = projectRepository.create(firstNewProject);
+
+		Project secondNewProject = new Project();
+		secondNewProject.setName("Second Favorite Project");
+		secondNewProject.setDescription("It's just for test");
+		Project secondCreatedProject = projectRepository.create(secondNewProject);
+
+		asciidoc.capture("Link Task with several Projects").call(() -&gt; taskToProjectManyRelationRepository.addRelations(createdTask, Arrays.asList(firstCreatedProject.getId(), secondCreatedProject.getId()), "projects"));
+
+		asciidoc.capture("Get Task relation Projects").call(() -&gt; taskToProjectManyRelationRepository.findManyRelations(Collections.singleton(createdTask.getId()), "projects", new QuerySpec(Task.class)));
+
+		asciidoc.capture("Remove single Project from Task").call(() -&gt; taskToProjectManyRelationRepository.removeRelations(createdTask, Collections.singleton(firstCreatedProject.getId()), "projects"));
+	}
 }</code></pre>
 </div>
 </div>
@@ -7405,7 +7453,9 @@ transaction spanning all requests. This looks as follows:</p>
 <div class="listingblock">
 <div class="title">AbstractOperationsTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>			operationsModule.addFilter(new TransactionOperationFilter());</code></pre>
+<pre class="CodeRay highlight"><code>            if (transactional) {
+                operationsModule.addFilter(new TransactionOperationFilter());
+            }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7956,45 +8006,45 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 <div class="content">
 <pre class="CodeRay highlight"><code>public class DynamicModule implements InitializingModule {
 
-	private ModuleContext context;
+    private ModuleContext context;
 
-	@Override
-	public String getModuleName() {
-		return "dynamic";
-	}
+    @Override
+    public String getModuleName() {
+        return "dynamic";
+    }
 
-	@Override
-	public void setupModule(ModuleContext context) {
-		this.context = context;
-	}
+    @Override
+    public void setupModule(ModuleContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public void init() {
-		for (int i = 0; i &lt; 2; i++) {
-			RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
+    @Override
+    public void init() {
+        for (int i = 0; i &lt; 2; i++) {
+            RegistryEntryBuilder builder = context.newRegistryEntryBuilder();
 
-			String resourceType = "dynamic" + i;
-			RegistryEntryBuilder.ResourceRepositoryEntryBuilder resourceRepository = builder.resourceRepository();
-			resourceRepository.instance(new DynamicResourceRepository(resourceType));
+            String resourceType = "dynamic" + i;
+            RegistryEntryBuilder.ResourceRepositoryEntryBuilder resourceRepository = builder.resourceRepository();
+            resourceRepository.instance(new DynamicResourceRepository(resourceType));
 
-			RegistryEntryBuilder.RelationshipRepositoryEntryBuilder parentRepository = builder.relationshipRepositoryForField("parent");
-			parentRepository.instance(new DynamicRelationshipRepository(resourceType));
-			RegistryEntryBuilder.RelationshipRepositoryEntryBuilder childrenRepository = builder.relationshipRepositoryForField("children");
-			childrenRepository.instance(new DynamicRelationshipRepository(resourceType));
+            RegistryEntryBuilder.RelationshipRepositoryEntryBuilder parentRepository = builder.relationshipRepositoryForField("parent");
+            parentRepository.instance(new DynamicRelationshipRepository(resourceType));
+            RegistryEntryBuilder.RelationshipRepositoryEntryBuilder childrenRepository = builder.relationshipRepositoryForField("children");
+            childrenRepository.instance(new DynamicRelationshipRepository(resourceType));
 
-			InformationBuilder.ResourceInformationBuilder resource = builder.resource();
-			resource.resourceType(resourceType);
-			resource.resourceClass(Resource.class);
-			resource.addField("id", ResourceFieldType.ID, String.class);
-			resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
-			resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType(resourceType)
-					.oppositeName("children");
-			resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType(resourceType)
-					.oppositeName("parent");
+            InformationBuilder.ResourceInformationBuilder resource = builder.resource();
+            resource.resourceType(resourceType);
+            resource.implementationType(Resource.class);
+            resource.addField("id", ResourceFieldType.ID, String.class);
+            resource.addField("value", ResourceFieldType.ATTRIBUTE, String.class);
+            resource.addField("parent", ResourceFieldType.RELATIONSHIP, Resource.class).oppositeResourceType(resourceType)
+                    .oppositeName("children");
+            resource.addField("children", ResourceFieldType.RELATIONSHIP, List.class).oppositeResourceType(resourceType)
+                    .oppositeName("parent");
 
-			context.addRegistryEntry(builder.build());
-		}
-	}
+            context.addRegistryEntry(builder.build());
+        }
+    }
 }</code></pre>
 </div>
 </div>
@@ -8092,7 +8142,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-30 16:37:29 UTC
+Last updated 2019-07-14 14:27:03 UTC
 </div>
 </div>
 </body>
