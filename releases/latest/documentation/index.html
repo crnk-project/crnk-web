@@ -639,7 +639,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_documentation_with_asciidoc">11.4. Documentation with AsciiDoc</a></li>
 </ul>
 </li>
-<li><a href="#_bulk_updates_with_operations_module">12. Bulk Updates with Operations Module</a></li>
+<li><a href="#_bulk_updates_with_operations_module">12. Bulk Updates with Operations Module</a>
+<ul class="sectlevel2">
+<li><a href="#_operation_module_properties">12.1. Operation Module Properties</a></li>
+<li><a href="#_example_request_and_response">12.2. Example Request and Response</a></li>
+</ul>
+</li>
 <li><a href="#_monitoring">13. Monitoring</a>
 <ul class="sectlevel2">
 <li><a href="#_opentracing">13.1. OpenTracing</a></li>
@@ -7544,6 +7549,55 @@ transaction spanning all requests. This looks as follows:</p>
 		call.execute();</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_operation_module_properties">12.1. Operation Module Properties</h3>
+<div class="paragraph">
+<p>The operations module can be customized using one of the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Operation Module Properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Description</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default Value</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resumeOnError</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If an error occurs during the operation execution, continue the other operations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">includeChangedRelationships</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Toggle to include all changed relationships in the request by default. This only applies for POST and PATCH operation requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayOperationResponseOnSuccess</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, the response will always be included. Otherwise, it only displays the status codes of the operation unless an error has occurred.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">True</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Here is an example of how to set these properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>OperationsModule operationsModule = OperationsModule.create();
+operationsModule.setIncludeChangedRelationships(false);
+operationsModule.resumeOnError(true);
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_request_and_response">12.2. Example Request and Response</h3>
 <div class="paragraph">
 <p>An example request in JSON looks like:</p>
 </div>
@@ -7667,6 +7721,7 @@ The limitations are expected to be addressed at some point as well, contribution
 </div>
 <div class="paragraph">
 <p><a id="monitoring"></a></p>
+</div>
 </div>
 </div>
 </div>
@@ -8214,7 +8269,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-25 12:26:26 UTC
+Last updated 2019-08-09 17:26:10 UTC
 </div>
 </div>
 </body>
