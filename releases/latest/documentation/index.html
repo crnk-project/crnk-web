@@ -5406,7 +5406,15 @@ a particular filter. The returned <code>QuerySpec</code> is applied to all repos
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Added to the caller <code>QuerySpec</code> to filter by both caller and DataRoom filters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Added to the caller <code>QuerySpec</code> to filter by both caller and DataRoom filters. This will
+  remove any sensitive/undesired resources from the result. Note that it is important to
+  adapt the <code>QuerySpec</code> rather than filtering results of the query: only the former
+  efficiently supports paging (if necessary, one can workaround this a bit for the later
+  if deemed in practical by always query with offset 0 and limiting the number of pages one can request).
+  Note there is also a further subtle difference when requesting a single resource by id:
+  A <code>FORBIDDEN</code> status code is returned and a warning written to the log if the resource
+  with the requested ID does not pass DAC. It is assumed that the caller should not know
+  its ID in the first place.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST</code></p></td>
@@ -7960,7 +7968,15 @@ the other parts of the application.</p>
 </li>
 <li>
 <p><em>Is Swagger supported by Crnk?</em></p>
-<p>Have a look at <a href="http://www.crnk.io/related/" class="bare">http://www.crnk.io/related/</a>.</p>
+<p>Crnk comes with an experimental generator that will create an Open API-compatible
+specification. For more general information about the benefits of a more opinionated
+specification like JSON:API see <a href="http://www.crnk.io/related/" class="bare">http://www.crnk.io/related/</a>.</p>
+</li>
+<li>
+<p><em>How can the serialization of Java 8 date and time data types be customized?</em></p>
+<p>This is entirely in the hands of Jackson and not related to Crnk. A custom <code>JsonDeserializer</code>
+and <code>JsonSerializer</code> can be implemented and registered with <code>ObjectMapper</code>.
+See <a href="https://stackoverflow.com/questions/46263773/jackson-parse-custom-offset-date-time" class="bare">https://stackoverflow.com/questions/46263773/jackson-parse-custom-offset-date-time</a>.</p>
 </li>
 </ol>
 </div>
@@ -8373,7 +8389,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-10-06 07:46:58 UTC
+Last updated 2019-10-06 08:12:14 UTC
 </div>
 </div>
 </body>
