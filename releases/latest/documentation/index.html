@@ -634,9 +634,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_generation">11. Generation</a>
 <ul class="sectlevel2">
 <li><a href="#_java_annotation_processor">11.1. Java Annotation Processor</a></li>
-<li><a href="#_typescript">11.2. Typescript</a></li>
-<li><a href="#_gradle_customizations">11.3. Gradle customizations</a></li>
-<li><a href="#_documentation_with_asciidoc">11.4. Documentation with AsciiDoc</a></li>
+<li><a href="#_openapi">11.2. OpenAPI</a></li>
+<li><a href="#_typescript">11.3. Typescript</a></li>
+<li><a href="#_gradle_customizations">11.4. Gradle customizations</a></li>
+<li><a href="#_documentation_with_asciidoc">11.5. Documentation with AsciiDoc</a></li>
 </ul>
 </li>
 <li><a href="#_bulk_updates_with_operations_module">12. Bulk Updates with Operations Module</a>
@@ -7034,7 +7035,106 @@ capability of that particular field. Contributions welcomed.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_typescript">11.2. Typescript</h3>
+<h3 id="_openapi">11.2. OpenAPI</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This generator is still experimental. Feedback welcomed.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>crnk-gen-openapi</code> provides an way to generate OpenAPI files. The OpenAPI Specification,
+originally known as the Swagger Specification, is a specification for machine-readable interface
+files for describing, producing, consuming, and visualizing RESTful web services.</p>
+</div>
+<div class="paragraph">
+<p>The OpenAPI generator allows the generation of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>specifications of paths for resources and related objects (like nested objects and enumeration types).</p>
+</li>
+<li>
+<p>specifications of result documents (i.e. resources and any linking and meta information).</p>
+</li>
+<li>
+<p>specifications of links information.</p>
+</li>
+<li>
+<p>specifications of meta information.</p>
+</li>
+<li>
+<p>specifications of standard errors</p>
+</li>
+<li>
+<p>specifications of standard parameters</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a <code>templateName</code> file is provided, it will override the <code>projectName</code>, <code>projectVersion</code>, and
+<code>projectDescription</code> passed into the generate step. Similarly, descriptions of operations can be
+overridden within the provided OpenAPI template file.</p>
+</div>
+<div class="paragraph">
+<p>There is a Gradle plugin to run OpenAPI (and other) generation. The setup looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>buildscript {
+	dependencies {
+		classpath "io.crnk:crnk-gen-gradle:${version}"
+	}
+}
+
+apply plugin: 'crnk-gen'
+crnkGen {
+    runtime {
+        configuration = 'openapiGenRuntime'
+    }
+
+    // fork generation into new process to have clean environment
+    forked = true
+
+    // specify the package to look for resources
+    resourcePackages = ['io.crnk.test']
+
+    openapi {
+        // enable OpenAPI generation within Gradle plugin
+        enabled = true
+
+				// specify name of openapi template in the build dir to merge onto
+				templateName = "openapi-template.yml"
+
+				// specify name of API to display in the generated OpenAPI file
+				projectName = "Generated Title"
+
+				// specify version of the API to display in the generated OpenAPI file
+				projectVersion = "0.1.0"
+
+				// specify name of openapi template in the build dir to merge onto
+				projectDescription = "A generated description of the API."
+
+        // specify location of generated sources
+        genDir = file('src/resources')
+    }
+}
+crnkGen.init()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Applying <code>crnk-gen</code> results in a new <code>generateOpenapi</code> task to perform the generation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_typescript">11.3. Typescript</h3>
 <div class="paragraph">
 <p>The Typescript generator allows the generation of:</p>
 </div>
@@ -7223,7 +7323,7 @@ crnkGen.init()</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_gradle_customizations">11.3. Gradle customizations</h3>
+<h3 id="_gradle_customizations">11.4. Gradle customizations</h3>
 <div class="paragraph">
 <p>Internally the Crnk Gradle plugin supports multiple ways of looking up the set of available resources and repositories
 to generate.
@@ -7257,7 +7357,7 @@ crnkGen.init()</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_documentation_with_asciidoc">11.4. Documentation with AsciiDoc</h3>
+<h3 id="_documentation_with_asciidoc">11.5. Documentation with AsciiDoc</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -8273,7 +8373,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-10-04 13:56:04 UTC
+Last updated 2019-10-06 07:23:15 UTC
 </div>
 </div>
 </body>
