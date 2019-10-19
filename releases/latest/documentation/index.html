@@ -7644,7 +7644,7 @@ transaction spanning all requests. This looks as follows:</p>
 <div class="listingblock">
 <div class="title">AbstractOperationsTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>            if (transactional) {
+<pre class="CodeRay highlight"><code>            if (isTransactional()) {
                 operationsModule.addFilter(new TransactionOperationFilter());
             }</code></pre>
 </div>
@@ -7655,12 +7655,12 @@ transaction spanning all requests. This looks as follows:</p>
 <div class="listingblock">
 <div class="title">OperationsPostTest.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code>		OperationsClient operationsClient = new OperationsClient(client);
-		OperationsCall call = operationsClient.createCall();
-		call.add(HttpMethod.POST, movie);
-		call.add(HttpMethod.POST, person1);
-		call.add(HttpMethod.POST, person2);
-		call.execute();</code></pre>
+<pre class="CodeRay highlight"><code>        OperationsClient operationsClient = new OperationsClient(client);
+        OperationsCall call = operationsClient.createCall();
+        call.add(HttpMethod.POST, movie);
+        call.add(HttpMethod.POST, person1);
+        call.add(HttpMethod.POST, person2);
+        call.execute();</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -8399,7 +8399,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-10-18 13:21:48 UTC
+Last updated 2019-10-19 06:59:43 UTC
 </div>
 </div>
 </body>
