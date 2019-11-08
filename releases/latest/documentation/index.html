@@ -7650,7 +7650,7 @@ public class AsciiDocCaptureTest {
 
 		asciidoc.capture("Link Project and Task").call(() -&gt; taskToProjectOneRelationRepository.setRelation(createdTask, createdProject.getId(), "project"));
 
-		asciidoc.capture("Find Project by Task").call(() -&gt; taskToProjectOneRelationRepository.findOneRelations(Collections.singleton(createdTask.getId()), "project", new QuerySpec(Task.class)));
+		asciidoc.capture("Find Project by Task").call(() -&gt; taskToProjectOneRelationRepository.findOneRelations(Collections.singleton(createdTask.getId()), "project", new QuerySpec(Project.class)));
 
 		asciidoc.capture("Delete Project from Task").call(() -&gt; taskToProjectOneRelationRepository.setRelation(createdTask, null, "project"));
 	}
@@ -7674,7 +7674,7 @@ public class AsciiDocCaptureTest {
 
 		asciidoc.capture("Link Task with several Projects").call(() -&gt; taskToProjectManyRelationRepository.addRelations(createdTask, Arrays.asList(firstCreatedProject.getId(), secondCreatedProject.getId()), "projects"));
 
-		asciidoc.capture("Get Task relation Projects").call(() -&gt; taskToProjectManyRelationRepository.findManyRelations(Collections.singleton(createdTask.getId()), "projects", new QuerySpec(Task.class)));
+		asciidoc.capture("Get Task relation Projects").call(() -&gt; taskToProjectManyRelationRepository.findManyRelations(Collections.singleton(createdTask.getId()), "projects", new QuerySpec(Project.class)));
 
 		asciidoc.capture("Remove single Project from Task").call(() -&gt; taskToProjectManyRelationRepository.removeRelations(createdTask, Collections.singleton(firstCreatedProject.getId()), "projects"));
 	}
@@ -8494,7 +8494,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-08 18:04:03 UTC
+Last updated 2019-11-08 18:45:57 UTC
 </div>
 </div>
 </body>
