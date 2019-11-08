@@ -626,11 +626,12 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_data_access">11. Data Access</a>
 <ul class="sectlevel2">
-<li><a href="#_jpa">11.1. JPA</a></li>
-<li><a href="#_jsr_303_validation_module">11.2. JSR 303 Validation Module</a></li>
-<li><a href="#_meta_module">11.3. Meta Module</a></li>
-<li><a href="#_activiti_module">11.4. Activiti Module</a></li>
-<li><a href="#_faceted_search">11.5. Faceted Search</a></li>
+<li><a href="#_in_memory">11.1. In-Memory</a></li>
+<li><a href="#_jpa">11.2. JPA</a></li>
+<li><a href="#_jsr_303_validation_module">11.3. JSR 303 Validation Module</a></li>
+<li><a href="#_meta_module">11.4. Meta Module</a></li>
+<li><a href="#_activiti_module">11.5. Activiti Module</a></li>
+<li><a href="#_faceted_search">11.6. Faceted Search</a></li>
 </ul>
 </li>
 <li><a href="#_generation">12. Generation</a>
@@ -5680,10 +5681,65 @@ indistinguishable from non-existing ones.</p>
 <h2 id="_data_access">11. Data Access</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a id="jpa_module"></a></p>
+<p><a id="in_memory"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_jpa">11.1. JPA</h3>
+<h3 id="_in_memory">11.1. In-Memory</h3>
+<div class="paragraph">
+<p>There are many use cases where data is not accessed from an external data store, but rather is already
+available in-memory on the server or is sufficiently small to so.
+For this purpose Crnk offers <code>QuerySpec.apply(&#8230;&#8203;)</code> and <code>InMemoryResourceRepository</code> to quickly build
+repositories to offer access to in-memory data structures. This implementations are well suited for
+up to a few thousands of resources.</p>
+</div>
+<div class="paragraph">
+<p><code>QuerySpec.apply(&#8230;&#8203;)</code> allows the sorting, filtering, and paging for a list of objects:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+<span class="directive">public</span> ResourceList&lt;Task&gt; findAll(QuerySpec querySpec) {
+    <span class="predefined-type">List</span>&lt;Task&gt; tasks = ...
+    return querySpec.apply(resources.values());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behind the scenes it makes use of <code>InMemoryEvaluator</code> that offers further customization options.
+While sorting makes use of <code>Comparable</code>, filtering makes use of <code>FilterOperator.matches(value1, value2)</code>.
+Custom <code>FilterOperator</code> implementations may extend the feature set of  <code>InMemoryEvaluator</code>.</p>
+</div>
+<div class="paragraph">
+<p>Based on <code>QuerySpec.apply(&#8230;&#8203;)</code> there is a <code>InMemoryResourceRepository</code> that simply holds resources in a
+<code>ConcurrentHashMap</code>. <code>POST</code> and <code>PATCH</code> will insert and update resources in the map, while <code>DELETE</code> will remove
+them again. Next to holding small data sets, it is also well suited for <strong>mocking of repositories</strong>.
+For example,  <code>InMemoryResourceRepository</code> might be used in the early phases of development to instantly give consumers
+a fully working repository without having to do the actual implementation. Or it can be used as replacement
+for third-party repositories during testing.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+<code>QuerySpec.apply(&#8230;&#8203;)</code> makes use of the information held in-memory. In that regard, it is
+  conceptually simple. Make sure the in-memory data fits requirements. For example,
+  some application may want to filter relationships bi-directionally. In this case the in-memory
+  data structures must maintain the relationship from both ends (like <code>project</code> and <code>tasks</code> relationships
+  in <code>Task</code> and <code>Project</code> resources respectively). This may already be given, happen when the repositories
+  perform a change, or through getters and setters that are also accessed by Crnk.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="jpa_module"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jpa">11.2. JPA</h3>
 <div class="paragraph">
 <p>The JPA module allows to automatically expose JPA entities as JSON:API repositories. No implementation
 or Crnk-specific annotations are necessary.</p>
@@ -5750,7 +5806,7 @@ to the usually more interesting exceptions like
 <p>Not yet supported are sparse field sets queried by tuple queries.</p>
 </div>
 <div class="sect3">
-<h4 id="_jpa_module_setup">11.1.1. JPA Module Setup</h4>
+<h4 id="_jpa_module_setup">11.2.1. JPA Module Setup</h4>
 <div class="paragraph">
 <p>To use the JPA module, two things are necessary:</p>
 </div>
@@ -6007,7 +6063,7 @@ environment (Spring, JEE, etc.). This might be as simple as a Spring bean implem
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pagination_2">11.1.2. Pagination</h4>
+<h4 id="_pagination_2">11.2.2. Pagination</h4>
 <div class="paragraph">
 <p>The JPA module implements both pagination approaches supported by Crnk.
 Setting <code>JpaModule.setTotalResourceCountUsed(true|false)</code> allows to decide whether the total
@@ -6017,7 +6073,7 @@ are counted. Have a look at the <a href="#pagination">[pagination]</a> section f
 </div>
 </div>
 <div class="sect3">
-<h4 id="_criteria_api_and_querydsl">11.1.3. Criteria API and QueryDSL</h4>
+<h4 id="_criteria_api_and_querydsl">11.2.3. Criteria API and QueryDSL</h4>
 <div class="paragraph">
 <p>The JPA module can work with two different query APIs, the default Criteria API
 and QueryDSL. <code>JpaModule.setQueryFactory</code> allows
@@ -6027,7 +6083,7 @@ QueryDSL sits on top of JPQL and has to advantage of being easier to use.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_lazy_and_eager_loading">11.1.4. Lazy and Eager Loading</h4>
+<h4 id="_lazy_and_eager_loading">11.2.4. Lazy and Eager Loading</h4>
 <div class="paragraph">
 <p>JPA relationships can either be <code>EAGER</code> or <code>LAZY</code>. The former is mapped to Crnk serialization type <code>ID_ONLY</code> and the later to <code>LAZY</code>.
 If a relationship is supposed to be truly eager, <code>@JsonApiRelation(serializeType=SerializeType.EAGER)</code> can be used next to the JPA annotations.</p>
@@ -6037,7 +6093,7 @@ If a relationship is supposed to be truly eager, <code>@JsonApiRelation(serializ
 </div>
 </div>
 <div class="sect3">
-<h4 id="_access_with_crnk_client">11.1.5. Access with Crnk client</h4>
+<h4 id="_access_with_crnk_client">11.2.5. Access with Crnk client</h4>
 <div class="paragraph">
 <p>To setup a Crnk client with the JPA module use:</p>
 </div>
@@ -6097,7 +6153,7 @@ link information and list return type. An example can look like:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_customizing_the_exposed_resources_over_the_underlying_entity_model">11.1.6. Customizing the exposed resources over the underlying entity model</h4>
+<h4 id="_customizing_the_exposed_resources_over_the_underlying_entity_model">11.2.6. Customizing the exposed resources over the underlying entity model</h4>
 <div class="paragraph">
 <p>Not always it is desired to have a 1:1 mapping between resources and entities. There are
 various techniques to customize the resource model:</p>
@@ -6119,7 +6175,7 @@ various techniques to customize the resource model:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_standalone_usage">11.1.7. Standalone Usage</h4>
+<h4 id="_standalone_usage">11.2.7. Standalone Usage</h4>
 <div class="paragraph">
 <p>The given snipped shows how to translate a QuerySpec to a JPA Criteria query without involving
 repositories and Crnk:</p>
@@ -6145,7 +6201,7 @@ repositories and Crnk:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsr_303_validation_module">11.2. JSR 303 Validation Module</h3>
+<h3 id="_jsr_303_validation_module">11.3. JSR 303 Validation Module</h3>
 <div class="paragraph">
 <p>A <code>ValidationModule</code> provided by <code>io.crnk:crnk-validation</code> implements
 resource validation and provides exception mappers for <code>javax.validation.ValidationException</code> and <code>javax.validation.ConstraintViolationException</code>.
@@ -6204,7 +6260,7 @@ module should be defined in the following way:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_module">11.3. Meta Module</h3>
+<h3 id="_meta_module">11.4. Meta Module</h3>
 <div class="paragraph">
 <p>This is a module that exposes the internal workings of Crnk as JSON:API repositories.
 It lets you browse the set of available resources, their types, their attributes, etc. For example,
@@ -6230,7 +6286,7 @@ any future standard implementation will built up on the information from the
 </table>
 </div>
 <div class="sect3">
-<h4 id="_setup_3">11.3.1. Setup</h4>
+<h4 id="_setup_3">11.4.1. Setup</h4>
 <div class="paragraph">
 <p>A setup can look as follows:</p>
 </div>
@@ -6246,7 +6302,7 @@ expose more meta data, such as the <code>JpaMetaProvider</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_2">11.3.2. Examples</h4>
+<h4 id="_examples_2">11.4.2. Examples</h4>
 <div class="paragraph">
 <p>To learn more about the set of available resources, have a look at the <code>MetaElement</code> class and all its subclasses. Some of the
 most important classes are:</p>
@@ -6418,7 +6474,7 @@ most important classes are:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_identifiers_for_meta_elements">11.3.3. Identifiers for Meta Elements</h4>
+<h4 id="_identifiers_for_meta_elements">11.4.3. Identifiers for Meta Elements</h4>
 <div class="paragraph">
 <p>Of importance is the assignment of IDs to meta elements. For resources the resource type is used to compute the meta
 id and a <code>resources</code> prefix is added. In the example above, person gets a <code>resources.person</code> meta id.
@@ -6446,7 +6502,7 @@ source files.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_extending_the_meta_module">11.3.4. Extending the Meta Module</h4>
+<h4 id="_extending_the_meta_module">11.4.4. Extending the Meta Module</h4>
 <div class="paragraph">
 <p>There is a <code>MetaModuleExtension</code> extension that allows other Crnk modules contribute <code>MetaProvider</code>
 implementation. This allows to:</p>
@@ -6468,7 +6524,7 @@ meta model next to the JSON:API one (like for documentation purposes).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_activiti_module">11.4. Activiti Module</h3>
+<h3 id="_activiti_module">11.5. Activiti Module</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -6507,7 +6563,7 @@ the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
 in generic fashion.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_4">11.4.1. Setup</h4>
+<h4 id="_setup_4">11.5.1. Setup</h4>
 <div class="paragraph">
 <p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
 It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
@@ -6664,7 +6720,7 @@ closely related to the resource classes and fields.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_example_application">11.4.2. Example application</h4>
+<h4 id="_example_application">11.5.2. Example application</h4>
 <div class="paragraph">
 <p>The example application goes a few steps further in the setup. The patterns of those steps might be of
 interest of consumers of the <code>ActivitiModule</code> as well.</p>
@@ -6824,7 +6880,7 @@ starting the approval process, submitting a form and then verifying the changes 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_limitations">11.4.3. Limitations</h4>
+<h4 id="_limitations">11.5.3. Limitations</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -6853,7 +6909,7 @@ will survive in the long-term.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_faceted_search">11.5. Faceted Search</h3>
+<h3 id="_faceted_search">11.6. Faceted Search</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -6874,7 +6930,7 @@ may also depend on each other, whereas later facets are filtered by preceding on
 provides an out-of-the-box solution to implement faceted search.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">11.5.1. Setup</h4>
+<h4 id="_setup_5">11.6.1. Setup</h4>
 <div class="paragraph">
 <p>To setup faceted search, the <code>FacetModule</code> must be added to  application. For Spring Boot there is
 a <code>CrnkFacetAutoConfiguration</code> in place. To then enable faceted search for an attribute, it can be
@@ -6917,7 +6973,7 @@ implement their own <code>FacetProvider</code> implementation and register it th
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_3">11.5.2. Examples</h4>
+<h4 id="_examples_3">11.6.2. Examples</h4>
 <div class="paragraph">
 <p>All the facets are then available as regular, new JSON:API resource that can filtered, paged, sorted, etc. like
 any other resource:</p>
@@ -6960,7 +7016,7 @@ any other resource:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_nesting">11.5.3. Nesting</h4>
+<h4 id="_nesting">11.6.3. Nesting</h4>
 <div class="paragraph">
 <p>To select values of facets and update the counts of subsequent facets use:</p>
 </div>
@@ -6987,7 +7043,7 @@ the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_grouping">11.5.4. Grouping</h4>
+<h4 id="_grouping">11.6.4. Grouping</h4>
 <div class="paragraph">
 <p>To compute facets separately for each label of a particular facet, use the <code>GROUP</code> operator:</p>
 </div>
@@ -7014,7 +7070,7 @@ the GROUP operator needs for further performance tuning.
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap">11.5.5. Roadmap</h4>
+<h4 id="_roadmap">11.6.5. Roadmap</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -8494,7 +8550,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-08 18:45:57 UTC
+Last updated 2019-11-08 19:21:55 UTC
 </div>
 </div>
 </body>
