@@ -2176,8 +2176,8 @@ must be a valid resource. The next example showcases a bi-directional relationsh
     ...
 }
 
-<span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">tasks</span><span class="delimiter">&quot;</span></span>)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Task</span> {
+<span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Project</span> {
 
     <span class="annotation">@JsonApiRelation</span>(mappedBy=<span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">private</span> <span class="predefined-type">Set</span>&lt;Task&gt; tasks;
@@ -2188,15 +2188,39 @@ must be a valid resource. The next example showcases a bi-directional relationsh
 </div>
 <div class="paragraph">
 <p>The <code>project</code> and <code>tasks</code> field are linked through the <code>mappedBy</code> property by pointing from the non-owning
-to the owning field of the relationship. <code>project</code> as owning field will be used for all read and update operations.
+to the owning field of the relationship. <code>project</code> as owning field will be used for all read and update operations. This
+means:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>for <code>GET /api/projects?include=tasks</code> and <code>GET /api/projects/{id}/tasks</code>, first the projects are loaded and then
+a query is issued against the repository of <code>Task</code> with a filter <code>project.id = {list of project ids}</code>.</p>
+</li>
+<li>
+<p>for <code>PATCH/POST/DELETE /api/project/{id}/tasks</code>, the request is forwarded
+to the <code>Task</code> repository by setting the <code>project</code> field and saving the updated resources.</p>
+</li>
+<li>
+<p>for <code>PATCH/POST /api/projects/{id}</code> the <code>tasks</code> attribute can by default not be modified because it is not the owner
+of the relationships. But repositories are free to implement this functionality if desired.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Behind the scenes <code>mappedBy</code> makes use of the <code>FORWARD_OPPOSITE</code> repository behavior whereas the opposite
+makes use of <code>FORWARD_OWNER</code> that are explained further down in this section. As such <code>mappedBy</code> can be
+considered to be a shortcut for setting various other notifications that is useful in many scenarios.
 The semantics of <code>mappedBy</code> matches with the concepts of, for example, JPA-related annotations.
 It is typical for single-valued fields like <code>project</code> to be the owner. Such fields are usually backed by something like
 a column in a database and are simple to read and write. In contrast,
-multi-valued fields like <code>tasks</code> can only be obtained by issuing a query against the single-valued counter-part.</p>
+multi-valued fields like <code>tasks</code> can only be obtained by issuing a query against the single-valued counter-part.
+In such a setting, it might proof useful to to make use of <a href="#jsonApiRelationId">@JsonApiRelationId</a>
+on the owning side (introduced in the next section).</p>
 </div>
 <div class="paragraph">
 <p>@JsonApiRelation comes with a number of attributes to customize its behavior.
-<a href="#jsonApiRelationId">@JsonApiRelation</a> as complementary annotation is introduced in the subsequent section.</p>
+<a href="#jsonApiRelationId">@JsonApiRelationId</a> as complementary annotation is introduced in the subsequent section.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2489,6 +2513,24 @@ the pair those two objects automatically. Trailing <code>s</code> are ignored fo
 must be implemented</strong>. Instead Crnk will automatically dispatch relationship requests to the owning and
 opposite <code>ResourceRepository</code>. This allows to focus on the development of <code>ResourceRepository</code>.
 See <a href="#relationshipRepository">RelationshipRepository</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>Next to plain Java objects, many other libraries support this kind of semantic of having two attributes
+referring to the same data. For example in JPA this looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiRelationId</span>
+<span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">project_id</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">private</span> <span class="predefined-type">Long</span> projectId;
+
+<span class="annotation">@OneToOne</span>(fetch = FetchType.LAZY)
+<span class="annotation">@JoinColumn</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">project_id</span><span class="delimiter">&quot;</span></span>, insertable = <span class="predefined-constant">false</span>, updatable = <span class="predefined-constant">false</span>)
+<span class="directive">private</span> ProjectEntity project;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because two fields are mapped to the same column, one must be set to a read-only mode.</p>
 </div>
 </div>
 <div class="sect2">
@@ -8550,7 +8592,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-09 06:45:06 UTC
+Last updated 2019-11-09 06:45:55 UTC
 </div>
 </div>
 </body>
