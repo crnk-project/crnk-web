@@ -4226,7 +4226,7 @@ public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt;
 	@Override
 	public TestException fromErrorResponse(ErrorResponse errorResponse) {
 		JsonApiResponse response = errorResponse.getResponse();
-		List&lt;ErrorData&gt; errors = (List&lt;ErrorData&gt;) response.getEntity();
+		List&lt;ErrorData&gt; errors = (List&lt;ErrorData&gt;) response.getErrors();
 		StringBuilder message = new StringBuilder();
 		for (ErrorData error : errors) {
 			String title = error.getDetail();
@@ -8592,7 +8592,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-09 08:17:07 UTC
+Last updated 2019-11-10 11:59:21 UTC
 </div>
 </div>
 </body>

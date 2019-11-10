@@ -910,7 +910,7 @@ relationship identifier <code>projectId</code>. <code>projectId</code> is always
         <span class="annotation">@Override</span>
         <span class="directive">public</span> TestException fromErrorResponse(ErrorResponse errorResponse) {
                 JsonApiResponse response = errorResponse.getResponse();
-                <span class="predefined-type">List</span>&lt;ErrorData&gt; errors = (<span class="predefined-type">List</span>&lt;ErrorData&gt;) response.getEntity();
+                <span class="predefined-type">List</span>&lt;ErrorData&gt; errors = (<span class="predefined-type">List</span>&lt;ErrorData&gt;) response.getErrors();
                 <span class="predefined-type">StringBuilder</span> message = <span class="keyword">new</span> <span class="predefined-type">StringBuilder</span>();
                 <span class="keyword">for</span> (ErrorData error : errors) {
                         <span class="predefined-type">String</span> title = error.getDetail();
@@ -1001,7 +1001,7 @@ if found on the classpath and <code>SecurityConfigurer</code> allows its customi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-09 08:17:07 UTC
+Last updated 2019-11-10 11:59:21 UTC
 </div>
 </div>
 </body>
