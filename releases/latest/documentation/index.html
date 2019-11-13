@@ -8370,7 +8370,7 @@ and <code>PropertiesProvider</code> to interface with that particular systems.</
 <h3 id="_create_repositories_at_runtime">16.10. Create repositories at runtime</h3>
 <div class="paragraph">
 <p>Repositories are usually created at compile-time, either by making use of the various annotations or a module
-such as the ´JpaModule´. However, the module API also allows the creation of repositories at runtime.
+such as the <code>JpaModule</code>. However, the module API also allows the creation of repositories at runtime.
 There are two complementary mechanisms in place to achieve this and outlined in the next two sections.</p>
 </div>
 <div class="admonitionblock note">
@@ -8393,15 +8393,15 @@ this feature is in incubation, more refinements are expected in upcoming release
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><code>JsonAnyGetter</code> and <code>JsonAnySetter</code> annotations from Jackson allow to dynamically add properties to a resource.
-Further implementing <code>ResourceTypeHolder</code> interface allows to also customize the type of a resource. Together it
- allows the implementation of arbitrarily custom resources. Note that when manipulating with <code>ResourceTypeHolder</code>
- it may also become necessary to register the resource with the <code>ResourceRegistry</code> as outlined in the
- similar `Resourrce`example below.</p>
+<p>Create resources classes at runtime with a library like <a href="http://bytebuddy.net/#/" class="bare">http://bytebuddy.net/#/</a> to follow the same
+pattern as for any compile-time repository.</p>
 </li>
 <li>
-<p>Create a matching resource class at runtime with a library like <a href="http://bytebuddy.net/#/" class="bare">http://bytebuddy.net/#/</a> to follow the same
-pattern as for any compile-time repository.</p>
+<p><code>JsonAnyGetter</code> and <code>JsonAnySetter</code> annotations from Jackson allow to dynamically add properties to a resource.
+Further implementing <code>ResourceTypeHolder</code> interface allows to manipulate the type of a resource. Together
+the annotations allow the implementation of arbitrarily custom resources and type hierarchies. Note that
+when making use of <code>ResourceTypeHolder</code> it may also become necessary to register the resource types
+to the <code>ResourceRegistry</code> as <code>RegistryEntry</code> as outlined in the <code>Resource</code> example below.</p>
 </li>
 <li>
 <p>Make use of the <code>Resource</code> class. It is the generic JSON:API resource presentation within the Crnk engine.</p>
@@ -8414,6 +8414,8 @@ each <code>ResourceField</code> to specify how to read and write attributes (see
 </div>
 <div class="paragraph">
 <p>The use of <code>JsonAnyGetter</code> and <code>JsonAnySetter</code> is simplest and recommended for most use case.
+An example is given in
+<a href="https://github.com/crnk-project/crnk-example/blob/master/crnk-example-service/src/main/java/io/crnk/example/service/model/PersonEntity.java">PersonEntity</a>
 Nevertheless the direct use of <code>Resource</code> opens up the possibility for more deeper control of everything:</p>
 </div>
 <div class="listingblock">
@@ -8592,7 +8594,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-13 18:27:09 UTC
+Last updated 2019-11-13 19:25:42 UTC
 </div>
 </div>
 </body>
