@@ -562,6 +562,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
 <li><a href="#_nested_resources">4.9. Nested Resources</a></li>
+<li><a href="#_jsonapiversion">4.10. @JsonApiVersion</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -2916,6 +2917,96 @@ Nesting is currently limited to a single level (and the possibility to have furt
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsonapiversion">4.10. @JsonApiVersion</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is experimental
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Crnk supports versioning of resources and fields based on content negotiation.
+Any resource and field can carry a version range where it is available.
+Crnk will disregard any resource and field with a version range that does not intersect with the request version.
+The HTTP <code>Accept</code> header is used to pass along the desired version as part of general content negotiation.
+This has the benefit that URLs remain constant across versions, greatly simplifying usability and linking.
+For a more detailed discussion, see here[<a href="https://blog.ploeh.dk/2015/06/22/rest-implies-content-negotiation/" class="bare">https://blog.ploeh.dk/2015/06/22/rest-implies-content-negotiation/</a>].</p>
+</div>
+<div class="paragraph">
+<p>A versioned resource looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">VersionedTask.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The resource itself is available up to version 5.</p>
+</li>
+<li>
+<p>The field <code>completed</code> is only available from version 1 to 3.</p>
+</li>
+<li>
+<p>The field <code>newCompleted</code> introduces a new flavor of <code>completed</code> making use of <code>CompletionStatus</code> rather than
+a boolean. Through the use of <code>@JsonProperty</code> it is mapped to <code>completed</code> on the REST layer whereas
+the Java side has access to both the old and new field.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Crnk makes use of integer-based version number to signal major versions with breaking changes. There is
+no need for minor versions in this scheme. But applications are free to use additional minor versions in other contexts.</p>
+</div>
+<div class="paragraph">
+<p>A request than carries an accept header like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET /api/versionedTask HTTP/1.1
+Accept: application/vnd.api+json; version=2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, the version can be passed as URL parameter (easier to use from a browser:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET /api/versionedTask?version=2 HTTP/1.1
+Accept: application/vnd.api+json</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#client">CrnkClient</a> supports setting the request version through <code>CrnkClient.setVersion(&#8230;&#8203;)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Not supported is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ID fields cannot be versioned.</p>
+</li>
+<li>
+<p>for multiple classes to serve the same resource for different version ranges.
+For example, it is not possible to introduce a class <code>VersionedTaskV2.java</code>.
+For most use cases it should be sufficient to redefine fields. This may change in the future</p>
+</li>
+<li>
+<p>Meta and link fields cannot be versioned, this may change in the future.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8594,7 +8685,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-13 19:40:51 UTC
+Last updated 2019-11-18 16:38:34 UTC
 </div>
 </div>
 </body>
