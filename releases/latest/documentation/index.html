@@ -631,8 +631,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jpa">11.2. JPA</a></li>
 <li><a href="#_jsr_303_validation_module">11.3. JSR 303 Validation Module</a></li>
 <li><a href="#_meta_module">11.4. Meta Module</a></li>
-<li><a href="#_activiti_module">11.5. Activiti Module</a></li>
-<li><a href="#_faceted_search">11.6. Faceted Search</a></li>
+<li><a href="#_faceted_search">11.5. Faceted Search</a></li>
 </ul>
 </li>
 <li><a href="#_generation">12. Generation</a>
@@ -6306,6 +6305,32 @@ various techniques to customize the resource model:</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Next to modifying the set of attributes and relationships, an application may
+also want to apply more advanced filters (SQL <code>SUBSELECT</code>, <code>GROUP BY</code>, etc.).
+Thereby, it is recommended to continue following resource-oriented REST principles.
+Most notably, everything that can be sorted and filtered, should also be
+queryable. There are two typical scenarios:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The desired complex filter is based on a single column. In this case,
+a new <code>FilterOperator</code> should be implemented just like any other existing operator
+like <code>EQ</code> and <code>LT</code>.</p>
+</li>
+<li>
+<p>The desired complex filter spans multiple columns and possibly tables.
+A basic solution can just exchange the entity for a DB view and make
+a new column available with the computed result used for filtering. Or a
+more advanced and performant solution can introduce the computed result
+as new (nested) resource. The later the advantage that the computed
+result is only evaluated when explicitly requested, either directly or through
+an inclusion. The new resources can be setup as DB view holding
+the computed result and a foreign key to the original table.</p>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_standalone_usage">11.2.7. Standalone Usage</h4>
@@ -6654,395 +6679,13 @@ meta model next to the JSON:API one (like for documentation purposes).</p>
 <div class="paragraph">
 <p>For more detailed information have a look at the current <code>ResourceMetaProvider</code>.</p>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_activiti_module">11.5. Activiti Module</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-This module is in new and in incubation. Feedback and improvements welcomed.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST API.
-The motivation of <code>ActivitiModule</code> is to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>have a JSON:API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
-and client-side tooling of JSON:API.</p>
-</li>
-<li>
-<p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
-and task definition, there is a dedicated repository and resource type for it. The resource is comprised of
-both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic fields
-stored by the application as process/task/form variables. Mapping to static resp. dynamic fields is done
-automatically by the <code>ActivitiModule</code> and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
-the application is enabled, for example, to introduce custom security policies for each resource with
-the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>This setup differs substantially from the API provided by Activiti that is implemented
-in generic fashion.</p>
-</div>
-<div class="sect3">
-<h4 id="_setup_4">11.5.1. Setup</h4>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
-It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
-</div>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> implements four resource base classes that match the equivalent Activiti classes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ExecutionResource</code></p>
-</li>
-<li>
-<p><code>FormResource</code></p>
-</li>
-<li>
-<p><code>ProcessInstanceResource</code></p>
-</li>
-<li>
-<p><code>TaskResource</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>To setup a JSON:API repository for a process or task, the corresponding resource class can be subclassed and extended with
-the application specific fields. For example:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">ApprovalProcessInstance</span> <span class="directive">extends</span> ProcessInstanceResource {
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> resourceId;
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> resourceType;
-
-        <span class="directive">public</span> <span class="predefined-type">String</span> getResourceId() {
-                <span class="keyword">return</span> resourceId;
-        }
-
-        ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and</p>
-</div>
-<div class="listingblock">
-<div class="title">ScheduleApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleApprovalProcessInstance</span> <span class="directive">extends</span> ApprovalProcessInstance {
-
-        <span class="directive">public</span> <span class="type">enum</span> ScheduleStatus {
-                DONE,
-                SHIPPED
-        }
-
-        <span class="directive">private</span> ScheduleApprovalValues newValues;
-
-        <span class="directive">private</span> ScheduleApprovalValues previousValues;
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> stringValue;
-
-        <span class="directive">private</span> <span class="type">int</span> intValue;
-
-        <span class="directive">private</span> ScheduleStatus status;
-
-        <span class="directive">public</span> ScheduleStatus getStatus() {
-                <span class="keyword">return</span> status;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setStatus(ScheduleStatus status) {
-                <span class="local-variable">this</span>.status = status;
-        }
-
-
-        <span class="directive">public</span> <span class="type">int</span> getIntValue() {
-                <span class="keyword">return</span> intValue;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setIntValue(<span class="type">int</span> intValue) {
-                <span class="local-variable">this</span>.intValue = intValue;
-        }
-
-        <span class="directive">public</span> <span class="predefined-type">String</span> getStringValue() {
-                <span class="keyword">return</span> stringValue;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setStringValue(<span class="predefined-type">String</span> stringValue) {
-                <span class="local-variable">this</span>.stringValue = stringValue;
-        }
-
-        ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The example application makes use of an intermediate <code>ApprovalProcessInstance</code> base class to potentially share the approval
-logic among multiple entities in the future (if it would be real-world use case). <code>ScheduleApprovalProcessInstance</code> has
-the static fields of Activiti and a number of custom, dynamic fields like <code>resourceType</code>, <code>resourceId</code> and <code>newValues</code>.
-The dynamic fields will be mapped to to process, task resp. form variables.</p>
-</div>
-<div class="paragraph">
-<p>Notice the relation to <code>ApproveTask</code>, which is a task counter part extending from <code>TaskResource</code>. If a process has multiple
-tasks, you may introduce multiple such relationships.</p>
-</div>
-<div class="paragraph">
-<p>Finally, the setup of the <code>ActiviModule</code> looks like:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-        ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
-
-        ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
-        terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
-
-        ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-        processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
-        processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
-        processConfig.addTaskRelationship(
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
-        );
-        TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-        taskConfig.historic(HistoricApproveTask.class);
-        taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
-        taskConfig.setForm(ApproveForm.class);
-        <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
-    }</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ActivitiModuleConfig</code> allows to register processes and tasks that then will be exposed as repositories.</p>
-</li>
-<li>
-<p><code>ScheduleApprovalProcessInstance</code>, <code>ApproveTask</code> and the <code>approveTask</code> relationship are registered.</p>
-</li>
-<li>
-<p><code>ApproveTask</code> is user task that is handled by submitting an <code>ApproveForm</code>.</p>
-</li>
-<li>
-<p><code>filterByProcessDefinitionKey</code> and <code>filterByTaskDefinitionKey</code> ensure that the two repositories
-are isolated from other repositories for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>One could imagine to make this configuration also available through an annotation-based API in the future as it is
-closely related to the resource classes and fields.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_example_application">11.5.2. Example application</h4>
-<div class="paragraph">
-<p>The example application goes a few steps further in the setup. The patterns of those steps might be of
-interest of consumers of the <code>ActivitiModule</code> as well.</p>
-</div>
-<div class="paragraph">
-<p>The workflow looks as follows:</p>
-</div>
-<div class="paragraph">
-<p>]
-.approval.bpmn20.xml</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-
-&lt;definitions id="approvalDefinitions"
-			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 targetNamespace="http://activiti.org/bpmn20"
-			 xmlns:activiti="http://activiti.org/bpmn"
-			 xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"&gt;
-
-
-	&lt;process id="scheduleChange" name="Approve schedule change" isExecutable="true"&gt;
-		&lt;documentation&gt;
-			This process is initiated when a user modifies a scheduleEntity trough the JSON API endpoint.
-		&lt;/documentation&gt;
-
-		&lt;startEvent id="startScheduleChange" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
-
-		&lt;userTask id="approveScheduleTask" name="Approve new Schedule"&gt;
-			&lt;extensionElements&gt;
-				&lt;activiti:formProperty id="approved" name="Do you approve this change" type="boolean" required="true" /&gt;
-			&lt;/extensionElements&gt;
-		&lt;/userTask&gt;
-
-		&lt;sequenceFlow id="startFlow" sourceRef="startScheduleChange" targetRef="approveScheduleTask"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="decideFlow" sourceRef="approveScheduleTask" targetRef="approvalExclusiveGateway"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;serviceTask id="scheduleChangeApproved" name="Create schedule Account, send Alerts"
-					 activiti:expression="${approvalManager.approved(execution)}"&gt;&lt;/serviceTask&gt;
-		&lt;serviceTask id="scheduleChangeDenied" name="send alert"
-					 activiti:expression="${approvalManager.denied(execution)}"&gt;&lt;/serviceTask&gt;
-
-		&lt;endEvent id="endEvent" name="End"&gt;&lt;/endEvent&gt;
-
-		&lt;exclusiveGateway id="approvalExclusiveGateway" name="Exclusive Gateway"&gt;&lt;/exclusiveGateway&gt;
-
-		&lt;sequenceFlow id="approveFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeApproved"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == true}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="denyFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeDenied"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == false}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow5" sourceRef="scheduleChangeDenied" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow6" sourceRef="scheduleChangeApproved" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-	&lt;/process&gt;
-
-
-	&lt;process id="immediateTerminationFlow" name="Directly terminates" isExecutable="true"&gt;
-		&lt;documentation&gt;
-			This process directly terminates
-		&lt;/documentation&gt;
-
-		&lt;startEvent id="quickStartEvent" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
-
-		&lt;sequenceFlow id="quickStartFlow" sourceRef="quickStartEvent" targetRef="quickEndEvent"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;endEvent id="quickEndEvent" name="End"&gt;&lt;/endEvent&gt;
-
-	&lt;/process&gt;
-&lt;/definitions&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>There is a:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>approveScheduleTask</code> task requires a form submission by a user.</p>
-</li>
-<li>
-<p><code>approvalExclusiveGateway</code> checks whether the change was accepted.</p>
-</li>
-<li>
-<p><code>scheduleChangeApproved</code> invokes <code>${approvalManager.approved(execution)}</code> whereas <code>approvalManager</code> is a Java object
-taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.</p>
-</li>
-<li>
-<p><code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
-changes. This means the regular <code>ScheduleRepository</code> implementation will be called in the same fashion as for
- a typical request. Real world use cases may also need to save and reconstruct the security context.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For the approval-related functionality a second module is registered:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-        FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
-                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
-        );
-        <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
-
-        SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
-        module.addRepositoryDecoratorFactory(
-                ApprovalRepositoryDecorator.createFactory(approvalManager)
-        );
-        module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
-                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
-        );
-        <span class="keyword">return</span> module;
-    }</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ApprovalRepositoryDecorator</code> hooks into the request processing of the Crnk engine and intercepts
-all <code>PATCH</code> and <code>POST</code> requests for the <code>Schedule</code> resource. The decorator then may chooses to
-abort the request and start an approval flow instead with the help of <code>ApprovalManager</code>.</p>
-</li>
-<li>
-<p><code>ApprovalRelationshipRepository</code> introduces an additional relationship between the actual resources
-and approval resources. It can be used, for example, by user interfaces to show the current status
-of an open approval workflow. <code>ApprovalRelationshipRepository.getResourceFields</code> declares
-the relationship field, meaning that the original application resource does not have to declare the
-relationship. This may or may not be useful depending on how much control there is over the original resource
-(for example there is no control over JPA entities).</p>
-</li>
-<li>
-<p><code>historic(&#8230;&#8203;)</code> method specify the historic resource counterparts to query the history.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The chosen setup leads to an approval system that is <strong>fully transparent</strong> to the actual repository implementations
-and can be added to any kind of repository.</p>
-</div>
-<div class="paragraph">
-<p><code>ApprovalIntTest</code> showcases the example workflow by doing a change,
-starting the approval process, submitting a form and then verifying the changes have been saved.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_limitations">11.5.3. Limitations</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Currently the main entities of Activiti have been exposed. Configuration-related repositories
-could be exposed as well in the future.</p>
-</li>
-<li>
-<p>Historic repositories are still considered being experimental.</p>
-</li>
-<li>
-<p>Activiti has a limited query API that is inherited by the application. Potentially <code>crnk-data-jpa</code> could help
-out a bit in this area.</p>
-</li>
-<li>
-<p>Multi-tenancy is not yet done out-of-the-box.</p>
-</li>
-<li>
-<p>Activiti has been forked to Flowable. As of yet it is unclear whether one or both project
-will survive in the long-term.</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p><a id="facet_module"></a></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_faceted_search">11.6. Faceted Search</h3>
+<h3 id="_faceted_search">11.5. Faceted Search</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -7063,7 +6706,7 @@ may also depend on each other, whereas later facets are filtered by preceding on
 provides an out-of-the-box solution to implement faceted search.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">11.6.1. Setup</h4>
+<h4 id="_setup_4">11.5.1. Setup</h4>
 <div class="paragraph">
 <p>To setup faceted search, the <code>FacetModule</code> must be added to  application. For Spring Boot there is
 a <code>CrnkFacetAutoConfiguration</code> in place. To then enable faceted search for an attribute, it can be
@@ -7106,7 +6749,7 @@ implement their own <code>FacetProvider</code> implementation and register it th
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_3">11.6.2. Examples</h4>
+<h4 id="_examples_3">11.5.2. Examples</h4>
 <div class="paragraph">
 <p>All the facets are then available as regular, new JSON:API resource that can filtered, paged, sorted, etc. like
 any other resource:</p>
@@ -7149,7 +6792,7 @@ any other resource:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_nesting">11.6.3. Nesting</h4>
+<h4 id="_nesting">11.5.3. Nesting</h4>
 <div class="paragraph">
 <p>To select values of facets and update the counts of subsequent facets use:</p>
 </div>
@@ -7176,7 +6819,7 @@ the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_grouping">11.6.4. Grouping</h4>
+<h4 id="_grouping">11.5.4. Grouping</h4>
 <div class="paragraph">
 <p>To compute facets separately for each label of a particular facet, use the <code>GROUP</code> operator:</p>
 </div>
@@ -7203,7 +6846,7 @@ the GROUP operator needs for further performance tuning.
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap">11.6.5. Roadmap</h4>
+<h4 id="_roadmap">11.5.5. Roadmap</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -8685,7 +8328,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-04 08:02:56 UTC
+Last updated 2019-12-07 16:34:48 UTC
 </div>
 </div>
 </body>
