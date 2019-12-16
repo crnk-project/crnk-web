@@ -5839,7 +5839,10 @@ up to a few thousands of resources.</p>
 <div class="paragraph">
 <p>Behind the scenes it makes use of <code>InMemoryEvaluator</code> that offers further customization options.
 While sorting makes use of <code>Comparable</code>, filtering makes use of <code>FilterOperator.matches(value1, value2)</code>.
-Custom <code>FilterOperator</code> implementations may extend the feature set of  <code>InMemoryEvaluator</code>.</p>
+Custom <code>FilterOperator</code> implementations may extend the feature set of  <code>InMemoryEvaluator</code>. Paging
+is implemented by simply truncating the result list. Inclusions and field sets are honored by
+by the Crnk engine when returning results (other non-in-memory repositories may want to implement
+this functionality directly in the repository to avoid fetching undesired data in the first place).</p>
 </div>
 <div class="paragraph">
 <p>Based on <code>QuerySpec.apply(&#8230;&#8203;)</code> there is a <code>InMemoryResourceRepository</code> that simply holds resources in a
@@ -7027,7 +7030,8 @@ overridden within the provided OpenAPI template file.</p>
 apply plugin: 'crnk-gen'
 crnkGen {
     runtime {
-        configuration = 'openapiGenRuntime'
+        // Gradle classpath configuration to use
+        configuration = 'runtime'
     }
 
     // fork generation into new process to have clean environment
@@ -7225,7 +7229,8 @@ export let createEmptySchedule = function(id: string): Schedule {
 apply plugin: 'crnk-gen'
 crnkGen {
     runtime {
-        configuration = 'typescriptGenRuntime'
+        // Gradle classpath configuration to use
+        configuration = 'runtime'
     }
 
     // fork generation into new process to have clean environment
@@ -7256,11 +7261,26 @@ crnkGen.init()</code></pre>
 <h3 id="_gradle_customizations">12.4. Gradle customizations</h3>
 <div class="paragraph">
 <p>Internally the Crnk Gradle plugin supports multiple ways of looking up the set of available resources and repositories
-to generate.
-The simplest way is by scanning the classpath for @JsonApiResource-annotated classes. More elaborate setups
-can also launch an application (e.g. with Spring or CDI) and extract the information from the running application.
-While the former is simpler to setup, the later can deal with all border cases like a repository being backed
-by something different than a @JsonApiResource-annotated class. For Spring this looks like:</p>
+to generate. The simplest way is by scanning the classpath for <code>@JsonApiResource</code>-annotated classes.
+The classpath for scanning can be set through the use of a regular Gradle configuration object, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>crnkGen{
+	runtime {
+		configuration = 'runtime'
+	}
+
+	...
+}
+crnkGen.init()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More elaborate setups can also launch an application (e.g. with Spring or CDI) and extract the information
+from the running application. While the former is simpler to setup, the later can deal with all border cases
+like a repository being backed by something different than a <code>@JsonApiResource</code>-annotated class. Such a
+Spring setup looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7268,7 +7288,7 @@ by something different than a @JsonApiResource-annotated class. For Spring this 
 
     // launch a Spring application to extract information about available resources
 	runtime {
-		configuration = 'typescriptGenRuntime'
+		configuration = 'runtime'
         spring {
         	profile = 'test'
         	configuration = 'io.crnk.example.ExampleApplication'
@@ -7283,7 +7303,9 @@ crnkGen.init()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Typically a test profile is used to bring the Spring application up in order to then extract the repositories for generation.</p>
+<p>Typically a test profile can used to bring the Spring application up as unit tests are supposed to be
+self-contained and allow the application to boot up. The repositories are then retrieved from the
+Spring dependency injection container.</p>
 </div>
 </div>
 <div class="sect2">
@@ -8328,7 +8350,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-12 18:48:58 UTC
+Last updated 2019-12-16 18:43:54 UTC
 </div>
 </div>
 </body>
