@@ -2946,7 +2946,29 @@ For a more detailed discussion, see here[<a href="https://blog.ploeh.dk/2015/06/
 <div class="listingblock">
 <div class="title">VersionedTask.java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">versionedTask</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@JsonApiVersion</span>(max = <span class="integer">5</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">VersionedTask</span> {
+
+    <span class="directive">public</span> <span class="type">enum</span> CompletionStatus {
+        DONE,
+        OPEN,
+        IN_PROGRESS
+    }
+
+    <span class="annotation">@JsonApiId</span>
+    <span class="directive">private</span> <span class="predefined-type">Long</span> id;
+
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+
+    <span class="annotation">@JsonApiVersion</span>(min = <span class="integer">1</span>, max = <span class="integer">3</span>)
+    <span class="directive">private</span> <span class="type">boolean</span> completed;
+
+    <span class="annotation">@JsonApiVersion</span>(min = <span class="integer">5</span>)
+    <span class="annotation">@JsonProperty</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">completed</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> CompletionStatus newCompleted;
+
+}</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -4281,7 +4303,7 @@ a corresponding exception mapper which defines mapping to a proper JSON:API erro
 <div class="ulist">
 <ul>
 <li>
-<p>implement ExceptionMapper interface</p>
+<p>implement <code>ExceptionMapper</code> interface</p>
 </li>
 <li>
 <p>available trough the used discovery mechanism or added trough a module.</p>
@@ -4333,16 +4355,92 @@ public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt;
 </div>
 </div>
 <div class="paragraph">
-<p>On the server-side an exception should be mapped to an <code>ErrorResponse</code> object
+<p>On the server-side an exception is mapped to an <code>ErrorResponse</code> object
 with <code>toErrorResponse</code>. It consists of an HTTP status and <code>ErrorData</code> (which is consistent with JSON:API error structure).
 On the client-side an <code>ExceptionMapper</code> returning <code>true</code> upon <code>accept(&#8230;&#8203;)</code> is used to map an
 <code>ErrorResponse</code> back to an exception with <code>fromErrorResponse</code>.</p>
 </div>
 <div class="paragraph">
-<p>Note that the exception mapper is reponsible for providing the logging of exceptions with the
-appropriate log levels. Also have a look at the subsequent section about the validation module that takes
-care of JSR-303 bean validation exception mapping.</p>
+<p>Note that <code>ExceptionMapper</code> follow a number of important behaviors:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Built-in <code>ExceptionMapper</code> can be overridden by custom <code>ExceptionMapper</code> implementations. The later always takes precedence.</p>
+</li>
+<li>
+<p>The <code>ExceptionMapper</code> is responsible for providing the logging of exceptions with the appropriate log levels.
+Typically a <code>4xx</code> status causes a <code>WARN</code> log message, whereas <code>5xx</code> errors cause an <code>ERROR</code> log message.
+Also have a look at the subsequent section about the validation module that takes
+care of JSR-303 bean validation exception mapping.</p>
+</li>
+<li>
+<p><code>ExceptionMapper</code> target a given exception class. In case of type hierarchies, the closest <code>ExceptionMapper</code> is chosen.
+For example, if there are <code>ExceptionMapper</code> implementations for both <code>RuntimeException</code> and <code>IllegalStateException</code>,
+the mappers for <code>RuntimeException</code> is chosen if there is no direct mapper for <code>IllegalStateException</code>.</p>
+</li>
+<li>
+<p><code>ExceptionMapper</code> can implement the <code>Prioritizable</code> interface if multiple implementations target the
+same exception type. But note that the type hierarchy still takes precedence.</p>
+</li>
+<li>
+<p>The implementation of a custom <code>ExceptionMapper</code> can be skipped if the exception inherits from <code>CrnkMappableException</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are a number of built-in exception mappers provided by crnk-core and the various modules:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">401</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UnauthorizedException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">403</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ForbiddenException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceNotFoundException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">405</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodNotAllowedException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">409</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OptimisticLockException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConstraintViolationException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InternalServerErrorException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">503</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TimeoutException</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -8350,7 +8448,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-16 19:14:11 UTC
+Last updated 2019-12-19 06:32:19 UTC
 </div>
 </div>
 </body>
