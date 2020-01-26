@@ -4912,7 +4912,9 @@ allow a fully automated setup.</p>
 
 	class ScheduleListLinks extends DefaultPagedLinksInformation implements LinksInformation {
 
-		public String name = "value";
+		public Link objLink = new DefaultLink("value");
+
+		public String stringLink = "value";
 	}
 
 	class ScheduleListMeta extends DefaultPagedMetaInformation {
@@ -7474,7 +7476,7 @@ application. This in turn is realized by the AsciiDoc module of the Crnk generat
         title = "Api Documentation"
 
         // specify location of generated sources
-        genDir = file('build/generated/source/asciidoc')
+        genDir = file('build/generated/sources/asciidoc')
     }
 }
 crnkGen.init()</code></pre>
@@ -7553,7 +7555,7 @@ public class AsciiDocCaptureTest {
     }
 
     private AsciidocCaptureModule setupAsciidoc() {
-        File outputDir = new File("build/tmp/asciidoc/generated/source/asciidoc");
+        File outputDir = new File("build/tmp/asciidoc/generated/sources/asciidoc");
         AsciidocCaptureConfig asciidocConfig = new AsciidocCaptureConfig();
         asciidocConfig.setGenDir(outputDir);
         return new AsciidocCaptureModule(asciidocConfig);
@@ -8445,7 +8447,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-10 19:08:34 UTC
+Last updated 2020-01-26 11:07:42 UTC
 </div>
 </div>
 </body>
