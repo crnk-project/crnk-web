@@ -8059,7 +8059,7 @@ module API.</p>
 <p>The <code>DocumentFilter</code> interface allows to intercept incoming requests and do
 any kind of validation, changes, monitoring, transaction handling, etc. <code>DocumentFilter</code> can be
 hooked into Crnk by setting up a module and registering the filter to the
-<code>ModuleContext</code>. Not that for every request, this interface is called exactly once.</p>
+<code>ModuleContext</code>. Note that for every request, this interface is called exactly once.</p>
 </div>
 <div class="paragraph">
 <p>A request may span multiple repository accesses. To intercept the actual repository requests,
@@ -8074,7 +8074,7 @@ implementing the same Crnk repository interfaces. The decorated repository inste
 the actual repository will get called and it is up to the decorated repository of how to proceed
 with the request, usually by calling the actual repository. <code>RepositoryDecoratorFactory</code>
 can be registered with <code>ModuleContext.addRepositoryDecoratorFactory</code>. The factory gets
-notified about every repository registration and is then free do decorate it or not.</p>
+notified about every repository registration and is then free to decorate it or not.</p>
 </div>
 <div class="paragraph">
 <p><a id="modificationfilter"></a></p>
@@ -8447,7 +8447,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-27 09:29:30 UTC
+Last updated 2020-01-28 19:47:41 UTC
 </div>
 </div>
 </body>
