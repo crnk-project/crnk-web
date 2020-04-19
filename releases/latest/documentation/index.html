@@ -2597,7 +2597,35 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
-<p>By default links are serialized as:</p>
+<p>Links can be represented either as either simple String:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"http://example.com/articles/1/relationships/comments",</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or as structured objects of type <code>Link</code> with
+<code>href</code>, <code>rel</code>, <code>anchor</code>, <code>params</code>, <code>describedBy</code> and <code>meta</code> fields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"links": {
+	"self": "http://example.com/articles/1/relationships/comments",
+		"related": {
+			"href": "http://example.com/articles/1/comments",
+			"describedby": "http://example.com/schemas/article-comments",
+			"meta": {
+				"count": 10
+			}
+		}
+	}
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>LinksInformation</code> objects can hold either type. With <code>DefaultLink</code> there is a default implementation
+of  <code>Link</code> available. By default simple strings will be serialized as such:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2607,7 +2635,7 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
-<p>With <code>crnk.config.serialize.object.links=true</code> links get serialized as:</p>
+<p>This can be changed by setting the property <code>crnk.config.serialize.object.links=true</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8447,7 +8475,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-19 05:09:48 UTC
+Last updated 2020-04-19 16:57:29 UTC
 </div>
 </div>
 </body>
