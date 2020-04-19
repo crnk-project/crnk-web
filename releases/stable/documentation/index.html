@@ -562,6 +562,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
 <li><a href="#_nested_resources">4.9. Nested Resources</a></li>
+<li><a href="#_jsonapiversion">4.10. @JsonApiVersion</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -630,8 +631,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jpa">11.2. JPA</a></li>
 <li><a href="#_jsr_303_validation_module">11.3. JSR 303 Validation Module</a></li>
 <li><a href="#_meta_module">11.4. Meta Module</a></li>
-<li><a href="#_activiti_module">11.5. Activiti Module</a></li>
-<li><a href="#_faceted_search">11.6. Faceted Search</a></li>
+<li><a href="#_faceted_search">11.5. Faceted Search</a></li>
 </ul>
 </li>
 <li><a href="#_generation">12. Generation</a>
@@ -1021,7 +1021,7 @@ parts, some from third-party modules and others from manually implemented ones.<
 <h2 id="_setup">3. Setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Crnk integrates well with many popular framework. The example applications outline various different possible
+<p>Crnk integrates well with many popular frameworks. The example applications outline various different possible
 setups. But application are also free to customize their setup to their liking.
 There are three main, orthogonal aspects of Crnk that need configuration:</p>
 </div>
@@ -2597,7 +2597,35 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
-<p>By default links are serialized as:</p>
+<p>Links can be represented either as either simple String:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"http://example.com/articles/1/relationships/comments",</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or as structured objects of type <code>Link</code> with
+<code>href</code>, <code>rel</code>, <code>anchor</code>, <code>params</code>, <code>describedBy</code> and <code>meta</code> fields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"links": {
+	"self": "http://example.com/articles/1/relationships/comments",
+		"related": {
+			"href": "http://example.com/articles/1/comments",
+			"describedby": "http://example.com/schemas/article-comments",
+			"meta": {
+				"count": 10
+			}
+		}
+	}
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>LinksInformation</code> objects can hold either type. With <code>DefaultLink</code> there is a default implementation
+of  <code>Link</code> available. By default simple strings will be serialized as such:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2607,7 +2635,7 @@ See <a href="http://jsonapi.org/format/#document-links" class="bare">http://json
 </div>
 </div>
 <div class="paragraph">
-<p>With <code>crnk.config.serialize.object.links=true</code> links get serialized as:</p>
+<p>This can be changed by setting the property <code>crnk.config.serialize.object.links=true</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2916,6 +2944,118 @@ Nesting is currently limited to a single level (and the possibility to have furt
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsonapiversion">4.10. @JsonApiVersion</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+This feature is experimental
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Crnk supports versioning of resources and fields based on content negotiation.
+Any resource and field can carry a version range where it is available.
+Crnk will disregard any resource and field with a version range that does not intersect with the request version.
+The HTTP <code>Accept</code> header is used to pass along the desired version as part of general content negotiation.
+This has the benefit that URLs remain constant across versions, greatly simplifying usability and linking.
+For a more detailed discussion, see here[<a href="https://blog.ploeh.dk/2015/06/22/rest-implies-content-negotiation/" class="bare">https://blog.ploeh.dk/2015/06/22/rest-implies-content-negotiation/</a>].</p>
+</div>
+<div class="paragraph">
+<p>A versioned resource looks like:</p>
+</div>
+<div class="listingblock">
+<div class="title">VersionedTask.java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">versionedTask</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@JsonApiVersion</span>(max = <span class="integer">5</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">VersionedTask</span> {
+
+    <span class="directive">public</span> <span class="type">enum</span> CompletionStatus {
+        DONE,
+        OPEN,
+        IN_PROGRESS
+    }
+
+    <span class="annotation">@JsonApiId</span>
+    <span class="directive">private</span> <span class="predefined-type">Long</span> id;
+
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+
+    <span class="annotation">@JsonApiVersion</span>(min = <span class="integer">1</span>, max = <span class="integer">3</span>)
+    <span class="directive">private</span> <span class="type">boolean</span> completed;
+
+    <span class="annotation">@JsonApiVersion</span>(min = <span class="integer">5</span>)
+    <span class="annotation">@JsonProperty</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">completed</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> CompletionStatus newCompleted;
+
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The resource itself is available up to version 5.</p>
+</li>
+<li>
+<p>The field <code>completed</code> is only available from version 1 to 3.</p>
+</li>
+<li>
+<p>The field <code>newCompleted</code> introduces a new flavor of <code>completed</code> making use of <code>CompletionStatus</code> rather than
+a boolean. Through the use of <code>@JsonProperty</code> it is mapped to <code>completed</code> on the REST layer whereas
+the Java side has access to both the old and new field.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Crnk makes use of integer-based version number to signal major versions with breaking changes. There is
+no need for minor versions in this scheme. But applications are free to use additional minor versions in other contexts.</p>
+</div>
+<div class="paragraph">
+<p>A request than carries an accept header like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET /api/versionedTask HTTP/1.1
+Accept: application/vnd.api+json; version=2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, the version can be passed as URL parameter (easier to use from a browser:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET /api/versionedTask?version=2 HTTP/1.1
+Accept: application/vnd.api+json</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#client">CrnkClient</a> supports setting the request version through <code>CrnkClient.setVersion(&#8230;&#8203;)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Not supported is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ID fields cannot be versioned.</p>
+</li>
+<li>
+<p>for multiple classes to serve the same resource for different version ranges.
+For example, it is not possible to introduce a class <code>VersionedTaskV2.java</code>.
+For most use cases it should be sufficient to redefine fields. This may change in the future</p>
+</li>
+<li>
+<p>Meta and link fields cannot be versioned, this may change in the future.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -4191,7 +4331,7 @@ a corresponding exception mapper which defines mapping to a proper JSON:API erro
 <div class="ulist">
 <ul>
 <li>
-<p>implement ExceptionMapper interface</p>
+<p>implement <code>ExceptionMapper</code> interface</p>
 </li>
 <li>
 <p>available trough the used discovery mechanism or added trough a module.</p>
@@ -4243,16 +4383,92 @@ public class TestExceptionMapper implements ExceptionMapper&lt;TestException&gt;
 </div>
 </div>
 <div class="paragraph">
-<p>On the server-side an exception should be mapped to an <code>ErrorResponse</code> object
+<p>On the server-side an exception is mapped to an <code>ErrorResponse</code> object
 with <code>toErrorResponse</code>. It consists of an HTTP status and <code>ErrorData</code> (which is consistent with JSON:API error structure).
 On the client-side an <code>ExceptionMapper</code> returning <code>true</code> upon <code>accept(&#8230;&#8203;)</code> is used to map an
 <code>ErrorResponse</code> back to an exception with <code>fromErrorResponse</code>.</p>
 </div>
 <div class="paragraph">
-<p>Note that the exception mapper is reponsible for providing the logging of exceptions with the
-appropriate log levels. Also have a look at the subsequent section about the validation module that takes
-care of JSR-303 bean validation exception mapping.</p>
+<p>Note that <code>ExceptionMapper</code> follow a number of important behaviors:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Built-in <code>ExceptionMapper</code> can be overridden by custom <code>ExceptionMapper</code> implementations. The later always takes precedence.</p>
+</li>
+<li>
+<p>The <code>ExceptionMapper</code> is responsible for providing the logging of exceptions with the appropriate log levels.
+Typically a <code>4xx</code> status causes a <code>WARN</code> log message, whereas <code>5xx</code> errors cause an <code>ERROR</code> log message.
+Also have a look at the subsequent section about the validation module that takes
+care of JSR-303 bean validation exception mapping.</p>
+</li>
+<li>
+<p><code>ExceptionMapper</code> target a given exception class. In case of type hierarchies, the closest <code>ExceptionMapper</code> is chosen.
+For example, if there are <code>ExceptionMapper</code> implementations for both <code>RuntimeException</code> and <code>IllegalStateException</code>,
+the mappers for <code>RuntimeException</code> is chosen if there is no direct mapper for <code>IllegalStateException</code>.</p>
+</li>
+<li>
+<p><code>ExceptionMapper</code> can implement the <code>Prioritizable</code> interface if multiple implementations target the
+same exception type. But note that the type hierarchy still takes precedence.</p>
+</li>
+<li>
+<p>The implementation of a custom <code>ExceptionMapper</code> can be skipped if the exception inherits from <code>CrnkMappableException</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are a number of built-in exception mappers provided by crnk-core and the various modules:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">401</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UnauthorizedException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">403</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ForbiddenException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceNotFoundException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">405</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodNotAllowedException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">409</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OptimisticLockException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConstraintViolationException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InternalServerErrorException</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">503</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TimeoutException</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -4724,7 +4940,9 @@ allow a fully automated setup.</p>
 
 	class ScheduleListLinks extends DefaultPagedLinksInformation implements LinksInformation {
 
-		public String name = "value";
+		public Link objLink = new DefaultLink("value");
+
+		public String stringLink = "value";
 	}
 
 	class ScheduleListMeta extends DefaultPagedMetaInformation {
@@ -5749,7 +5967,10 @@ up to a few thousands of resources.</p>
 <div class="paragraph">
 <p>Behind the scenes it makes use of <code>InMemoryEvaluator</code> that offers further customization options.
 While sorting makes use of <code>Comparable</code>, filtering makes use of <code>FilterOperator.matches(value1, value2)</code>.
-Custom <code>FilterOperator</code> implementations may extend the feature set of  <code>InMemoryEvaluator</code>.</p>
+Custom <code>FilterOperator</code> implementations may extend the feature set of  <code>InMemoryEvaluator</code>. Paging
+is implemented by simply truncating the result list. Inclusions and field sets are honored by
+by the Crnk engine when returning results (other non-in-memory repositories may want to implement
+this functionality directly in the repository to avoid fetching undesired data in the first place).</p>
 </div>
 <div class="paragraph">
 <p>Based on <code>QuerySpec.apply(&#8230;&#8203;)</code> there is a <code>InMemoryResourceRepository</code> that simply holds resources in a
@@ -6215,6 +6436,32 @@ various techniques to customize the resource model:</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Next to modifying the set of attributes and relationships, an application may
+also want to apply more advanced filters (SQL <code>SUBSELECT</code>, <code>GROUP BY</code>, etc.).
+Thereby, it is recommended to continue following resource-oriented REST principles.
+Most notably, everything that can be sorted and filtered, should also be
+queryable. There are two typical scenarios:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The desired complex filter is based on a single column. In this case,
+a new <code>FilterOperator</code> should be implemented just like any other existing operator
+like <code>EQ</code> and <code>LT</code>.</p>
+</li>
+<li>
+<p>The desired complex filter spans multiple columns and possibly tables.
+A basic solution can just exchange the entity for a DB view and make
+a new column available with the computed result used for filtering. Or a
+more advanced and performant solution can introduce the computed result
+as new (nested) resource. The later the advantage that the computed
+result is only evaluated when explicitly requested, either directly or through
+an inclusion. The new resources can be setup as DB view holding
+the computed result and a foreign key to the original table.</p>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_standalone_usage">11.2.7. Standalone Usage</h4>
@@ -6563,395 +6810,13 @@ meta model next to the JSON:API one (like for documentation purposes).</p>
 <div class="paragraph">
 <p>For more detailed information have a look at the current <code>ResourceMetaProvider</code>.</p>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_activiti_module">11.5. Activiti Module</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-This module is in new and in incubation. Feedback and improvements welcomed.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>There is an <code>ActivitiModule</code> for the <a href="https://www.activiti.org">Activiti</a> workflow engine that offers an alternative REST API.
-The motivation of <code>ActivitiModule</code> is to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>have a JSON:API compliant REST API to benefit from the resource-oriented architecture, linking, sorting, filtering, paging,
-and client-side tooling of JSON:API.</p>
-</li>
-<li>
-<p>have a type-safe, non-generic REST API that is tailored towards the use cases at hand. This means that for each process
-and task definition, there is a dedicated repository and resource type for it. The resource is comprised of
-both the static fields provided by Activiti (like <code>name</code>, <code>startTime</code> and <code>priority</code>) and the dynamic fields
-stored by the application as process/task/form variables. Mapping to static resp. dynamic fields is done
-automatically by the <code>ActivitiModule</code> and hidden from consumers. The repository implementations ensure a proper isolation of different types. And
-the application is enabled, for example, to introduce custom security policies for each resource with
-the <code>SecurityModule</code> or a <code>ResourceFilter</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>This setup differs substantially from the API provided by Activiti that is implemented
-in generic fashion.</p>
-</div>
-<div class="sect3">
-<h4 id="_setup_4">11.5.1. Setup</h4>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> comes within a small example application within the <code>src/main/test</code> directory that showcases its use.
-It sets up an approval flow where changes to the <code>Schedule</code> resource must be approved by a user.</p>
-</div>
-<div class="paragraph">
-<p>The <code>ActivitiModule</code> implements four resource base classes that match the equivalent Activiti classes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ExecutionResource</code></p>
-</li>
-<li>
-<p><code>FormResource</code></p>
-</li>
-<li>
-<p><code>ProcessInstanceResource</code></p>
-</li>
-<li>
-<p><code>TaskResource</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>To setup a JSON:API repository for a process or task, the corresponding resource class can be subclassed and extended with
-the application specific fields. For example:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">ApprovalProcessInstance</span> <span class="directive">extends</span> ProcessInstanceResource {
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> resourceId;
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> resourceType;
-
-        <span class="directive">public</span> <span class="predefined-type">String</span> getResourceId() {
-                <span class="keyword">return</span> resourceId;
-        }
-
-        ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and</p>
-</div>
-<div class="listingblock">
-<div class="title">ScheduleApprovalProcessInstance.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@JsonApiResource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">ScheduleApprovalProcessInstance</span> <span class="directive">extends</span> ApprovalProcessInstance {
-
-        <span class="directive">public</span> <span class="type">enum</span> ScheduleStatus {
-                DONE,
-                SHIPPED
-        }
-
-        <span class="directive">private</span> ScheduleApprovalValues newValues;
-
-        <span class="directive">private</span> ScheduleApprovalValues previousValues;
-
-        <span class="directive">private</span> <span class="predefined-type">String</span> stringValue;
-
-        <span class="directive">private</span> <span class="type">int</span> intValue;
-
-        <span class="directive">private</span> ScheduleStatus status;
-
-        <span class="directive">public</span> ScheduleStatus getStatus() {
-                <span class="keyword">return</span> status;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setStatus(ScheduleStatus status) {
-                <span class="local-variable">this</span>.status = status;
-        }
-
-
-        <span class="directive">public</span> <span class="type">int</span> getIntValue() {
-                <span class="keyword">return</span> intValue;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setIntValue(<span class="type">int</span> intValue) {
-                <span class="local-variable">this</span>.intValue = intValue;
-        }
-
-        <span class="directive">public</span> <span class="predefined-type">String</span> getStringValue() {
-                <span class="keyword">return</span> stringValue;
-        }
-
-        <span class="directive">public</span> <span class="type">void</span> setStringValue(<span class="predefined-type">String</span> stringValue) {
-                <span class="local-variable">this</span>.stringValue = stringValue;
-        }
-
-        ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The example application makes use of an intermediate <code>ApprovalProcessInstance</code> base class to potentially share the approval
-logic among multiple entities in the future (if it would be real-world use case). <code>ScheduleApprovalProcessInstance</code> has
-the static fields of Activiti and a number of custom, dynamic fields like <code>resourceType</code>, <code>resourceId</code> and <code>newValues</code>.
-The dynamic fields will be mapped to to process, task resp. form variables.</p>
-</div>
-<div class="paragraph">
-<p>Notice the relation to <code>ApproveTask</code>, which is a task counter part extending from <code>TaskResource</code>. If a process has multiple
-tasks, you may introduce multiple such relationships.</p>
-</div>
-<div class="paragraph">
-<p>Finally, the setup of the <code>ActiviModule</code> looks like:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> ActivitiModule createActivitiModule(ProcessEngine processEngine) {
-        ActivitiModuleConfig config = <span class="keyword">new</span> ActivitiModuleConfig();
-
-        ProcessInstanceConfig terminatationProcessConfig = config.addProcessInstance(ImmediateTerminatationProcessInstance.class);
-        terminatationProcessConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">immediateTerminationFlow</span><span class="delimiter">&quot;</span></span>);
-
-        ProcessInstanceConfig processConfig = config.addProcessInstance(ScheduleApprovalProcessInstance.class);
-        processConfig.historic(HistoricScheduleApprovalProcessInstance.class);
-        processConfig.filterByProcessDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>);
-        processConfig.addTaskRelationship(
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">approveTask</span><span class="delimiter">&quot;</span></span>, ApproveTask.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>
-        );
-        TaskRepositoryConfig taskConfig = config.addTask(ApproveTask.class);
-        taskConfig.historic(HistoricApproveTask.class);
-        taskConfig.filterByTaskDefinitionKey(<span class="string"><span class="delimiter">&quot;</span><span class="content">approveScheduleTask</span><span class="delimiter">&quot;</span></span>);
-        taskConfig.setForm(ApproveForm.class);
-        <span class="keyword">return</span> ActivitiModule.create(processEngine, config);
-    }</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ActivitiModuleConfig</code> allows to register processes and tasks that then will be exposed as repositories.</p>
-</li>
-<li>
-<p><code>ScheduleApprovalProcessInstance</code>, <code>ApproveTask</code> and the <code>approveTask</code> relationship are registered.</p>
-</li>
-<li>
-<p><code>ApproveTask</code> is user task that is handled by submitting an <code>ApproveForm</code>.</p>
-</li>
-<li>
-<p><code>filterByProcessDefinitionKey</code> and <code>filterByTaskDefinitionKey</code> ensure that the two repositories
-are isolated from other repositories for <code>GET</code>, <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>One could imagine to make this configuration also available through an annotation-based API in the future as it is
-closely related to the resource classes and fields.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_example_application">11.5.2. Example application</h4>
-<div class="paragraph">
-<p>The example application goes a few steps further in the setup. The patterns of those steps might be of
-interest of consumers of the <code>ActivitiModule</code> as well.</p>
-</div>
-<div class="paragraph">
-<p>The workflow looks as follows:</p>
-</div>
-<div class="paragraph">
-<p>]
-.approval.bpmn20.xml</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-
-&lt;definitions id="approvalDefinitions"
-			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 targetNamespace="http://activiti.org/bpmn20"
-			 xmlns:activiti="http://activiti.org/bpmn"
-			 xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"&gt;
-
-
-	&lt;process id="scheduleChange" name="Approve schedule change" isExecutable="true"&gt;
-		&lt;documentation&gt;
-			This process is initiated when a user modifies a scheduleEntity trough the JSON API endpoint.
-		&lt;/documentation&gt;
-
-		&lt;startEvent id="startScheduleChange" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
-
-		&lt;userTask id="approveScheduleTask" name="Approve new Schedule"&gt;
-			&lt;extensionElements&gt;
-				&lt;activiti:formProperty id="approved" name="Do you approve this change" type="boolean" required="true" /&gt;
-			&lt;/extensionElements&gt;
-		&lt;/userTask&gt;
-
-		&lt;sequenceFlow id="startFlow" sourceRef="startScheduleChange" targetRef="approveScheduleTask"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="decideFlow" sourceRef="approveScheduleTask" targetRef="approvalExclusiveGateway"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;serviceTask id="scheduleChangeApproved" name="Create schedule Account, send Alerts"
-					 activiti:expression="${approvalManager.approved(execution)}"&gt;&lt;/serviceTask&gt;
-		&lt;serviceTask id="scheduleChangeDenied" name="send alert"
-					 activiti:expression="${approvalManager.denied(execution)}"&gt;&lt;/serviceTask&gt;
-
-		&lt;endEvent id="endEvent" name="End"&gt;&lt;/endEvent&gt;
-
-		&lt;exclusiveGateway id="approvalExclusiveGateway" name="Exclusive Gateway"&gt;&lt;/exclusiveGateway&gt;
-
-		&lt;sequenceFlow id="approveFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeApproved"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == true}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-
-		&lt;sequenceFlow id="denyFlow" sourceRef="approvalExclusiveGateway" targetRef="scheduleChangeDenied"&gt;
-			&lt;conditionExpression xsi:type="tFormalExpression"&gt;
-				&lt;![CDATA[
-                ${approved == false}
-            ]]&gt;
-			&lt;/conditionExpression&gt;
-		&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow5" sourceRef="scheduleChangeDenied" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-		&lt;sequenceFlow id="flow6" sourceRef="scheduleChangeApproved" targetRef="endEvent"&gt;&lt;/sequenceFlow&gt;
-	&lt;/process&gt;
-
-
-	&lt;process id="immediateTerminationFlow" name="Directly terminates" isExecutable="true"&gt;
-		&lt;documentation&gt;
-			This process directly terminates
-		&lt;/documentation&gt;
-
-		&lt;startEvent id="quickStartEvent" name="Start" activiti:initiator="initiator"&gt;&lt;/startEvent&gt;
-
-		&lt;sequenceFlow id="quickStartFlow" sourceRef="quickStartEvent" targetRef="quickEndEvent"&gt;&lt;/sequenceFlow&gt;
-
-		&lt;endEvent id="quickEndEvent" name="End"&gt;&lt;/endEvent&gt;
-
-	&lt;/process&gt;
-&lt;/definitions&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>There is a:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>approveScheduleTask</code> task requires a form submission by a user.</p>
-</li>
-<li>
-<p><code>approvalExclusiveGateway</code> checks whether the change was accepted.</p>
-</li>
-<li>
-<p><code>scheduleChangeApproved</code> invokes <code>${approvalManager.approved(execution)}</code> whereas <code>approvalManager</code> is a Java object
-taking care of the approval handling and registered to <code>activiti.cfg.xml</code>.</p>
-</li>
-<li>
-<p><code>approvalManager.approved(&#8230;&#8203;)</code> reconstructs the original request and forwards it to Crnk again to save the approved
-changes. This means the regular <code>ScheduleRepository</code> implementation will be called in the same fashion as for
- a typical request. Real world use cases may also need to save and reconstruct the security context.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For the approval-related functionality a second module is registered:</p>
-</div>
-<div class="listingblock">
-<div class="title">ApprovalTestApplication.java</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> SimpleModule createApprovalModule(ApprovalManager approvalManager) {
-        FilterSpec approvalFilter = <span class="keyword">new</span> FilterSpec(
-                <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">definitionKey</span><span class="delimiter">&quot;</span></span>), FilterOperator.EQ, <span class="string"><span class="delimiter">&quot;</span><span class="content">scheduleChange</span><span class="delimiter">&quot;</span></span>
-        );
-        <span class="predefined-type">List</span>&lt;FilterSpec&gt; approvalFilters = <span class="predefined-type">Arrays</span>.asList(approvalFilter);
-
-        SimpleModule module = <span class="keyword">new</span> SimpleModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>);
-        module.addRepositoryDecoratorFactory(
-                ApprovalRepositoryDecorator.createFactory(approvalManager)
-        );
-        module.addRepository(<span class="keyword">new</span> ApprovalRelationshipRepository(Schedule.class,
-                ScheduleApprovalProcessInstance.class, <span class="string"><span class="delimiter">&quot;</span><span class="content">approval</span><span class="delimiter">&quot;</span></span>,
-                <span class="string"><span class="delimiter">&quot;</span><span class="content">approval/schedule</span><span class="delimiter">&quot;</span></span>, approvalFilters)
-        );
-        <span class="keyword">return</span> module;
-    }</code></pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ApprovalRepositoryDecorator</code> hooks into the request processing of the Crnk engine and intercepts
-all <code>PATCH</code> and <code>POST</code> requests for the <code>Schedule</code> resource. The decorator then may chooses to
-abort the request and start an approval flow instead with the help of <code>ApprovalManager</code>.</p>
-</li>
-<li>
-<p><code>ApprovalRelationshipRepository</code> introduces an additional relationship between the actual resources
-and approval resources. It can be used, for example, by user interfaces to show the current status
-of an open approval workflow. <code>ApprovalRelationshipRepository.getResourceFields</code> declares
-the relationship field, meaning that the original application resource does not have to declare the
-relationship. This may or may not be useful depending on how much control there is over the original resource
-(for example there is no control over JPA entities).</p>
-</li>
-<li>
-<p><code>historic(&#8230;&#8203;)</code> method specify the historic resource counterparts to query the history.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The chosen setup leads to an approval system that is <strong>fully transparent</strong> to the actual repository implementations
-and can be added to any kind of repository.</p>
-</div>
-<div class="paragraph">
-<p><code>ApprovalIntTest</code> showcases the example workflow by doing a change,
-starting the approval process, submitting a form and then verifying the changes have been saved.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_limitations">11.5.3. Limitations</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Currently the main entities of Activiti have been exposed. Configuration-related repositories
-could be exposed as well in the future.</p>
-</li>
-<li>
-<p>Historic repositories are still considered being experimental.</p>
-</li>
-<li>
-<p>Activiti has a limited query API that is inherited by the application. Potentially <code>crnk-data-jpa</code> could help
-out a bit in this area.</p>
-</li>
-<li>
-<p>Multi-tenancy is not yet done out-of-the-box.</p>
-</li>
-<li>
-<p>Activiti has been forked to Flowable. As of yet it is unclear whether one or both project
-will survive in the long-term.</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p><a id="facet_module"></a></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_faceted_search">11.6. Faceted Search</h3>
+<h3 id="_faceted_search">11.5. Faceted Search</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -6972,7 +6837,7 @@ may also depend on each other, whereas later facets are filtered by preceding on
 provides an out-of-the-box solution to implement faceted search.</p>
 </div>
 <div class="sect3">
-<h4 id="_setup_5">11.6.1. Setup</h4>
+<h4 id="_setup_4">11.5.1. Setup</h4>
 <div class="paragraph">
 <p>To setup faceted search, the <code>FacetModule</code> must be added to  application. For Spring Boot there is
 a <code>CrnkFacetAutoConfiguration</code> in place. To then enable faceted search for an attribute, it can be
@@ -7015,7 +6880,7 @@ implement their own <code>FacetProvider</code> implementation and register it th
 </div>
 </div>
 <div class="sect3">
-<h4 id="_examples_3">11.6.2. Examples</h4>
+<h4 id="_examples_3">11.5.2. Examples</h4>
 <div class="paragraph">
 <p>All the facets are then available as regular, new JSON:API resource that can filtered, paged, sorted, etc. like
 any other resource:</p>
@@ -7058,7 +6923,7 @@ any other resource:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_nesting">11.6.3. Nesting</h4>
+<h4 id="_nesting">11.5.3. Nesting</h4>
 <div class="paragraph">
 <p>To select values of facets and update the counts of subsequent facets use:</p>
 </div>
@@ -7085,7 +6950,7 @@ the <code>priority</code> facet. To choose and order facets use:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_grouping">11.6.4. Grouping</h4>
+<h4 id="_grouping">11.5.4. Grouping</h4>
 <div class="paragraph">
 <p>To compute facets separately for each label of a particular facet, use the <code>GROUP</code> operator:</p>
 </div>
@@ -7112,7 +6977,7 @@ the GROUP operator needs for further performance tuning.
 </div>
 </div>
 <div class="sect3">
-<h4 id="_roadmap">11.6.5. Roadmap</h4>
+<h4 id="_roadmap">11.5.5. Roadmap</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -7293,7 +7158,8 @@ overridden within the provided OpenAPI template file.</p>
 apply plugin: 'crnk-gen'
 crnkGen {
     runtime {
-        configuration = 'openapiGenRuntime'
+        // Gradle classpath configuration to use
+        configuration = 'runtime'
     }
 
     // fork generation into new process to have clean environment
@@ -7491,7 +7357,8 @@ export let createEmptySchedule = function(id: string): Schedule {
 apply plugin: 'crnk-gen'
 crnkGen {
     runtime {
-        configuration = 'typescriptGenRuntime'
+        // Gradle classpath configuration to use
+        configuration = 'runtime'
     }
 
     // fork generation into new process to have clean environment
@@ -7522,11 +7389,26 @@ crnkGen.init()</code></pre>
 <h3 id="_gradle_customizations">12.4. Gradle customizations</h3>
 <div class="paragraph">
 <p>Internally the Crnk Gradle plugin supports multiple ways of looking up the set of available resources and repositories
-to generate.
-The simplest way is by scanning the classpath for @JsonApiResource-annotated classes. More elaborate setups
-can also launch an application (e.g. with Spring or CDI) and extract the information from the running application.
-While the former is simpler to setup, the later can deal with all border cases like a repository being backed
-by something different than a @JsonApiResource-annotated class. For Spring this looks like:</p>
+to generate. The simplest way is by scanning the classpath for <code>@JsonApiResource</code>-annotated classes.
+The classpath for scanning can be set through the use of a regular Gradle configuration object, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>crnkGen{
+	runtime {
+		configuration = 'runtime'
+	}
+
+	...
+}
+crnkGen.init()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More elaborate setups can also launch an application (e.g. with Spring or CDI) and extract the information
+from the running application. While the former is simpler to setup, the later can deal with all border cases
+like a repository being backed by something different than a <code>@JsonApiResource</code>-annotated class. Such a
+Spring setup looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7534,7 +7416,7 @@ by something different than a @JsonApiResource-annotated class. For Spring this 
 
     // launch a Spring application to extract information about available resources
 	runtime {
-		configuration = 'typescriptGenRuntime'
+		configuration = 'runtime'
         spring {
         	profile = 'test'
         	configuration = 'io.crnk.example.ExampleApplication'
@@ -7549,7 +7431,9 @@ crnkGen.init()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Typically a test profile is used to bring the Spring application up in order to then extract the repositories for generation.</p>
+<p>Typically a test profile can used to bring the Spring application up as unit tests are supposed to be
+self-contained and allow the application to boot up. The repositories are then retrieved from the
+Spring dependency injection container.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7620,7 +7504,7 @@ application. This in turn is realized by the AsciiDoc module of the Crnk generat
         title = "Api Documentation"
 
         // specify location of generated sources
-        genDir = file('build/generated/source/asciidoc')
+        genDir = file('build/generated/sources/asciidoc')
     }
 }
 crnkGen.init()</code></pre>
@@ -7699,7 +7583,7 @@ public class AsciiDocCaptureTest {
     }
 
     private AsciidocCaptureModule setupAsciidoc() {
-        File outputDir = new File("build/tmp/asciidoc/generated/source/asciidoc");
+        File outputDir = new File("build/tmp/asciidoc/generated/sources/asciidoc");
         AsciidocCaptureConfig asciidocConfig = new AsciidocCaptureConfig();
         asciidocConfig.setGenDir(outputDir);
         return new AsciidocCaptureModule(asciidocConfig);
@@ -8011,15 +7895,12 @@ to have <code>application/json-patch+json</code>, otherwise the <code>Operations
 <div class="ulist">
 <ul>
 <li>
-<p>So far does not support bulk <code>GET</code> operations.</p>
-</li>
-<li>
 <p>Does so far not support bulk update of relationships.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>With support for <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations the most important building blocks should be in place.
+<p>With support for <code>GET</code> (find-one only), <code>POST</code>, <code>PATCH</code> and <code>DELETE</code> operations the most important building blocks should be in place.
 The limitations are expected to be addressed at some point as well, contributions welcomed.</p>
 </div>
 <div class="paragraph">
@@ -8206,7 +8087,7 @@ module API.</p>
 <p>The <code>DocumentFilter</code> interface allows to intercept incoming requests and do
 any kind of validation, changes, monitoring, transaction handling, etc. <code>DocumentFilter</code> can be
 hooked into Crnk by setting up a module and registering the filter to the
-<code>ModuleContext</code>. Not that for every request, this interface is called exactly once.</p>
+<code>ModuleContext</code>. Note that for every request, this interface is called exactly once.</p>
 </div>
 <div class="paragraph">
 <p>A request may span multiple repository accesses. To intercept the actual repository requests,
@@ -8221,7 +8102,7 @@ implementing the same Crnk repository interfaces. The decorated repository inste
 the actual repository will get called and it is up to the decorated repository of how to proceed
 with the request, usually by calling the actual repository. <code>RepositoryDecoratorFactory</code>
 can be registered with <code>ModuleContext.addRepositoryDecoratorFactory</code>. The factory gets
-notified about every repository registration and is then free do decorate it or not.</p>
+notified about every repository registration and is then free to decorate it or not.</p>
 </div>
 <div class="paragraph">
 <p><a id="modificationfilter"></a></p>
@@ -8594,7 +8475,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-13 19:40:51 UTC
+Last updated 2020-04-19 17:46:28 UTC
 </div>
 </div>
 </body>
