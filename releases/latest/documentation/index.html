@@ -561,8 +561,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
-<li><a href="#_nested_resources">4.9. Nested Resources</a></li>
-<li><a href="#_jsonapiversion">4.10. @JsonApiVersion</a></li>
+<li><a href="#_optional_values">4.9. Optional values</a></li>
+<li><a href="#_nested_resources">4.10. Nested Resources</a></li>
+<li><a href="#_jsonapiversion">4.11. @JsonApiVersion</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -2735,6 +2736,10 @@ resource.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an object can be read and/or written.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JsonInclude.Include.NON_EMPTY</code> and <code>JsonInclude.Include.NON_NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether null and empty values are omitted from serialization.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonAnyGetter</code> and <code>@JsonAnySetter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To map dynamic data structures to JSON. For an example have a look at
   <a href="https://github.com/crnk-project/crnk-example/blob/master/crnk-example-service/src/main/java/io/crnk/example/service/model/PersonEntity.java">PersonEntity</a>
@@ -2750,7 +2755,26 @@ resource.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_nested_resources">4.9. Nested Resources</h3>
+<h3 id="_optional_values">4.9. Optional values</h3>
+<div class="paragraph">
+<p>Crnk comes with support for <code>java.util.Optional</code>. Serialization of such fields is omitted if no value is present.
+For this to work properly, the <code>Jdk8Module`</code> module must be registered with Jackson. It is available from:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>	&lt;dependency&gt;
+		&lt;groupId&gt;com.fasterxml.jackson.datatype&lt;/groupId&gt;
+		&lt;artifactId&gt;jackson-datatype-jdk8&lt;/artifactId&gt;
+		&lt;version&gt;${JACKSON_VERSION}&lt;/version&gt;
+	&lt;/dependency&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More information can be found in <a href="https://www.baeldung.com/jackson-optional" class="bare">https://www.baeldung.com/jackson-optional</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nested_resources">4.10. Nested Resources</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2786,7 +2810,7 @@ there might be multiple comments.</p>
 The subsequent two section go into detail how to setup such resources.</p>
 </div>
 <div class="sect3">
-<h4 id="_single_nested_resources">4.9.1. Single Nested Resources</h4>
+<h4 id="_single_nested_resources">4.10.1. Single Nested Resources</h4>
 <div class="paragraph">
 <p>Single nested resources share the identifier with the parent resource. From the example aboce:</p>
 </div>
@@ -2822,7 +2846,7 @@ repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_multiple_nested_resources">4.9.2. Multiple Nested Resources</h4>
+<h4 id="_multiple_nested_resources">4.10.2. Multiple Nested Resources</h4>
 <div class="paragraph">
 <p>To nest multiple resource below a parent, structured identifier can be used:</p>
 </div>
@@ -2922,7 +2946,7 @@ repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_usage">4.9.3. Usage</h4>
+<h4 id="_usage">4.10.3. Usage</h4>
 <div class="paragraph">
 <p>For an example have a look at <code>NestedRepositoryClientTest</code> and its parent class. Depending on the use of <a href="#JsonApiExposed">[JsonApiExposed]</a> it
 is or is not be possible to also directly access <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code> without going
@@ -2947,7 +2971,7 @@ Nesting is currently limited to a single level (and the possibility to have furt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsonapiversion">4.10. @JsonApiVersion</h3>
+<h3 id="_jsonapiversion">4.11. @JsonApiVersion</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -8475,7 +8499,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-19 17:46:28 UTC
+Last updated 2020-04-21 07:36:17 UTC
 </div>
 </div>
 </body>
