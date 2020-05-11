@@ -2648,6 +2648,73 @@ of  <code>Link</code> available. By default simple strings will be serialized as
 </div>
 </div>
 <div class="paragraph">
+<p>There are a variety of interfaces for built-in link types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SelfLinksInformation</code></p>
+</li>
+<li>
+<p><code>RelatedLinksInformation</code></p>
+</li>
+<li>
+<p><code>PagingLinksInformation</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Such links will be populated automatically by Crnk if not specified otherwise.
+It is important to highlight that many links can and are derived from the <code>self</code> link.
+For example, if the <code>self</code> link is customized, all relationship links will be adjusted
+accordingly.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If you have use cases where the link can be derived from the <code>self</code> link, it can
+  be the easiest solution to implement that logic directly in the getter:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>	public static class ProjectLinks implements LinksInformation, SelfLinksInformation {
+
+		private String value;
+
+		private String self;
+
+		public String getValue() {
+			if(value == null &amp;&amp; self != null){
+				return self + "/foo";
+			}
+			return value;
+		}
+		...
+	}</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<code>CrnkBoot.getUrlBuilder()</code> gives access to the <code>UrlBuilder</code> class that allows the construction
+  of URLs from resources. Ìt is also, for example, defined as Spring bean and can be
+  injected into any class.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p><a id="jsonApiField"></a></p>
 </div>
 </div>
@@ -8499,7 +8566,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-08 06:35:58 UTC
+Last updated 2020-05-11 18:15:48 UTC
 </div>
 </div>
 </body>
