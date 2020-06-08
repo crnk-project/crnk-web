@@ -6426,6 +6426,15 @@ number of resources should be counted or whether just the presence of a subseque
 is checked (by querying <code>limit + 1</code> entities). By default the total resources
 are counted. Have a look at the <a href="#pagination">[pagination]</a> section for more information.</p>
 </div>
+<div class="paragraph">
+<p>Further, pagination requires a total order among records to avoid recordings jumping in different
+positions. Databases typically do not guarantee  that the same query does result in the same
+result order if no sorting criteria is specified resulting in a total order. For this reason
+Crnk automatically adds the primary key as sort critiera if total order is not given.
+If you make use of composite primary keys, also make sure to be aware of
+<a href="https://stackoverflow.com/questions/8139437/how-to-set-the-column-order-of-a-composite-primary-key-using-jpa-hibernate" class="bare">https://stackoverflow.com/questions/8139437/how-to-set-the-column-order-of-a-composite-primary-key-using-jpa-hibernate</a>
+and <code>JpaQuery.setAlphabeticEmbeddableElementOrder(&#8230;&#8203;)</code>.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_criteria_api_and_querydsl">11.2.3. Criteria API and QueryDSL</h4>
@@ -8567,7 +8576,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-04 07:44:04 UTC
+Last updated 2020-06-08 13:46:44 UTC
 </div>
 </div>
 </body>
