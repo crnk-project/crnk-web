@@ -561,8 +561,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_jsonapilinksinformation">4.6. JsonApiLinksInformation</a></li>
 <li><a href="#_jsonapifield">4.7. JsonApiField</a></li>
 <li><a href="#_jackson_annotations">4.8. Jackson annotations</a></li>
-<li><a href="#_nested_resources">4.9. Nested Resources</a></li>
-<li><a href="#_jsonapiversion">4.10. @JsonApiVersion</a></li>
+<li><a href="#_optional_values">4.9. Optional values</a></li>
+<li><a href="#_nested_resources">4.10. Nested Resources</a></li>
+<li><a href="#_jsonapiversion">4.11. @JsonApiVersion</a></li>
 </ul>
 </li>
 <li><a href="#_repositories">5. Repositories</a>
@@ -576,17 +577,18 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_pagination">5.7. Pagination</a></li>
 <li><a href="#_numbersize_paging">5.8. Number/Size Paging</a></li>
 <li><a href="#_sparse_fieldsets">5.9. Sparse Fieldsets</a></li>
-<li><a href="#_url_mapping">5.10. URL Mapping</a></li>
-<li><a href="#_relationship_repositories">5.11. Relationship Repositories</a></li>
-<li><a href="#_resourcelist">5.12. ResourceList</a></li>
-<li><a href="#_error_handling">5.13. Error Handling</a></li>
-<li><a href="#_meta_information">5.14. Meta Information</a></li>
-<li><a href="#_links_information">5.15. Links Information</a></li>
-<li><a href="#_inheritance">5.16. Inheritance</a></li>
-<li><a href="#_payload_size_optimizations">5.17. Payload Size Optimizations</a></li>
-<li><a href="#_repository_decoration">5.18. Repository Decoration</a></li>
-<li><a href="#_resourcefieldcontributor">5.19. ResourceFieldContributor</a></li>
-<li><a href="#_jsonapiexposed">5.20. @JsonApiExposed</a></li>
+<li><a href="#_inclusion_of_related_resources">5.10. Inclusion of Related Resources</a></li>
+<li><a href="#_url_mapping">5.11. URL Mapping</a></li>
+<li><a href="#_relationship_repositories">5.12. Relationship Repositories</a></li>
+<li><a href="#_resourcelist">5.13. ResourceList</a></li>
+<li><a href="#_error_handling">5.14. Error Handling</a></li>
+<li><a href="#_meta_information">5.15. Meta Information</a></li>
+<li><a href="#_links_information">5.16. Links Information</a></li>
+<li><a href="#_inheritance">5.17. Inheritance</a></li>
+<li><a href="#_payload_size_optimizations">5.18. Payload Size Optimizations</a></li>
+<li><a href="#_repository_decoration">5.19. Repository Decoration</a></li>
+<li><a href="#_resourcefieldcontributor">5.20. ResourceFieldContributor</a></li>
+<li><a href="#_jsonapiexposed">5.21. @JsonApiExposed</a></li>
 </ul>
 </li>
 <li><a href="#_client">6. Client</a>
@@ -1396,13 +1398,13 @@ A code below shows a sample <code>web.xml</code> file with properly defined and 
 <div class="ulist">
 <ul>
 <li>
-<p><code>io-crnk:crnk-setup-spring</code> support for plain Spring 4 and 5.</p>
+<p><code>io.crnk:crnk-setup-spring</code> support for plain Spring 4 and 5.</p>
 </li>
 <li>
-<p><code>io-crnk:crnk-setup-spring-boot1</code> support for Spring Boot 1.x. This module is considered being deprecated and will be removed in the future.</p>
+<p><code>io.crnk:crnk-setup-spring-boot1</code> support for Spring Boot 1.x. This module is considered being deprecated and will be removed in the future.</p>
 </li>
 <li>
-<p><code>io-crnk:crnk-setup-spring-boot2</code> support for Spring Boot 2.x.</p>
+<p><code>io.crnk:crnk-setup-spring-boot2</code> support for Spring Boot 2.x.</p>
 </li>
 </ul>
 </div>
@@ -1421,7 +1423,7 @@ the basic setup that can easily be applied to a Spring-only setup without Spring
 </ul>
 </div>
 <div class="paragraph">
-<p><code>io-crnk:crnk-setup-spring-boot1</code> and  <code>io-crnk:crnk-setup-spring-boot2</code> host Spring Boot auto configurations
+<p><code>io.crnk:crnk-setup-spring-boot1</code> and  <code>io.crnk:crnk-setup-spring-boot2</code> host Spring Boot auto configurations
 that are enabled if the presence of the particular Crnk module and/or Spring component. Each auto configuration
 can be enabled and disabled and may host further properties to reconfigure it. The following auto configurations are available:</p>
 </div>
@@ -2647,6 +2649,73 @@ of  <code>Link</code> available. By default simple strings will be serialized as
 </div>
 </div>
 <div class="paragraph">
+<p>There are a variety of interfaces for built-in link types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SelfLinksInformation</code></p>
+</li>
+<li>
+<p><code>RelatedLinksInformation</code></p>
+</li>
+<li>
+<p><code>PagingLinksInformation</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Such links will be populated automatically by Crnk if not specified otherwise.
+It is important to highlight that many links can and are derived from the <code>self</code> link.
+For example, if the <code>self</code> link is customized, all relationship links will be adjusted
+accordingly.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If you have use cases where the link can be derived from the <code>self</code> link, it can
+  be the easiest solution to implement that logic directly in the getter:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>	public static class ProjectLinks implements LinksInformation, SelfLinksInformation {
+
+		private String value;
+
+		private String self;
+
+		public String getValue() {
+			if(value == null &amp;&amp; self != null){
+				return self + "/foo";
+			}
+			return value;
+		}
+		...
+	}</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<code>CrnkBoot.getUrlBuilder()</code> gives access to the <code>UrlBuilder</code> class that allows the construction
+  of URLs from resources. Ìt is also, for example, defined as Spring bean and can be
+  injected into any class.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p><a id="jsonApiField"></a></p>
 </div>
 </div>
@@ -2735,6 +2804,10 @@ resource.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an object can be read and/or written.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JsonInclude.Include.NON_EMPTY</code> and <code>JsonInclude.Include.NON_NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether null and empty values are omitted from serialization.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@JsonAnyGetter</code> and <code>@JsonAnySetter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To map dynamic data structures to JSON. For an example have a look at
   <a href="https://github.com/crnk-project/crnk-example/blob/master/crnk-example-service/src/main/java/io/crnk/example/service/model/PersonEntity.java">PersonEntity</a>
@@ -2750,7 +2823,26 @@ resource.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_nested_resources">4.9. Nested Resources</h3>
+<h3 id="_optional_values">4.9. Optional values</h3>
+<div class="paragraph">
+<p>Crnk comes with support for <code>java.util.Optional</code>. Serialization of such fields is omitted if no value is present.
+For this to work properly, the <code>Jdk8Module`</code> module must be registered with Jackson. It is available from:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>	&lt;dependency&gt;
+		&lt;groupId&gt;com.fasterxml.jackson.datatype&lt;/groupId&gt;
+		&lt;artifactId&gt;jackson-datatype-jdk8&lt;/artifactId&gt;
+		&lt;version&gt;${JACKSON_VERSION}&lt;/version&gt;
+	&lt;/dependency&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More information can be found in <a href="https://www.baeldung.com/jackson-optional" class="bare">https://www.baeldung.com/jackson-optional</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nested_resources">4.10. Nested Resources</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2786,7 +2878,7 @@ there might be multiple comments.</p>
 The subsequent two section go into detail how to setup such resources.</p>
 </div>
 <div class="sect3">
-<h4 id="_single_nested_resources">4.9.1. Single Nested Resources</h4>
+<h4 id="_single_nested_resources">4.10.1. Single Nested Resources</h4>
 <div class="paragraph">
 <p>Single nested resources share the identifier with the parent resource. From the example aboce:</p>
 </div>
@@ -2822,7 +2914,7 @@ repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_multiple_nested_resources">4.9.2. Multiple Nested Resources</h4>
+<h4 id="_multiple_nested_resources">4.10.2. Multiple Nested Resources</h4>
 <div class="paragraph">
 <p>To nest multiple resource below a parent, structured identifier can be used:</p>
 </div>
@@ -2922,7 +3014,7 @@ repository.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_usage">4.9.3. Usage</h4>
+<h4 id="_usage">4.10.3. Usage</h4>
 <div class="paragraph">
 <p>For an example have a look at <code>NestedRepositoryClientTest</code> and its parent class. Depending on the use of <a href="#JsonApiExposed">[JsonApiExposed]</a> it
 is or is not be possible to also directly access <code><a href="http://example.com/comments" class="bare">http://example.com/comments</a></code> without going
@@ -2947,7 +3039,7 @@ Nesting is currently limited to a single level (and the possibility to have furt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsonapiversion">4.10. @JsonApiVersion</h3>
+<h3 id="_jsonapiversion">4.11. @JsonApiVersion</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3888,8 +3980,9 @@ that are based on <code>OffsetLimitPagingSpec</code>.</p>
 <div class="paragraph">
 <p><a id="inclusion"></a></p>
 </div>
-<div class="sect3">
-<h4 id="_inclusion_of_related_resources">5.9.1. Inclusion of Related Resources</h4>
+</div>
+<div class="sect2">
+<h3 id="_inclusion_of_related_resources">5.10. Inclusion of Related Resources</h3>
 <div class="paragraph">
 <p>Information about relationships to include in the response can be achieved by providing an <code>include</code> parameter. Examples:</p>
 </div>
@@ -3932,9 +4025,8 @@ The QuerySpec for a particular resource type can be obtained with <code>QuerySpe
 <p><a id="urlmapper"></a></p>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_url_mapping">5.10. URL Mapping</h3>
+<h3 id="_url_mapping">5.11. URL Mapping</h3>
 <div class="paragraph">
 <p>The mapping of request parameters to QuerySpec and back is implemented by <code>QuerySpecUrlMapper</code>.
 With <code>DefaultQuerySpecUrlMapper</code> there is a default implementation that follows the JSON:API
@@ -4000,7 +4092,7 @@ Sets the default <code>FilterOperator</code>. See <a href="#filtering">[filterin
 </div>
 </div>
 <div class="sect2">
-<h3 id="_relationship_repositories">5.11. Relationship Repositories</h3>
+<h3 id="_relationship_repositories">5.12. Relationship Repositories</h3>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -4063,7 +4155,7 @@ by the same repository. The <code>findOneRelations</code> and <code>findManyRela
 class through <code>querySpec.getResourceClass</code>, whereas the other methods directly obtain a <code>source</code> instance.</p>
 </div>
 <div class="sect3">
-<h4 id="_example">5.11.1. Example</h4>
+<h4 id="_example">5.12.1. Example</h4>
 <div class="listingblock">
 <div class="title">HistoryRelationshipRepository</div>
 <div class="content">
@@ -4095,7 +4187,7 @@ public class HistoryRelationshipRepository extends ManyRelationshipRepositoryBas
 </div>
 </div>
 <div class="sect3">
-<h4 id="_relationshipmatcher">5.11.2. RelationshipMatcher</h4>
+<h4 id="_relationshipmatcher">5.12.2. RelationshipMatcher</h4>
 <div class="paragraph">
 <p>With <code>RelationshipRepository.getMatcher()</code> one has a lot of flexibility about which kind of relationships a repository is
 serving. Rules can look like:</p>
@@ -4116,7 +4208,7 @@ as done in the example from the previous section.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_self_and_related_links">5.11.3. Self and Related Links</h4>
+<h4 id="_self_and_related_links">5.12.3. Self and Related Links</h4>
 <div class="paragraph">
 <p>The JSON:API specification from <a href="http://jsonapi.org/format/#fetching-relationships" class="bare">http://jsonapi.org/format/#fetching-relationships</a>
 mandates two relationship links:</p>
@@ -4156,7 +4248,7 @@ the <code>includedFields</code> property.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_forwardingrelationshiprepository">5.11.4. ForwardingRelationshipRepository</h4>
+<h4 id="_forwardingrelationshiprepository">5.12.4. ForwardingRelationshipRepository</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4214,7 +4306,7 @@ new ForwardingRelationshipRepository(
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcelist">5.12. ResourceList</h3>
+<h3 id="_resourcelist">5.13. ResourceList</h3>
 <div class="paragraph">
 <p>ResourceRepository and RelationshipRepository return lists of type ResourceList. The ResourceList can carry, next
 to the actual resources, also meta and links information:</p>
@@ -4280,13 +4372,13 @@ and used by both servers and clients:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling">5.13. Error Handling</h3>
+<h3 id="_error_handling">5.14. Error Handling</h3>
 <div class="paragraph">
 <p>Processing errors in Crnk can be handled by throwing an exception and providing
 a corresponding exception mapper which defines mapping to a proper JSON:API error response.</p>
 </div>
 <div class="sect3">
-<h4 id="_throwing_an_exception">5.13.1. Throwing an exception&#8230;&#8203;</h4>
+<h4 id="_throwing_an_exception">5.14.1. Throwing an exception&#8230;&#8203;</h4>
 <div class="paragraph">
 <p>Here is an example of throwing an Exception in the code:</p>
 </div>
@@ -4324,7 +4416,7 @@ a corresponding exception mapper which defines mapping to a proper JSON:API erro
 </div>
 </div>
 <div class="sect3">
-<h4 id="_and_mapping_it_to_jsonapi_response">5.13.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
+<h4 id="_and_mapping_it_to_jsonapi_response">5.14.2. &#8230;&#8203;and mapping it to JSON:API response</h4>
 <div class="paragraph">
 <p>Class responsible for mapping the exception should:</p>
 </div>
@@ -4472,7 +4564,7 @@ same exception type. But note that the type hierarchy still takes precedence.</p
 </div>
 </div>
 <div class="sect2">
-<h3 id="_meta_information">5.14. Meta Information</h3>
+<h3 id="_meta_information">5.15. Meta Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4497,7 +4589,7 @@ It contains a single method <code>MetaInformation getMetaInformation(Iterable&lt
 </div>
 </div>
 <div class="sect2">
-<h3 id="_links_information">5.15. Links Information</h3>
+<h3 id="_links_information">5.16. Links Information</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4525,12 +4617,12 @@ It contains a single method <code>LinksInformation getLinksInformation(Iterable&
 </div>
 </div>
 <div class="sect2">
-<h3 id="_inheritance">5.16. Inheritance</h3>
+<h3 id="_inheritance">5.17. Inheritance</h3>
 <div class="paragraph">
 <p>There are two different kinds of inheritance supported:</p>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_repository_per_type">5.16.1. Inheritance with a repository per type</h4>
+<h4 id="_inheritance_with_a_repository_per_type">5.17.1. Inheritance with a repository per type</h4>
 <div class="paragraph">
 <p>Each subtype is served by its own resource repository and each repository has its own URL.</p>
 </div>
@@ -4553,7 +4645,7 @@ also return resources of subtypes if they match the specified id or filter param
 </div>
 </div>
 <div class="sect3">
-<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.16.2. Inheritance with a single repository per type hierarchy</h4>
+<h4 id="_inheritance_with_a_single_repository_per_type_hierarchy">5.17.2. Inheritance with a single repository per type hierarchy</h4>
 <div class="paragraph">
 <p>In this case all resources share a repository implementation and URL (except for the identifier part). An example may look like:</p>
 </div>
@@ -4578,7 +4670,7 @@ a look at <code>InheritanceWithoutSubtypeRepositoryClientTest</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_payload_size_optimizations">5.17. Payload Size Optimizations</h3>
+<h3 id="_payload_size_optimizations">5.18. Payload Size Optimizations</h3>
 <div class="paragraph">
 <p>Self and related links can make up to 60% of the response payload size and not always are those links of use.
 Crnk offers a <code>Crnk-Compact: true</code> header that can be sent along with the request. In this case the computation
@@ -4589,7 +4681,7 @@ of those links is omitted. Further relationships without data are completely omi
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repository_decoration">5.18. Repository Decoration</h3>
+<h3 id="_repository_decoration">5.19. Repository Decoration</h3>
 <div class="paragraph">
 <p>Sometimes it is useful to augment a repository with further features. There are  different situations where that can makes sense:</p>
 </div>
@@ -4642,7 +4734,7 @@ intercept all requests and can do arbitrary modifications. The modifications may
 </div>
 </div>
 <div class="sect2">
-<h3 id="_resourcefieldcontributor">5.19. ResourceFieldContributor</h3>
+<h3 id="_resourcefieldcontributor">5.20. ResourceFieldContributor</h3>
 <div class="paragraph">
 <p>The <code>ResourceFieldContributor</code> interface allows to dynamically introduce new fields to resources without actually
 touching them. This is useful, for example, if you have a JPA entity exposed with crnk-data-jpa and
@@ -4715,7 +4807,7 @@ public class HistoryFieldContributor implements ResourceFieldContributor {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jsonapiexposed">5.20. @JsonApiExposed</h3>
+<h3 id="_jsonapiexposed">5.21. @JsonApiExposed</h3>
 <div class="paragraph">
 <p>A repository may be annotated with <code>@JsonApiExposed(false)</code>. In this case the repository is only available internally to other repositories, not
 externally on the JSON:API endpoint. There are different use cases for this:</p>
@@ -6334,6 +6426,15 @@ number of resources should be counted or whether just the presence of a subseque
 is checked (by querying <code>limit + 1</code> entities). By default the total resources
 are counted. Have a look at the <a href="#pagination">[pagination]</a> section for more information.</p>
 </div>
+<div class="paragraph">
+<p>Further, pagination requires a total order among records to avoid recordings jumping in different
+positions. Databases typically do not guarantee  that the same query does result in the same
+result order if no sorting criteria is specified resulting in a total order. For this reason
+Crnk automatically adds the primary key as sort critiera if total order is not given.
+If you make use of composite primary keys, also make sure to be aware of
+<a href="https://stackoverflow.com/questions/8139437/how-to-set-the-column-order-of-a-composite-primary-key-using-jpa-hibernate" class="bare">https://stackoverflow.com/questions/8139437/how-to-set-the-column-order-of-a-composite-primary-key-using-jpa-hibernate</a>
+and <code>JpaQuery.setAlphabeticEmbeddableElementOrder(&#8230;&#8203;)</code>.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_criteria_api_and_querydsl">11.2.3. Criteria API and QueryDSL</h4>
@@ -7372,7 +7473,7 @@ crnkGen {
         enabled = true
 
         // specify output format
-        format = 'PLAINJSON' // or 'JSONAPI'
+        format = 'PLAINJSON' // or 'NGRX'
 
         // specify location of generated sources
         genDir = file('src/resources')
@@ -8475,7 +8576,7 @@ public class ValidationClientModuleFactory implements ClientModuleFactory {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-19 17:46:28 UTC
+Last updated 2020-08-31 05:43:28 UTC
 </div>
 </div>
 </body>
